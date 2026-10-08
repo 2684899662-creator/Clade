@@ -13701,6 +13701,8 @@ function seasonSettle(){
     if(g.seasons[sz.id]?.settledAt) return;
     const snap = Object.values(g.users).map(u=>{ const xp = +(u.xp?.[sz.id]||0), L = achvLevel(xp); return {user:u.user, xp, level:L.idx, levelName:L.name, unlocked:Object.keys(u.unlocked||{}).length}; }).sort((a,b)=>b.xp-a.xp);
     /* 赛季精灵归档：每人当季精灵的形态 / 配色 / 阶段 / 经验 / 皮肤（不跨季继承，仅归档进图鉴） */
+    /* 皮肤保底不清零：上季精灵的保底进度留在 u.pity，新赛季精灵分配后由 spSkinPity 迁入 */
+    Object.values(g.users).forEach(u=>{ const r = u.ss?.[sz.id]; if(r?.skinPity) u.pity = {epic:+r.skinPity.epic||0, legend:+r.skinPity.legend||0}; });
     const sprites = Object.values(g.users).filter(u=>u.ss?.[sz.id]).map(u=>{ const r = u.ss[sz.id]; r.archived = gNowIso(); return {user:u.user, form:r.form, pal:r.pal, stage:spStageOf(+r.xp||0), xp:+r.xp||0, name:r.name||'', intimacy:+r.intimacy||0, feeds:+r.feeds||0, hash:r.hash, seed:r.seed}; });
     g.seasons[sz.id] = {id:sz.id, label:sz.label, start:sz.start, end:sz.end, settledAt:gNowIso(), settledBy:currentUser()?.username || 'system', snapshot:snap, sprites, seed:(g.seasonMeta?.id===sz.id ? g.seasonMeta.seed : '') || '',
       points:Object.fromEntries(Object.values(g.users).map(u=>[u.user, {earned:+u.pts?.[sz.id]||0, spent:+u.ptsSpent?.[sz.id]||0}])),
@@ -14329,12 +14331,20 @@ var SP_LINES = {
   sad:[['好久没见到你了……','I haven\'t seen you in a while…','Lâu rồi không gặp bạn…'],['能给我一点能量饲料吗？','Could I have some energy feed?','Cho mình chút thức ăn năng lượng được không?']],
 };
 
+/* ---------- 皮肤保底：挂在当季精灵上（u.ss[赛季].skinPity），赛季切换时原样迁入新赛季精灵，不清零；u.pity 保持同一份引用，兼容旧数据 ---------- */
+function spSkinPity(u){
+  if(!u) return {epic:0, legend:0};
+  const old = u.pity || {epic:0, legend:0}, r = u.ss?.[seasonNow().id];
+  if(!r) return (u.pity = old);
+  if(!r.skinPity){ r.skinPity = {epic:+old.epic||0, legend:+old.legend||0}; r.skinPityAt = gNowIso(); }
+  return (u.pity = r.skinPity);
+}
 /* ---------- 用户扩展字段 ---------- */
 function spU(name){
   const u = gUser(name || spMe());
   u.ss = u.ss || {}; u.tr = u.tr || {}; u.skins = u.skins || {}; u.equip = u.equip || {season:'', trial:{}};
   u.equip.trial = u.equip.trial || {};
-  u.shards = +u.shards || 0; u.tickets = +u.tickets || 0; u.pity = u.pity || {epic:0, legend:0};
+  u.shards = +u.shards || 0; u.tickets = +u.tickets || 0; u.pity = u.pity || {epic:0, legend:0}; spSkinPity(u);
   u.pts = u.pts || {}; u.ptsSpent = u.ptsSpent || {}; u.shop = u.shop || []; u.gd = u.gd || {}; u.ev = u.ev || {};
   u.np = u.np || {dnd:false, sound:false, subs:{achv:true, event:true, season:true, shop:true, social:true}};
   u.tal = u.tal || {speed:0, collect:0, social:0, fx:0}; u.cards = u.cards || {}; u.evoSeen = u.evoSeen || {};
@@ -14597,7 +14607,7 @@ function spDrawDo(eventId){
   spBusy = true;
   try{
     const {tbl, ev} = spDrawTable(eventId);
-    u.crystals -= cost; u.pity.epic = (+u.pity.epic||0) + 1; u.pity.legend = (+u.pity.legend||0) + 1;
+    spSkinPity(u); u.crystals -= cost; u.pity.epic = (+u.pity.epic||0) + 1; u.pity.legend = (+u.pity.legend||0) + 1;
     let k;
     if(u.pity.legend >= (+c.rarity.legend?.pity||100)) k = 'legend';
     else if(u.pity.epic >= (+c.rarity.epic?.pity||50)) k = spRand() < (+c.rarity.legend.p)/((+c.rarity.legend.p)+(+c.rarity.epic.p)) ? 'legend' : 'epic';
@@ -14609,7 +14619,8 @@ function spDrawDo(eventId){
     if(['epic','legend'].includes(k)) u.pity.epic = 0;
     if(k==='legend'){ u.pity.legend = 0; achvEvent('drawLegend'); }
     const res = spGrantSkin(u, sk.id, 'draw', true);
-    spAudit('skin-draw', u.user, {id:sk.id, rarity:k, event:eventId||'', pityE:u.pity.epic, pityL:u.pity.legend}, {crystals:-cost});
+    { const r0 = u.ss?.[seasonNow().id]; if(r0 && r0.skinPity===u.pity) r0.skinPityAt = gNowIso(); }
+    spAudit('skin-draw', u.user, {id:sk.id, rarity:k, event:eventId||'', pityE:u.pity.epic, pityL:u.pity.legend, season:seasonNow().id}, {crystals:-cost});
     gTouch(u); saveGrowth(true);
     state.sp.lastDraw = {id:sk.id, dup:res.dup, shards:res.shards||0, at:Date.now()};
     spSound(['epic','legend','limited','festival'].includes(k) ? 'rare' : 'pop');
@@ -16005,8 +16016,8 @@ function spAdmDraws(){
   const users = spOperators().map(a=>spU(a.username));
   const heavy = users.filter(u=>logs.filter(l=>l.user===u.user && l.act==='spirit-draw' && String(l.at).slice(0,10)===today).length > 20);
   return `<div class="sp-sec-h"><h3>${escapeHtml(tx('保底记录','Pity records','Bản ghi bảo hiểm'))}</h3></div>
-    <table class="data-table"><thead><tr><th>${escapeHtml(tx('操作员','Operator','Vận hành viên'))}</th><th>${escapeHtml(tx('本季精灵','This season','Mùa này'))}</th><th>${escapeHtml(tx('未出史诗赛季数','Seasons without Epic','Mùa chưa có Sử thi'))}</th><th>${escapeHtml(tx('未出传说赛季数','Seasons without Legendary','Mùa chưa có Huyền thoại'))}</th><th>${escapeHtml(tx('觉醒保底','Awakening pity','Bảo hiểm thức tỉnh'))}</th><th>${escapeHtml(tx('活动祈愿保底','Wish pity','Bảo hiểm cầu nguyện'))}</th><th>${escapeHtml(tx('收藏','Collection','Sưu tầm'))}</th><th>💠</th></tr></thead><tbody>
-    ${users.map(u=>{ const s = u.ss[seasonNow().id]; return `<tr><td data-i18n-ignore="1">${escapeHtml(spUserName(u.user))}</td><td>${s?`${spSeasonView(s, 22, {nofx:true})} ${escapeHtml(spRecName('season', s))} ${s.rar||''}`:'—'}</td><td>${u.spPity?.sr??0}/${gCfg().spPitySR}</td><td>${u.spPity?.ssr??0}/${gCfg().spPitySSR}</td><td>${s?`${+s.awTries||0}/${gCfg().awakenPity}`:'—'}</td><td>${spEvents().filter(e=>(e.cfg?.spirits||[]).length).map(e=>`${escapeHtml(trT(e.name))} ${+u.ev?.[e.id]?.pity||0}/${e.cfg.pity||40}`).join('<br>')||'—'}</td><td>${Object.keys(u.spc||{}).length}</td><td>${u.spShards||0}</td></tr>`; }).join('')}</tbody></table>
+    <table class="data-table"><thead><tr><th>${escapeHtml(tx('操作员','Operator','Vận hành viên'))}</th><th>${escapeHtml(tx('本季精灵','This season','Mùa này'))}</th><th>${escapeHtml(tx('未出史诗赛季数','Seasons without Epic','Mùa chưa có Sử thi'))}</th><th>${escapeHtml(tx('未出传说赛季数','Seasons without Legendary','Mùa chưa có Huyền thoại'))}</th><th>${escapeHtml(tx('觉醒保底','Awakening pity','Bảo hiểm thức tỉnh'))}</th><th>${escapeHtml(tx('皮肤补给保底（当季精灵）','Skin supply pity (season sprite)','Bảo hiểm tiếp tế trang phục (tinh linh mùa)'))}</th><th>${escapeHtml(tx('活动祈愿保底','Wish pity','Bảo hiểm cầu nguyện'))}</th><th>${escapeHtml(tx('收藏','Collection','Sưu tầm'))}</th><th>💠</th></tr></thead><tbody>
+    ${users.map(u=>{ const s = u.ss[seasonNow().id]; return `<tr><td data-i18n-ignore="1">${escapeHtml(spUserName(u.user))}</td><td>${s?`${spSeasonView(s, 22, {nofx:true})} ${escapeHtml(spRecName('season', s))} ${s.rar||''}`:'—'}</td><td>${u.spPity?.sr??0}/${gCfg().spPitySR}</td><td>${u.spPity?.ssr??0}/${gCfg().spPitySSR}</td><td>${s?`${+s.awTries||0}/${gCfg().awakenPity}`:'—'}</td><td>${(()=>{ const pp = spSkinPity(u), rc = gCfg().rarity||{}; return `${escapeHtml(tx('史诗','Epic','Sử thi'))} ${+pp.epic||0}/${rc.epic?.pity||50} · ${escapeHtml(tx('传说','Legendary','Huyền thoại'))} ${+pp.legend||0}/${rc.legend?.pity||100}`; })()}</td><td>${spEvents().filter(e=>(e.cfg?.spirits||[]).length).map(e=>`${escapeHtml(trT(e.name))} ${+u.ev?.[e.id]?.pity||0}/${e.cfg.pity||40}`).join('<br>')||'—'}</td><td>${Object.keys(u.spc||{}).length}</td><td>${u.spShards||0}</td></tr>`; }).join('')}</tbody></table>
     ${heavy.length?`<div class="sp-note">⚠️ ${escapeHtml(tx('今日祈愿次数异常偏高','Unusually many wishes today','Hôm nay cầu nguyện nhiều bất thường'))}：<span data-i18n-ignore="1">${heavy.map(u=>escapeHtml(spUserName(u.user))).join('、')}</span></div>`:''}
     <div class="sp-sec-h"><h3>${escapeHtml(tx('抽取 / 分配 / 觉醒记录','Draw / assignment / awakening log','Nhật ký rút / phân / thức tỉnh'))}</h3></div>
     <div class="table-scroll"><table class="data-table"><thead><tr><th>${escapeHtml(tx('时间','Time','Thời gian'))}</th><th>${escapeHtml(tx('操作','Action','Thao tác'))}</th><th>${escapeHtml(tx('用户','User','Người dùng'))}</th><th>${escapeHtml(tx('结果','Result','Kết quả'))}</th><th>${escapeHtml(tx('详情','Details','Chi tiết'))}</th></tr></thead><tbody>
@@ -17778,7 +17789,7 @@ function spSkinsHtml(){
     ${me?`<div class="sp-ovg">
       <section class="sp-c4 sp-card sp-draw wide"><header class="c4-h"><div class="c4-title"><b class="c4-name">🎁 ${escapeHtml(tx('皮肤补给','Skin supply','Tiếp tế trang phục'))}</b></div>${evFest?`<div class="c4-tags"><span class="sp-badge fest">${escapeHtml(trT(evFest.name))}</span></div>`:''}</header>
         <div class="c4-b"><div class="sp-draw-row"><div class="sp-draw-res">${lastSk?`<div class="sp-draw-card r-${lastSk.rarity}">${spSkinPreview(lastSk, 84, Math.min(4, spRecStage(ss)))}<b>${escapeHtml(trT(lastSk.name))}</b><span class="rar-pill r-${lastSk.rarity}">${escapeHtml(trT(SP_RARITY[lastSk.rarity].n))}</span>${last.dup?`<small>${escapeHtml(tx('重复，已转为碎片','Duplicate, converted to shards','Trùng, đã đổi thành mảnh'))} +${last.shards}</small>`:`<small>${escapeHtml(tx('新皮肤！','New skin!','Trang phục mới!'))}</small>`}</div>`:`<div class="sp-draw-empty">🎁</div>`}</div>
-          <div class="sp-draw-info"><div class="sp-pity">${escapeHtml(tx('保底','Pity','Bảo hiểm'))}：${escapeHtml(tx('史诗','Epic','Sử thi'))} <b>${me.pity.epic||0}/${c.rarity.epic?.pity}</b> · ${escapeHtml(tx('传说','Legendary','Huyền thoại'))} <b>${me.pity.legend||0}/${c.rarity.legend?.pity}</b></div>
+          <div class="sp-draw-info"><div class="sp-pity">${escapeHtml(tx('保底','Pity','Bảo hiểm'))}：${escapeHtml(tx('史诗','Epic','Sử thi'))} <b>${me.pity.epic||0}/${c.rarity.epic?.pity}</b> · ${escapeHtml(tx('传说','Legendary','Huyền thoại'))} <b>${me.pity.legend||0}/${c.rarity.legend?.pity}</b> <small class="hint">${escapeHtml(tx('（随当季精灵保留，换季不清零）','(kept on your season sprite; not reset at season end)','(giữ theo tinh linh mùa; không đặt lại khi sang mùa)'))}</small></div>
             <table class="sp-rates" aria-label="${escapeAttr(tx('概率公示','Published rates','Công bố xác suất'))}"><caption>${escapeHtml(tx('概率公示','Published rates','Công bố xác suất'))}</caption><tbody>${tbl.map(x=>`<tr><td><span class="rar-pill r-${x.k}">${escapeHtml(trT(SP_RARITY[x.k].n))}</span></td><td>${x.p.toFixed(x.p<1?1:0)}%</td><td class="hint">${c.rarity[x.k]?.pity?`${escapeHtml(tx('保底','Pity','Bảo hiểm'))} ${c.rarity[x.k].pity}`:['limited','festival'].includes(x.k)?escapeHtml(tx('仅限定活动','Limited events only','Chỉ sự kiện giới hạn')):''}</td></tr>`).join('')}</tbody></table></div></div></div>
         <div class="c4-p"><div class="hint">${escapeHtml(evFest ? tx('节日活动进行中：绝版 / 节日限定按公示概率出现。','Festival in progress: retired / festival skins appear at the published rates.','Lễ hội đang diễn ra: trang phục tuyệt bản / lễ hội xuất hiện theo tỉ lệ công bố.') : tx('非活动期间不产出绝版 / 节日限定，其概率并入普通。专属皮肤不进入补给池，请在兑换商店兑换。','Outside events no retired / festival skins drop; their rate is added to Common. Exclusive skins aren\'t in the supply — get them in the exchange shop.','Ngoài sự kiện không rơi trang phục tuyệt bản / lễ hội; tỉ lệ cộng vào Thường. Trang phục riêng không có trong tiếp tế — đổi ở cửa hàng.'))}</div></div>
         <footer class="c4-f"><button type="button" class="btn btn-primary btn-sm" data-act="spDraw" data-id="${evFest?.id||''}" ${(me.crystals||0)<(+c.drawCost||100)?'disabled':''}>${escapeHtml(tx('补给 1 次','Draw once','Rút 1 lần'))} <small>−${c.drawCost} 🥣</small></button></footer></section>
@@ -22493,13 +22504,74 @@ function spOffShot(cid){
 /* 后台：线下实物审核 / 核销 */
 SP_ADM_TABS.offline = ['线下实物','Physical rewards','Quà hiện vật'];
 function spAdmOfflineHtml(){
+  if(!spIsAdmin()) return '';
   const S = spS(), st = S.offSt || 'pending', list = Object.values(G().claims||{}).filter(c=>c.offline && (st==='all' || c.status===st)).sort((a,b)=>String(b.at).localeCompare(String(a.at)));
   const n = k=>Object.values(G().claims||{}).filter(c=>c.offline && c.status===k).length;
-  return `<div class="sp-evf__chips" role="tablist">${['pending','ready','issued','rejected','all'].map(k=>`<button type="button" class="sp-pillbtn ${st===k?'active':''}" data-act="spOffSt" data-v="${k}">${escapeHtml(k==='all'?tx('全部','All','Tất cả'):trT(SP_OFF_ST[k]))}${k!=='all'?` <small>${n(k)}</small>`:''}</button>`).join('')}</div>
+  return `${spOffCatalogBar()}<div class="sp-evf__chips" role="tablist">${['pending','ready','issued','rejected','all'].map(k=>`<button type="button" class="sp-pillbtn ${st===k?'active':''}" data-act="spOffSt" data-v="${k}">${escapeHtml(k==='all'?tx('全部','All','Tất cả'):trT(SP_OFF_ST[k]))}${k!=='all'?` <small>${n(k)}</small>`:''}</button>`).join('')}</div>
     <div class="table-scroll"><table class="data-table"><thead><tr><th>${escapeHtml(tx('申请时间','Applied','Ngày đăng ký'))}</th><th>${escapeHtml(tx('操作员','Operator','Vận hành viên'))}</th><th>${escapeHtml(tx('奖励','Reward','Phần thưởng'))}</th><th>${escapeHtml(tx('理由','Reason','Lý do'))}</th><th>${escapeHtml(tx('状态','Status','Trạng thái'))}</th><th>${escapeHtml(tx('凭证','Voucher','Phiếu'))}</th><th></th></tr></thead><tbody>
     ${list.map(c=>`<tr><td class="mono nowrap">${escapeHtml(localDT(c.at))}</td><td data-i18n-ignore="1">${escapeHtml(spUserName(c.user))}${c.flagged?` <small class="sp-badge lim">${escapeHtml(tx('异常标记','Flagged','Bị gắn cờ'))}</small>`:''}</td><td data-i18n-ignore="1">${escapeHtml(c.rewardName)}</td><td data-i18n-ignore="1">${escapeHtml(c.why||'')}</td><td><span class="rw-st st-${c.status}">${escapeHtml(trT(SP_OFF_ST[c.status]||[c.status,c.status,c.status]))}</span></td><td class="mono" data-i18n-ignore="1">${escapeHtml(c.code||'—')}</td>
       <td class="nowrap">${c.status==='pending'?`<button class="btn btn-primary btn-sm" data-act="spOffDecide" data-id="${c.id}" data-v="approve">${escapeHtml(tx('通过','Approve','Duyệt'))}</button><button class="btn btn-ghost btn-sm" data-act="spOffDecide" data-id="${c.id}" data-v="reject">${escapeHtml(tx('驳回','Reject','Từ chối'))}</button>`:c.status==='ready'?`<button class="btn btn-primary btn-sm" data-act="spOffDecide" data-id="${c.id}" data-v="issue">${escapeHtml(tx('核销发放','Verify and hand out','Đối chiếu và phát'))}</button><button class="btn btn-ghost btn-sm" data-act="spOffDecide" data-id="${c.id}" data-v="reject">${escapeHtml(tx('驳回','Reject','Từ chối'))}</button>`:''}</td></tr>`).join('') || `<tr><td colspan="7" class="hint">—</td></tr>`}</tbody></table></div>`;
 }
+/* ---------- 线下实物目录 CSV 导入 / 导出：表头直接使用实物目录（G().rewards，type = physical）的字段名 ---------- */
+var SP_OFF_CSV_FIELDS = ['id','name','icon','value','minLevel','stock','mode','validUntil','enabled','seasonScope','desc','achv','perUser','place','pickTime','owner','method'];
+function spOffCatalog(){ return Object.values(G().rewards||{}).filter(r=>r && r.type==='physical'); }
+function spOffCatalogBar(){
+  return `<div class="sp-filter sp-off-csv"><span class="hint">${escapeHtml(tx(`实物目录 ${spOffCatalog().length} 项`,`${spOffCatalog().length} items in the physical catalog`,`${spOffCatalog().length} mục quà hiện vật`))}</span>
+    <button type="button" class="btn btn-ghost btn-sm" data-act="spOffCsvTpl">${spIcon('download',14)} ${escapeHtml(tx('下载导入模板','Download template','Tải mẫu'))}</button>
+    <button type="button" class="btn btn-ghost btn-sm" data-act="spOffCsvExport">${spIcon('download',14)} ${escapeHtml(tx('导出实物目录','Export catalog','Xuất danh mục'))}</button>
+    <label class="btn btn-ghost btn-sm sp-file-btn">${spIcon('folder',14)} ${escapeHtml(tx('导入实物 CSV','Import physical CSV','Nhập CSV quà'))}<input type="file" accept=".csv,text/csv" data-off-import="1" hidden></label>
+    <span class="hint">${escapeHtml(tx('表头即实物目录字段名：','Headers are the catalog field names: ','Tiêu đề là tên trường: '))}<code data-i18n-ignore="1">${SP_OFF_CSV_FIELDS.join(',')}</code></span></div>`;
+}
+function spOffCsvDownload(rows, name){
+  const esc = v=>`"${String(v??'').replace(/"/g,'""')}"`;
+  const blob = new Blob(['\ufeff' + rows.map(r=>r.map(esc).join(',')).join('\r\n')], {type:'text/csv;charset=utf-8'}), a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = name; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href), 2000);
+}
+function spOffCsvExport(tpl){
+  if(!spIsAdmin()) return;
+  const rows = [SP_OFF_CSV_FIELDS.slice()];
+  if(tpl) rows.push(['', '实物示例', '🎁', '1', '0', '10', 'apply', '', 'true', 'every', '', '', '1', '行政前台', '工作日 14:00-17:00', 'admin', '现场领取']);
+  else spOffCatalog().forEach(r=>rows.push(SP_OFF_CSV_FIELDS.map(k=>k==='enabled' ? String(r.enabled!==false) : (r[k]??''))));
+  spOffCsvDownload(rows, tpl ? 'physical_rewards_template.csv' : `physical_rewards_${gToday()}.csv`);
+}
+function spOffCsvImport(text){
+  if(!spIsAdmin()) return toast(tx('仅超级管理员可以导入','Super admins only','Chỉ quản trị viên cấp cao'), 'error');
+  const rows = parseCsv(text); if(!rows.length) return toast(tx('CSV 为空','The CSV is empty','CSV trống'), 'warn');
+  const head = rows[0].map(x=>String(x||'').replace(/^\ufeff/, '').trim()), idx = {};
+  head.forEach((h, i)=>{ if(SP_OFF_CSV_FIELDS.includes(h)) idx[h] = i; });
+  const unknown = head.filter(h=>h && !SP_OFF_CSV_FIELDS.includes(h));
+  if(idx.name==null) return toast(tx('CSV 缺少 name 列（表头需使用实物目录字段名）','The CSV needs a name column (use the catalog field names as headers)','CSV thiếu cột name'), 'error');
+  const lv = (gCfg().levels||[]).length || 1, num = (v, d)=>{ const n = Math.floor(+v); return Number.isFinite(n) && n>=0 ? n : d; };
+  let add = 0, upd = 0, bad = 0;
+  rows.slice(1).forEach(r=>{
+    const get = k=>idx[k]==null ? undefined : String(r[idx[k]]??'').trim(), name = get('name');
+    if(!name){ bad++; return; }
+    let id = get('id') || ''; const prev = id && G().rewards[id];
+    if(prev && prev.type!=='physical'){ bad++; return; }
+    if(!id) id = uid('rw_');
+    const o = {...(prev || {createdAt:gNowIso(), createdBy:currentUser()?.username, icon:'🎁', mode:'apply', seasonScope:'every', enabled:true}), id, name:name.slice(0, 40), type:'physical'};
+    const sv = (k, max)=>{ const v = get(k); if(v!==undefined) o[k] = v.slice(0, max); };
+    sv('icon', 8); sv('value', 40); sv('desc', 80); sv('achv', 60); sv('place', 40); sv('pickTime', 40); sv('owner', 30); sv('method', 30);
+    if(get('minLevel')!==undefined) o.minLevel = Math.min(lv-1, num(get('minLevel'), 0));
+    if(get('stock')!==undefined) o.stock = num(get('stock'), 0);
+    if(get('perUser')!==undefined) o.perUser = num(get('perUser'), 0);
+    if(get('mode')!==undefined) o.mode = get('mode')==='claim' ? 'claim' : 'apply';
+    if(get('validUntil')!==undefined){ const d = get('validUntil'); o.validUntil = /^\d{4}-\d{2}-\d{2}$/.test(d) ? d : ''; }
+    if(get('enabled')!==undefined) o.enabled = !/^(false|0|no|否|下架)$/i.test(get('enabled'));
+    if(get('seasonScope')!==undefined) o.seasonScope = get('seasonScope') || 'every';
+    o.updatedAt = gNowIso(); o.updatedBy = currentUser()?.username;
+    G().rewards[id] = o; prev ? upd++ : add++;
+  });
+  addAudit('reward-config', {project:`physical-csv +${add} ~${upd}`}); try{ spAudit('offline-import', '', {add, upd, bad, unknown}); }catch(_e){}
+  saveGrowth(true);
+  toast(tx(`已导入：新增 ${add}，更新 ${upd}，跳过 ${bad}${unknown.length?`；忽略未知列 ${unknown.join('、')}`:''}`,`Imported: ${add} added, ${upd} updated, ${bad} skipped${unknown.length?`; ignored columns ${unknown.join(', ')}`:''}`,`Đã nhập: thêm ${add}, cập nhật ${upd}, bỏ qua ${bad}`), bad||unknown.length ? 'warn' : 'ok');
+  render();
+}
+document.addEventListener('change', e=>{
+  const el = e.target; if(!el?.dataset?.offImport || !el.files?.[0] || !spIsAdmin()) return;
+  const fr = new FileReader(); fr.onload = ()=>spOffCsvImport(decodeCsvBuffer(fr.result)); fr.readAsArrayBuffer(el.files[0]); el.value = '';
+});
+Object.assign(SP_AUDIT_LABEL, {'offline-import':['导入实物目录','Physical catalog import','Nhập danh mục quà']});
 /* 成就等级奖励中的「实物奖励」改走线下流程 */
 function rewardClaim(id){ const r = G().rewards?.[id]; if(r?.type==='physical' && spOffCfg().enabled){ if(!gIsOperator()) return toast(t('仅操作员可以领取奖励'), 'error'); const s = rewardStatusFor(r, currentUser().username); if(s.k!=='available') return toast(t(s.label), 'warn'); state.modal = {type:'spOffApply', rid:id}; return render(); } return rewardClaimCore(id); }
 function rewardStatusFor(r, user){
@@ -22568,6 +22640,8 @@ function spAction13(act, el, id){
     case 'spOffShot': spOffShot(id); return false;
     case 'spOffDecide': spOffDecide(id, v); return false;
     case 'spOffSt': S.offSt = v; return true;
+    case 'spOffCsvTpl': spOffCsvExport(true); return false;
+    case 'spOffCsvExport': spOffCsvExport(false); return false;
   }
   return typeof spAction14==='function' ? spAction14(act, el, id) : null;
 }
