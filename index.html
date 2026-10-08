@@ -3465,6 +3465,8 @@ body.sp-bnav-on .toast-wrap{bottom:calc(16px + var(--sp-bnav-h,0px) + env(safe-a
 .adm-resg dl{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:4px 10px;margin:0;font-size:12.5px;} .adm-resg dt{color:var(--text-dim);white-space:nowrap;} .adm-resg dd{margin:0;}
 .adm-resg-bar{display:block;height:5px;border-radius:3px;background:var(--panel-alt);margin-top:3px;overflow:hidden;} .adm-resg-bar i{display:block;height:100%;background:linear-gradient(90deg,#fbbf24,#7c3aed);}
 .adm-resg.mini dl{font-size:11.5px;} .adm-resg footer{display:flex;justify-content:flex-end;}
+.adm-resg footer{gap:6px;flex-wrap:wrap;} button.adm-chip{cursor:pointer;font:inherit;color:inherit;} button.adm-chip:hover{border-color:#7c3aed !important;}
+.adm-resg.flash{box-shadow:0 0 0 3px color-mix(in srgb,#7c3aed 45%,transparent);transition:box-shadow .3s;}
 td.pos{color:var(--running);} td.neg{color:var(--repair);}
 .sp-adv-fold{border:1px solid var(--border);border-radius:10px;padding:8px 12px;background:var(--panel);margin:10px 0;}
 .sp-adv-fold>summary{cursor:pointer;font-weight:700;display:flex;align-items:center;gap:6px;list-style:none;} .sp-adv-fold>summary::-webkit-details-marker{display:none;}
@@ -21044,7 +21046,7 @@ var SP_ADM_TABS2 = {overview:['总览','Overview','Tổng quan'], codex:['管理
 function spAdmPageHtml(){
   if(!spIsAdmin() || !spAdmCfg().poolEnabled) return '';
   const S = spS(), tab = SP_ADM_TABS2[S.admSpTab] ? S.admSpTab : 'overview', a = spAdmU(), lv = spAdmLvOf(+a.pts||0);
-  const res = Object.entries(SP_ADM_RES).map(([k, r])=>`<span class="sp-chip adm-chip" title="${escapeAttr(trT(r.use))}">${spIcon(r.i,16)} <b>${+a.res[k]||0}</b><small>${escapeHtml(trT(r.n))}</small></span>`).join('');
+  const res = Object.entries(SP_ADM_RES).map(([k, r])=>`<button type="button" class="sp-chip adm-chip" data-act="spAdmResOpen" data-v="${k}" title="${escapeAttr(trT(r.use))}">${spIcon(r.i,16)} <b>${+a.res[k]||0}</b><small>${escapeHtml(trT(r.n))}</small></button>`).join('');
   let body = '';
   try{ body = tab==='overview' ? spAdmSpOverview(a) : tab==='codex' ? spAdmCodex(a) : tab==='achv' ? spAdmAchHtml(a) : tab==='hub' ? spAdmHub(a) : tab==='diary' ? spAdmDiaryHtml(a) : tab==='skins' ? spAdmSkinsHtml(a) : tab==='observe' ? spAdmObserve(a) : spAdmPoolHtml(); }
   catch(err){ console.error(err); body = spStateHtml('err', tx('页面加载失败','Failed to load this page','Không tải được trang'), String(err?.message||err)); }
@@ -21267,11 +21269,12 @@ var SP_ADM_TITLE_N = {audit:['审计长','Chief auditor','Trưởng kiểm toán
 /* ---------- 管理员资源指引页（仅超级管理员）---------- */
 function spAdmResCard(a, k, mini){
   const c = spAdmResCfg(k), today = a.dayG?.d===gToday() ? +a.dayG[k]||0 : 0, pct = c.cap > 0 ? Math.min(100, today/c.cap*100) : 0;
-  return `<section class="adm-resg ${mini?'mini':''}"><header>${spIcon(c.i, mini?18:22)}<b>${escapeHtml(trT(c.n))}</b><span class="adm-resg-bal">${+a.res[k]||0}</span></header>
+  const hi = !mini && spS().admResHi===k && Date.now() - (+spS().admResHiAt||0) < 2500;
+  return `<section class="adm-resg ${mini?'mini':''} ${hi?'flash':''}" ${mini?'':`id="adm-res-${k}"`}><header>${spIcon(c.i, mini?18:22)}<b>${escapeHtml(trT(c.n))}</b><span class="adm-resg-bal">${+a.res[k]||0}</span></header>
     <dl><dt>${escapeHtml(tx('用途','Use','Công dụng'))}</dt><dd>${escapeHtml(trT(c.use))}</dd><dt>${escapeHtml(tx('获取途径','How to get','Cách nhận'))}</dt><dd>${escapeHtml(trT(c.src))}</dd>
       <dt>${escapeHtml(tx('每日上限','Daily cap','Giới hạn ngày'))}</dt><dd>${c.cap > 0 ? `${today} / ${c.cap}<span class="adm-resg-bar"><i style="width:${pct.toFixed(0)}%"></i></span>` : escapeHtml(tx('无上限','No cap','Không giới hạn'))}</dd>
       <dt>${escapeHtml(tx('是否重置','Resets','Đặt lại'))}</dt><dd>${escapeHtml(trT(SP_ADM_RESET[c.reset]||SP_ADM_RESET.none))}</dd></dl>
-    ${mini?'':`<footer><button type="button" class="btn btn-ghost btn-sm" data-act="spAdmJump" data-v="${c.go}">${spIcon('arrowRight',14)} ${escapeHtml(tx('前往','Go','Đi tới'))}</button></footer>`}</section>`;
+    <footer>${mini?`<button type="button" class="btn btn-ghost btn-sm" data-act="spAdmResOpen" data-v="${k}">${spIcon('compass',14)} ${escapeHtml(tx('查看详情','Details','Chi tiết'))}</button>`:''}<button type="button" class="btn btn-ghost btn-sm" data-act="spAdmJump" data-v="${c.go}">${spIcon('arrowRight',14)} ${escapeHtml(tx('前往','Go','Đi tới'))}</button></footer></section>`;
 }
 function spAdmResGuideHtml(){
   if(!spIsAdmin()) return '';
@@ -21482,7 +21485,11 @@ function spPlanPublish(p){
 function spAction10(act, el, id){
   const v = el?.dataset?.v, S = spS();
   switch(act){
-    case 'spAdmJump': S.page = 'adminsp'; S.admSpTab = v || 'overview'; state.modal = null; return true;
+    case 'spAdmJump': if(!spIsAdmin()) return false; state.view = 'spirit'; S.page = 'adminsp'; S.admSpTab = SP_ADM_TABS2[v] ? v : 'overview'; state.modal = null; return true;
+    /* 管理员资源（顶部资源条 / 中枢 / 说明弹窗）：打开管理员资源指引并定位到该资源；指引关闭时跳到该资源的获取页 */
+    case 'spAdmResOpen': { if(!spIsAdmin() || !SP_ADM_RES[v]) return false; state.view = 'spirit'; state.modal = null;
+      if(!spUxCfg().adminResGuide){ S.page = 'adminsp'; S.admSpTab = SP_ADM_TABS2[spAdmResCfg(v).go] ? spAdmResCfg(v).go : 'overview'; return true; }
+      S.page = 'adminres'; S.admResHi = v; S.admResHiAt = Date.now(); setTimeout(()=>document.getElementById('adm-res-' + v)?.scrollIntoView({block:'center', behavior:'smooth'}), 60); return true; }
     case 'spAdmResSave': spAdmResSave(false); return false;
     case 'spAdmResReset': if(confirm(tx('恢复管理员资源指引的默认配置？','Restore the admin resource guide defaults?','Khôi phục mặc định?'))) spAdmResSave(true); return false;
     case 'spAdmTitle': { if(!spIsAdmin()) return false; const a = spAdmU(); a.titleOn = a.titleOn || {}; if(!a.titleOn[v]){ if(!spAdmSpend(a, 'badge', 1, 'title')) return toast(tx('权限徽记不足','Not enough authority badges','Không đủ huy hiệu'), 'warn'), false; a.titleOn[v] = gNowIso(); } a.title = a.title===v ? '' : v; spAdmTouch(a); saveGrowth(true); return true; }
@@ -21596,7 +21603,7 @@ function spAdmHubPageHtml(){
   const pct = st.next ? Math.min(100, (st.xp - SP_HUB_LV[st.lv].at)/(st.next.at - SP_HUB_LV[st.lv].at)*100) : 100;
   return `<div class="adm-sp-page"><div class="adm-sp-head"><div><b class="adm-title">${spIcon('bank',20)} ${escapeHtml(tx('管理员中枢','Admin hub','Trung khu quản trị'))} · ${escapeHtml(trT(SP_HUB_LV[st.lv].n))} Lv.${st.lv+1}</b>
       <div class="sp-ms-bar adm"><i style="width:${pct.toFixed(0)}%"></i></div><div class="hint">${escapeHtml(tx('中枢经验','Hub XP','EXP trung khu'))} ${st.xp}${st.next?` / ${st.next.at}`:''} · ${escapeHtml(tx('只对超级管理员可见；与管理员图鉴、管理员日志联动。','Super admins only; linked with the admin codex and admin log.','Chỉ quản trị cấp cao; liên kết sách tranh và nhật ký quản trị.'))}</div></div>
-      <div class="adm-res">${['order','eye','core'].map(k=>`<span class="sp-chip adm-chip">${spIcon(spAdmResCfg(k).i,16)} <b>${+a.res[k]||0}</b><small>${escapeHtml(trT(spAdmResCfg(k).n))}</small></span>`).join('')}</div></div>
+      <div class="adm-res">${['order','eye','core'].map(k=>`<button type="button" class="sp-chip adm-chip" data-act="spAdmResOpen" data-v="${k}" title="${escapeAttr(trT(spAdmResCfg(k).use))}">${spIcon(spAdmResCfg(k).i,16)} <b>${+a.res[k]||0}</b><small>${escapeHtml(trT(spAdmResCfg(k).n))}</small></button>`).join('')}</div></div>
     <div class="adm-hub-links"><button type="button" class="btn btn-ghost btn-sm" data-act="spAdmJump" data-v="codex">${spIcon('book',16)} ${escapeHtml(tx('管理员图鉴','Admin codex','Sách tranh quản trị'))}</button><button type="button" class="btn btn-ghost btn-sm" data-act="spAdmJump" data-v="diary">${spIcon('scroll',16)} ${escapeHtml(tx('管理员日志','Admin log','Nhật ký quản trị'))}</button><button type="button" class="btn btn-ghost btn-sm" data-act="spAdmJump" data-v="achv">${spIcon('trophy',16)} ${escapeHtml(tx('管理员成就','Admin achievements','Thành tựu quản trị'))}</button><button type="button" class="btn btn-ghost btn-sm" data-act="spAdmJump" data-v="observe">${spIcon('eye',16)} ${escapeHtml(tx('全局观照（只读）','Global overview (read-only)','Quán chiếu (chỉ đọc)'))}</button></div>
     ${spAdmHub(a)}</div>`;
 }
