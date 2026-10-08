@@ -3726,8 +3726,9 @@ body.art-noadj .spv .spirit-svg.art{filter:none;}
 .modal.sp-shop-modal{width:min(440px,100%);}
 .rw-icon-pick{display:flex;align-items:center;gap:8px;min-width:0;} .rw-icon-pick select{flex:1;min-width:0;}
 .rw-icon-pv{flex:0 0 34px;width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--border);border-radius:8px;background:var(--panel-alt);font-size:18px;}
-/* ===== v3.2 精灵家园：小屋界面 + 布置模式 ===== */
-.sp-h2-page{display:flex;flex-direction:column;gap:12px;min-width:0;}
+/* ===== v3.3 精灵家园：统一坐标系 · 图层 · 响应式 · 拖拽 =====
+   图层（家园内部）：背景 1 / 地台 2 / 装饰后层 3 / 精灵 4 / 装饰前层 5 / 特效 6 / 浮层 7 / 弹窗 8 / 导航栏 9 / 悬浮按钮 10 */
+:root{--zh-bg:1;--zh-pad:2;--zh-deco-b:3;--zh-sprite:4;--zh-deco-f:5;--zh-fx:6;--zh-float:7;--zh-modal:8;--zh-nav:9;--zh-fab:10;}
 .sp-h2-top{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(160px,1fr) auto auto;gap:10px 16px;align-items:center;padding:12px 14px;border:1px solid var(--border);border-radius:16px;background:linear-gradient(120deg,color-mix(in srgb,var(--cold) 10%,var(--panel)),var(--panel) 60%);}
 .sp-h2-id{display:flex;gap:10px;align-items:center;min-width:0;} .sp-h2-id small{color:var(--text-dim);}
 .sp-h2-crest{flex:0 0 44px;width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#fff;box-shadow:0 4px 10px rgba(15,23,42,.15);background:#c9976a;}
@@ -3739,16 +3740,12 @@ body.art-noadj .spv .spirit-svg.art{filter:none;}
 .sp-h2-topact .btn{position:relative;}
 .sp-h2-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#ef4444;margin-left:4px;box-shadow:0 0 0 2px var(--panel);vertical-align:top;animation:spH2Ping 1.6s ease-in-out infinite;}
 .sp-h2-badge{display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:#ef4444;color:#fff;font-size:11px;font-weight:800;margin-left:4px;}
-.sp-h2-main{display:grid;grid-template-columns:230px minmax(0,1fr) 260px;gap:12px;align-items:start;}
 .sp-h2-card{border:1px solid var(--border);border-radius:14px;background:var(--panel);padding:12px;display:flex;flex-direction:column;gap:8px;min-width:0;}
 .sp-h2-card>header{display:flex;align-items:center;gap:6px;} .sp-h2-card>header small{margin-left:auto;color:var(--text-dim);}
-.sp-h2-side{display:flex;flex-direction:column;gap:12px;min-width:0;}
 .sp-h2-tasks ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;}
 .sp-h2-tasks li{display:grid;grid-template-columns:18px minmax(0,1fr) auto auto;gap:6px;align-items:center;font-size:12.5px;padding:6px 8px;border-radius:10px;background:var(--panel-alt);}
 .sp-h2-tasks li small{color:var(--text-dim);} .sp-h2-tasks li em{font-style:normal;font-size:11px;color:#16a34a;font-weight:700;}
 .sp-h2-tasks li.done{background:color-mix(in srgb,#16a34a 10%,var(--panel));} .sp-h2-tasks li.claimed{opacity:.6;} .sp-h2-tasks li.claimed span{text-decoration:line-through;}
-.sp-h2-stage{display:flex;flex-direction:column;gap:8px;min-width:0;scroll-margin-top:84px;}
-.sp-h2-stagebar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
 .sp-h2-dlist{display:flex;flex-wrap:wrap;gap:6px;}
 .sp-h2-dchip{position:relative;display:inline-flex;align-items:center;gap:4px;padding:5px 9px;border-radius:999px;border:1px solid var(--border);background:var(--panel-alt);font:inherit;font-size:12px;cursor:pointer;color:var(--text-dim);}
 .sp-h2-dchip.on{border-color:var(--cold);color:var(--text);background:color-mix(in srgb,var(--cold) 10%,var(--panel));}
@@ -3757,61 +3754,7 @@ body.art-noadj .spv .spirit-svg.art{filter:none;}
 .sp-h2-meters{display:flex;flex-direction:column;gap:6px;} .sp-h2-meters>div{display:grid;grid-template-columns:84px minmax(0,1fr) auto;gap:6px;align-items:center;font-size:12px;} .sp-h2-meters small{color:var(--text-dim);}
 .sp-h2-ach{display:flex;gap:4px;flex-wrap:wrap;} .sp-h2-ach span{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:var(--panel-alt);color:var(--text-faint);} .sp-h2-ach span.on{background:#fef3c7;color:#b45309;}
 .sp-h2-msgs .sp-msg.new b::after{content:'';display:inline-block;width:6px;height:6px;border-radius:50%;background:#ef4444;margin-left:4px;vertical-align:middle;}
-/* 场景 */
-.sp-h2-scene{--h2-wall:#f3dfc1;--h2-floor:#c9976a;position:relative;display:flex;flex-direction:column;min-height:400px;border-radius:18px;overflow:hidden;border:1px solid var(--border);isolation:isolate;box-shadow:0 8px 24px rgba(15,23,42,.08);}
-.sp-h2-scene.bg-cottage{--h2-wall:repeating-linear-gradient(90deg,#f3dfc1 0 38px,#ecd3ae 38px 40px);--h2-floor:repeating-linear-gradient(90deg,#c9976a 0 64px,#b98657 64px 66px);}
-.sp-h2-scene.bg-courtyard{--h2-wall:linear-gradient(#f5f0e4,#e8dfca);--h2-floor:repeating-conic-gradient(#d9d3c3 0 25%,#cbc4b1 0 50%) 0 0/40px 40px;}
-.sp-h2-scene.bg-garden{--h2-wall:radial-gradient(circle at 15% 30%,#cdeccf 0 22px,transparent 23px),radial-gradient(circle at 80% 40%,#cdeccf 0 28px,transparent 29px),linear-gradient(#e9f7ea,#d4eed8);--h2-floor:radial-gradient(circle at 30% 60%,#b6e39b 0 3px,transparent 4px) 0 0/22px 22px,linear-gradient(#a6d98d,#84c46d);}
-.sp-h2-scene.bg-manor{--h2-wall:linear-gradient(#f1e8f8 0 68%,#d6c2ea 68% 71%,#e7dbf2 71%);--h2-floor:repeating-linear-gradient(45deg,#b98a5c 0 16px,#a77a4e 16px 32px);}
-.sp-h2-scene.bg-castle{--h2-wall:repeating-linear-gradient(0deg,#dadde7 0 24px,#c6cad8 24px 26px);--h2-floor:linear-gradient(90deg,#8d93a8 0 28%,#b23b4a 28% 72%,#8d93a8 72%);}
-.sp-h2-wall{position:relative;height:44%;min-height:160px;background:var(--h2-wall);border-bottom:6px solid rgba(0,0,0,.08);}
-.sp-h2-floor{position:relative;flex:1;background:var(--h2-floor);display:flex;flex-direction:column;justify-content:flex-end;padding:0 3% 12px;}
-.sp-h2-window{position:absolute;left:50%;top:16%;transform:translateX(-50%);width:132px;height:84px;border-radius:14px 14px 4px 4px;border:6px solid rgba(255,255,255,.85);box-shadow:0 2px 8px rgba(0,0,0,.12);overflow:hidden;background:linear-gradient(#8fd3ff,#dff3ff);z-index:1;}
-.tod-dusk .sp-h2-window{background:linear-gradient(#ff9f6b,#ffd9a6);} .tod-night .sp-h2-window{background:linear-gradient(#1c2754,#3a4a8c);}
-.wx-cloud .sp-h2-window,.wx-rain .sp-h2-window{background:linear-gradient(#9fb2c4,#d6e0ea);} .tod-night.wx-cloud .sp-h2-window,.tod-night.wx-rain .sp-h2-window{background:linear-gradient(#18203d,#2c375f);}
-.sp-h2-window .orb{position:absolute;right:16px;top:10px;width:24px;height:24px;border-radius:50%;background:#ffd34d;box-shadow:0 0 18px #ffd34d;}
-.tod-night .sp-h2-window .orb{background:#f8fafc;box-shadow:0 0 14px #c7d2fe;width:20px;height:20px;} .wx-cloud .sp-h2-window .orb,.wx-rain .sp-h2-window .orb{opacity:.35;}
-.sp-h2-window .cl{position:absolute;height:12px;border-radius:999px;background:rgba(255,255,255,.9);animation:spH2Cloud 18s linear infinite;} .sp-h2-window .c1{width:42px;top:30px;left:-50px;} .sp-h2-window .c2{width:30px;top:52px;left:-40px;animation-delay:-9s;}
-.sp-h2-window .drops{position:absolute;inset:0;display:none;}
-.wx-rain .sp-h2-window .drops{display:block;background:repeating-linear-gradient(105deg,transparent 0 9px,rgba(255,255,255,.55) 9px 10px);animation:spH2Rain .6s linear infinite;}
-.wx-snow .sp-h2-window .drops{display:block;background:radial-gradient(circle,#fff 0 1.5px,transparent 2px) 0 0/14px 14px;animation:spH2Snow 3s linear infinite;}
-.sp-h2-beam{position:absolute;left:50%;top:calc(16% + 84px);width:240px;height:260px;transform:translateX(-50%);background:linear-gradient(rgba(255,240,200,.45),transparent 80%);clip-path:polygon(28% 0,72% 0,100% 100%,0 100%);pointer-events:none;z-index:2;}
-.tod-night .sp-h2-beam{background:linear-gradient(rgba(170,190,255,.18),transparent 80%);} .wx-rain .sp-h2-beam,.wx-cloud .sp-h2-beam{opacity:.5;}
-.tod-dusk::after,.tod-night::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:3;}
-.tod-dusk::after{background:linear-gradient(rgba(255,150,80,.10),rgba(255,120,60,.06));} .tod-night::after{background:rgba(18,26,66,.26);}
-.sp-h2-motes{position:absolute;inset:0;pointer-events:none;z-index:4;}
-.sp-h2-motes i{position:absolute;width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.75);opacity:0;animation:spH2Mote 7s ease-in-out infinite;}
-.tod-night .sp-h2-motes i{background:#fde68a;box-shadow:0 0 8px #fde68a;width:5px;height:5px;}
-.sp-h2-motes i:nth-child(1){left:8%;top:62%;} .sp-h2-motes i:nth-child(2){left:18%;top:40%;animation-delay:-1s;} .sp-h2-motes i:nth-child(3){left:30%;top:70%;animation-delay:-2.2s;} .sp-h2-motes i:nth-child(4){left:42%;top:30%;animation-delay:-3s;} .sp-h2-motes i:nth-child(5){left:55%;top:66%;animation-delay:-4.1s;}
-.sp-h2-motes i:nth-child(6){left:64%;top:44%;animation-delay:-5s;} .sp-h2-motes i:nth-child(7){left:74%;top:72%;animation-delay:-.5s;} .sp-h2-motes i:nth-child(8){left:84%;top:36%;animation-delay:-2.7s;} .sp-h2-motes i:nth-child(9){left:92%;top:60%;animation-delay:-3.6s;} .sp-h2-motes i:nth-child(10){left:48%;top:52%;animation-delay:-6s;}
-/* 装饰 */
-.sp-h2-deco{position:absolute;z-index:2;display:grid;place-items:center;width:46px;height:46px;border-radius:14px;background:rgba(255,255,255,.7);box-shadow:0 3px 8px rgba(0,0,0,.15);}
-.sp-h2-deco.spot-wl{left:8%;top:24%;} .sp-h2-deco.spot-wr{right:8%;top:22%;} .sp-h2-deco.spot-wc{left:28%;top:18%;} .sp-h2-deco.spot-wt{right:28%;top:8%;}
-.sp-h2-deco.spot-lt{right:20%;top:44%;border-radius:50%;box-shadow:0 0 22px rgba(255,214,102,.8);} .sp-h2-deco.spot-lt2{left:19%;top:46%;border-radius:50%;box-shadow:0 0 22px rgba(255,140,90,.7);}
-.sp-h2-floor .sp-h2-deco.spot-fl{left:2%;bottom:14px;} .sp-h2-floor .sp-h2-deco.spot-fr{right:2%;bottom:14px;} .sp-h2-floor .sp-h2-deco.spot-fc2{right:12%;bottom:68px;}
-.sp-h2-floor .sp-h2-deco.spot-fc{left:50%;bottom:6px;transform:translateX(-50%);width:min(70%,360px);height:34px;border-radius:50%;background:radial-gradient(#a78bfa,#7c3aed 70%);opacity:.55;z-index:0;box-shadow:none;}
-.sp-h2-deco.spot-fc svg{display:none;}
 .dk-plant{color:#16a34a;} .dk-lamp{color:#eab308;} .dk-shelf{color:#b45309;} .dk-tank{color:#0284c7;} .dk-flag{color:#dc2626;} .dk-lantern{color:#dc2626;} .dk-fountain{color:#0ea5e9;} .dk-window{color:#f59e0b;} .dk-banner{color:#b23b4a;}
-/* 展示位 */
-.sp-h2-row{position:relative;z-index:5;display:flex;justify-content:center;gap:clamp(6px,3%,28px);}
-.sp-h2-row.back{transform:scale(.86);transform-origin:bottom center;margin-bottom:-22px;margin-top:-34px;}
-.sp-h2-slot{position:relative;display:flex;flex-direction:column;align-items:center;width:clamp(92px,26%,150px);} .sp-h2-sp svg,.sp-h2-sp img{max-width:100%;height:auto;display:block;}
-.sp-h2-sp{border:none;background:none;padding:0;cursor:pointer;border-radius:16px;transition:transform .2s;} .sp-h2-sp:hover:not(:disabled){transform:translateY(-4px);} .sp-h2-sp:disabled{cursor:default;}
-.sp-h2-sp:focus-visible,.sp-h2-plus:focus-visible{outline:3px solid var(--cold);outline-offset:3px;}
-.sp-h2-pad{width:76%;height:14px;border-radius:50%;background:radial-gradient(rgba(0,0,0,.26),transparent 70%);margin-top:-8px;}
-.sp-h2-nm{margin-top:2px;max-width:100%;font-size:11px;padding:0 8px;border-radius:999px;background:rgba(255,255,255,.82);color:#334155;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.sp-h2-no{position:absolute;left:4px;top:2px;font-style:normal;font-size:10px;font-weight:800;width:18px;height:18px;border-radius:50%;display:grid;place-items:center;background:rgba(15,23,42,.55);color:#fff;}
-.sp-h2-slot.empty{min-height:96px;justify-content:flex-end;}
-.sp-h2-plus{width:62px;height:62px;border-radius:50%;border:2px dashed rgba(15,23,42,.35);background:rgba(255,255,255,.45);display:grid;place-items:center;cursor:pointer;color:rgba(15,23,42,.6);transition:transform .2s,background .2s;} .sp-h2-plus:hover{transform:scale(1.06);background:rgba(255,255,255,.75);}
-.sp-h2-scene.arranging .sp-h2-slot .sp-h2-pad{background:radial-gradient(color-mix(in srgb,var(--cold) 45%,transparent),transparent 70%);}
-.sp-h2-slot.active .sp-h2-sp,.sp-h2-slot.active .sp-h2-plus{outline:3px solid var(--cold);outline-offset:4px;animation:spH2Pulse 1.4s ease-in-out infinite;}
-.sp-h2-bounce{animation:spH2Bounce .55s ease;}
-.sp-h2-emptytip{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:6;display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px 18px;border-radius:14px;background:rgba(255,255,255,.88);box-shadow:0 6px 18px rgba(0,0,0,.12);color:#334155;}
-.sp-h2-lvfx{position:absolute;inset:0;z-index:8;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:radial-gradient(rgba(255,236,170,.85),rgba(255,255,255,.35) 60%,transparent);color:#7c2d12;animation:spH2Fx 3.2s ease forwards;text-align:center;padding:12px;}
-.sp-h2-lvfx b{font-size:24px;} .sp-h2-lvfx .burst{color:#f59e0b;animation:spH2Spin 1.6s linear infinite;}
-/* 布置面板：桌面右侧抽屉 / 手机底部面板；非弹窗、无遮罩 */
-.sp-h2-page.arr-open{padding-right:392px;}
-.sp-h2-arr{position:fixed;right:12px;top:72px;bottom:12px;width:372px;z-index:950;display:flex;flex-direction:column;gap:8px;padding:12px;border:1px solid var(--border);border-radius:16px;background:var(--panel);box-shadow:0 16px 40px rgba(15,23,42,.22);}
 .sp-h2-arr-h{display:flex;align-items:center;gap:8px;} .sp-h2-arr-h small{color:var(--text-dim);}
 .sp-h2-arr-slots{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px;}
 .sp-h2-arr-slot{position:relative;height:50px;border:1px dashed var(--border);border-radius:10px;background:var(--panel-alt);display:grid;place-items:center;cursor:pointer;padding:0;overflow:hidden;color:var(--text-dim);}
@@ -3832,31 +3775,126 @@ body.art-noadj .spv .spirit-svg.art{filter:none;}
 .sp-h2-card.sel{box-shadow:0 0 0 2px var(--cold) inset;}
 .sp-h2-card-sel{position:absolute;right:4px;top:4px;z-index:1;}
 .sp-h2-arr>footer{font-size:11.5px;}
-/* 好友 / 拜访 / 导航 */
 .sp-h2-flist{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:8px;}
 .sp-h2-friend{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:8px;align-items:center;padding:8px;border:1px solid var(--border);border-radius:12px;background:var(--panel-alt);}
 .sp-h2-friend.active{border-color:var(--cold);} .sp-h2-fav{width:44px;height:44px;display:grid;place-items:center;border-radius:12px;background:var(--panel);overflow:hidden;}
 .sp-h2-fmeta{min-width:0;} .sp-h2-fmeta b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;} .sp-h2-fmeta small{color:var(--text-dim);font-size:11.5px;}
 .sp-h2-fact{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;}
-.sp-h2-visit .sp-h2-scene{min-height:300px;}
-.sp-h2-nav{position:sticky;bottom:8px;z-index:20;display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:4px;padding:6px;border:1px solid var(--border);border-radius:16px;background:color-mix(in srgb,var(--panel) 92%,transparent);backdrop-filter:blur(6px);box-shadow:0 6px 18px rgba(15,23,42,.08);}
-.sp-h2-nav button{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 2px;border:none;background:none;font:inherit;font-size:11.5px;color:var(--text-dim);border-radius:10px;cursor:pointer;min-width:0;}
-.sp-h2-nav button span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;} .sp-h2-nav button:hover{background:var(--panel-alt);color:var(--text);}
 .sp-h2-upm .sp-h2-upline{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px;}
 .sp-h2-upsrc ul{list-style:none;margin:4px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:4px;} .sp-h2-upsrc li{display:flex;justify-content:space-between;gap:6px;font-size:12px;padding:4px 8px;border-radius:8px;background:var(--panel-alt);} .sp-h2-upsrc small{color:var(--text-dim);}
-body[data-theme="dark"] .sp-h2-scene{filter:brightness(.86) saturate(.92);} body[data-theme="dark"] .sp-h2-nm{background:rgba(15,23,42,.75);color:#e2e8f0;}
 @keyframes spH2Cloud{to{transform:translateX(230px);}} @keyframes spH2Rain{to{background-position:0 20px;}} @keyframes spH2Snow{to{background-position:0 28px;}}
 @keyframes spH2Mote{0%,100%{opacity:0;transform:translateY(0);}40%{opacity:.9;}60%{opacity:.6;transform:translateY(-18px);}}
 @keyframes spH2Pulse{0%,100%{outline-color:var(--cold);}50%{outline-color:color-mix(in srgb,var(--cold) 35%,transparent);}}
 @keyframes spH2Bounce{0%{transform:translateY(0);}35%{transform:translateY(-14px) scale(1.05);}70%{transform:translateY(2px) scale(.98);}100%{transform:none;}}
 @keyframes spH2Fx{0%{opacity:0;transform:scale(.9);}12%{opacity:1;transform:scale(1);}80%{opacity:1;}100%{opacity:0;visibility:hidden;}}
 @keyframes spH2Spin{to{transform:rotate(360deg);}} @keyframes spH2Ping{0%,100%{transform:scale(1);}50%{transform:scale(1.25);}}
-@media (max-width:1180px){ .sp-h2-main{grid-template-columns:minmax(0,1fr) minmax(0,1fr);} .sp-h2-stage{grid-column:1 / -1;order:-1;} .sp-h2-top{grid-template-columns:minmax(0,1fr) auto;} .sp-h2-xp{grid-column:1 / -1;order:3;} }
-@media (max-width:1100px){ .sp-h2-page.arr-open{padding-right:0;padding-bottom:min(54vh,520px);} .sp-h2-arr{left:0;right:0;top:auto;bottom:0;width:auto;height:min(54vh,520px);border-radius:18px 18px 0 0;padding-bottom:max(12px,env(safe-area-inset-bottom));} }
-@media (max-width:767px){ .sp-h2-arr{z-index:1500;} .sp-h2-nav{bottom:calc(64px + env(safe-area-inset-bottom,0px));} }
-@media (max-width:700px){ .sp-h2-main{grid-template-columns:minmax(0,1fr);} .sp-h2-scene{min-height:300px;} .sp-h2-window{width:104px;height:68px;} .sp-h2-deco{width:38px;height:38px;}
-  .sp-h2-nav{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:minmax(64px,1fr);overflow-x:auto;} .sp-h2-heat b{font-size:17px;} .sp-h2-topact{justify-content:flex-start;grid-column:1 / -1;} }
+.sp-h2-page{display:flex;flex-direction:column;gap:12px;min-width:0;max-width:100%;overflow-x:clip;}
+.sp-h2-top{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(140px,1fr) auto auto;gap:10px 16px;align-items:center;padding:12px 14px;border:1px solid var(--border);border-radius:16px;background:linear-gradient(120deg,color-mix(in srgb,var(--cold) 10%,var(--panel)),var(--panel) 60%);}
+.sp-h2-heat{display:flex;align-items:center;gap:4px;color:#ea580c;} .sp-h2-heat b{font-size:1.25rem;} .sp-h2-heat small{color:var(--text-dim);}
+/* 统一网格 + 卡片等高 */
+.sp-h2-main{display:grid;grid-template-columns:240px minmax(0,1fr) 270px;gap:12px;align-items:start;}
+.sp-h2-side{display:flex;flex-direction:column;gap:12px;min-width:0;}
+.sp-h2-card{display:flex;flex-direction:column;height:100%;min-width:0;}
+.sp-h2-card>.sp-h2-cardact,.sp-h2-tasks>.btn{margin-top:auto;}
+.sp-h2-flist{align-items:stretch;} .sp-h2-friend{height:100%;}
+.sp-h2-stage{display:flex;flex-direction:column;gap:8px;min-width:0;scroll-margin-top:56px;}
+.sp-h2-stagebar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+/* 舞台：固定 4:3，所有坐标都是舞台宽 / 高的百分比；字号随舞台宽度缩放（容器查询单位） */
+.sp-h2-scene{position:relative;border-radius:18px;overflow:hidden;border:1px solid var(--border);box-shadow:0 8px 24px rgba(15,23,42,.08);--h2-wall:#f3dfc1;--h2-floor:#c9976a;}
+.sp-h2-scene.bg-cottage{--h2-wall:repeating-linear-gradient(90deg,#f3dfc1 0 9.5%,#ecd3ae 9.5% 10%);--h2-floor:repeating-linear-gradient(90deg,#c9976a 0 15.5%,#b98657 15.5% 16%);}
+.sp-h2-scene.bg-courtyard{--h2-wall:linear-gradient(#f5f0e4,#e8dfca);--h2-floor:repeating-conic-gradient(#d9d3c3 0 25%,#cbc4b1 0 50%) 0 0/10% 15%;}
+.sp-h2-scene.bg-garden{--h2-wall:radial-gradient(circle at 15% 30%,#cdeccf 0 6%,transparent 6.2%),radial-gradient(circle at 80% 40%,#cdeccf 0 7%,transparent 7.2%),linear-gradient(#e9f7ea,#d4eed8);--h2-floor:radial-gradient(circle at 30% 60%,#b6e39b 0 14%,transparent 16%) 0 0/5% 7%,linear-gradient(#a6d98d,#84c46d);}
+.sp-h2-scene.bg-manor{--h2-wall:linear-gradient(#f1e8f8 0 68%,#d6c2ea 68% 71%,#e7dbf2 71%);--h2-floor:repeating-linear-gradient(45deg,#b98a5c 0 4%,#a77a4e 4% 8%);}
+.sp-h2-scene.bg-castle{--h2-wall:repeating-linear-gradient(0deg,#dadde7 0 13%,#c6cad8 13% 14%);--h2-floor:linear-gradient(90deg,#8d93a8 0 28%,#b23b4a 28% 72%,#8d93a8 72%);}
+.sp-h2-box{position:relative;width:100%;aspect-ratio:4 / 3;container-type:inline-size;overflow:hidden;isolation:isolate;touch-action:manipulation;user-select:none;-webkit-user-select:none;}
+.sp-h2-box>*{position:absolute;}
+.sp-h2-bg{inset:0;z-index:var(--zh-bg);pointer-events:none;}
+.sp-h2-bg>*{position:absolute;}
+.sp-h2-wall{left:0;right:0;top:0;height:var(--floor);background:var(--h2-wall);border-bottom:1.2cqw solid rgba(0,0,0,.08);}
+.sp-h2-floor{left:0;right:0;top:var(--floor);bottom:0;background:var(--h2-floor);}
+.sp-h2-window{left:50%;top:7%;width:21%;aspect-ratio:1.55;transform:translateX(-50%);border-radius:1.6cqw 1.6cqw .6cqw .6cqw;border:1.1cqw solid rgba(255,255,255,.85);box-shadow:0 .4cqw 1.2cqw rgba(0,0,0,.12);overflow:hidden;background:linear-gradient(#8fd3ff,#dff3ff);}
+.tod-dusk .sp-h2-window{background:linear-gradient(#ff9f6b,#ffd9a6);} .tod-night .sp-h2-window{background:linear-gradient(#1c2754,#3a4a8c);}
+.wx-cloud .sp-h2-window,.wx-rain .sp-h2-window{background:linear-gradient(#9fb2c4,#d6e0ea);} .tod-night.wx-cloud .sp-h2-window,.tod-night.wx-rain .sp-h2-window{background:linear-gradient(#18203d,#2c375f);}
+.sp-h2-window>i{position:absolute;}
+.sp-h2-window .orb{right:12%;top:12%;width:18%;aspect-ratio:1;border-radius:50%;background:#ffd34d;box-shadow:0 0 2cqw #ffd34d;}
+.tod-night .sp-h2-window .orb{background:#f8fafc;box-shadow:0 0 1.6cqw #c7d2fe;} .wx-cloud .sp-h2-window .orb,.wx-rain .sp-h2-window .orb{opacity:.35;}
+.sp-h2-window .cl{height:14%;border-radius:999px;background:rgba(255,255,255,.9);animation:spH2Cloud 18s linear infinite;} .sp-h2-window .c1{width:34%;top:36%;left:-40%;} .sp-h2-window .c2{width:24%;top:62%;left:-30%;animation-delay:-9s;}
+.sp-h2-window .drops{inset:0;display:none;}
+.wx-rain .sp-h2-window .drops{display:block;background:repeating-linear-gradient(105deg,transparent 0 7%,rgba(255,255,255,.55) 7% 8%);animation:spH2Rain .6s linear infinite;}
+.wx-snow .sp-h2-window .drops{display:block;background:radial-gradient(circle,#fff 0 1.2%,transparent 1.6%) 0 0/12% 18%;animation:spH2Snow 3s linear infinite;}
+.sp-h2-beam{left:50%;top:calc(7% + 13.5cqw);width:36%;height:60%;transform:translateX(-50%);background:linear-gradient(rgba(255,240,200,.42),transparent 80%);clip-path:polygon(30% 0,70% 0,100% 100%,0 100%);}
+.tod-night .sp-h2-beam{background:linear-gradient(rgba(170,190,255,.18),transparent 80%);} .wx-rain .sp-h2-beam,.wx-cloud .sp-h2-beam{opacity:.5;}
+.sp-h2-tint{inset:0;} .tod-dusk .sp-h2-tint{background:linear-gradient(rgba(255,150,80,.10),rgba(255,120,60,.06));} .tod-night .sp-h2-tint{background:rgba(18,26,66,.26);}   /* 氛围只染背景，不压暗精灵 */
+.sp-h2-gridov{inset:0;z-index:var(--zh-pad);pointer-events:none;background-image:linear-gradient(to right,rgba(15,23,42,.13) 1px,transparent 1px),linear-gradient(to bottom,rgba(15,23,42,.13) 1px,transparent 1px);background-size:var(--gs) var(--gs);}
+/* 地台 2 · 精灵 4 · 装饰 3 / 5 · 浮层 7（编号 / 名称） */
+.sp-h2-pad{z-index:var(--zh-pad);aspect-ratio:5 / 1;transform:translate(-50%,-55%);border-radius:50%;background:radial-gradient(rgba(0,0,0,.28),transparent 70%);pointer-events:none;}
+.arranging .sp-h2-pad{background:radial-gradient(color-mix(in srgb,var(--cold) 45%,transparent),transparent 70%);}
+.sp-h2-slot{z-index:var(--zh-sprite);aspect-ratio:1;transform:translate(-50%,-100%);display:flex;align-items:flex-end;justify-content:center;}
+.sp-h2-sp{width:100%;height:100%;border:none;background:none;padding:0;cursor:pointer;border-radius:16%;display:flex;align-items:flex-end;justify-content:center;transition:transform .2s;}
+.sp-h2-sp svg,.sp-h2-sp img{width:100%;height:auto;max-height:100%;display:block;} .sp-h2-sp:hover:not(:disabled){transform:translateY(-3%);} .sp-h2-sp:disabled{cursor:default;}
+.sp-h2-plus{width:58%;aspect-ratio:1;margin-bottom:6%;border-radius:50%;border:2px dashed rgba(15,23,42,.35);background:rgba(255,255,255,.45);display:grid;place-items:center;cursor:pointer;color:rgba(15,23,42,.6);transition:transform .2s,background .2s;} .sp-h2-plus:hover{transform:scale(1.06);background:rgba(255,255,255,.75);}
+.sp-h2-sp:focus-visible,.sp-h2-plus:focus-visible,.sp-h2-deco:focus-visible{outline:3px solid var(--cold);outline-offset:3px;}
+.sp-h2-slot.active .sp-h2-sp,.sp-h2-slot.active .sp-h2-plus,.sp-h2-slot.sel .sp-h2-sp{outline:3px solid var(--cold);outline-offset:3px;animation:spH2Pulse 1.4s ease-in-out infinite;}
+.sp-h2-tag{z-index:var(--zh-float);transform:translate(-50%,10%);display:flex;align-items:center;gap:.6cqw;pointer-events:none;max-width:24%;}
+.sp-h2-no{flex:0 0 auto;font-style:normal;font-size:clamp(9px,1.7cqw,12px);font-weight:800;width:2.4em;height:2.4em;border-radius:50%;display:grid;place-items:center;background:rgba(15,23,42,.6);color:#fff;}
+.sp-h2-nm{min-width:0;font-size:clamp(10px,1.9cqw,13px);padding:0 .7em;border-radius:999px;background:rgba(255,255,255,.85);color:#334155;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sp-h2-deco{display:grid;place-items:center;aspect-ratio:1;transform:translate(-50%,-50%) rotate(var(--r,0deg)) scale(var(--z,1));border-radius:22%;background:rgba(255,255,255,.72);box-shadow:0 .4cqw 1cqw rgba(0,0,0,.15);border:none;padding:0;font:inherit;color:inherit;}
+.sp-h2-deco.L-b{z-index:var(--zh-deco-b);} .sp-h2-deco.L-f{z-index:var(--zh-deco-f);}
+.sp-h2-deco-ic{display:grid;place-items:center;width:62%;height:62%;} .sp-h2-deco-ic svg{width:100%;height:100%;}
+.sp-h2-deco.flat{aspect-ratio:auto;border-radius:50%;background:radial-gradient(#a78bfa,#7c3aed 70%);opacity:.6;box-shadow:none;} .sp-h2-deco.flat .sp-h2-deco-ic{display:none;}
+.sp-h2-deco.dk-lamp,.sp-h2-deco.dk-lantern{border-radius:50%;box-shadow:0 0 2.4cqw rgba(255,214,102,.8);}
+button.sp-h2-deco{cursor:grab;} .sp-h2-deco.sel{outline:3px solid var(--cold);outline-offset:2px;} .sp-h2-deco.demoted{box-shadow:0 0 0 2px #f59e0b inset;}
+.arranging [data-hdrag]{touch-action:none;cursor:grab;} .sp-h2-box.dragging{cursor:grabbing;} .is-drag{opacity:.85;filter:drop-shadow(0 6px 10px rgba(0,0,0,.25));}
+.sp-h2-motes{inset:0;z-index:var(--zh-fx);pointer-events:none;}
+.sp-h2-motes i{position:absolute;width:.8cqw;height:.8cqw;border-radius:50%;background:rgba(255,255,255,.75);opacity:0;animation:spH2Mote 7s ease-in-out infinite;}
+.tod-night .sp-h2-motes i{background:#fde68a;box-shadow:0 0 1.4cqw #fde68a;}
+.sp-h2-motes i:nth-child(1){left:8%;top:22%;} .sp-h2-motes i:nth-child(2){left:18%;top:12%;animation-delay:-1s;} .sp-h2-motes i:nth-child(3){left:30%;top:36%;animation-delay:-2.2s;} .sp-h2-motes i:nth-child(4){left:42%;top:8%;animation-delay:-3s;} .sp-h2-motes i:nth-child(5){left:58%;top:30%;animation-delay:-4.1s;}
+.sp-h2-motes i:nth-child(6){left:66%;top:14%;animation-delay:-5s;} .sp-h2-motes i:nth-child(7){left:76%;top:34%;animation-delay:-.5s;} .sp-h2-motes i:nth-child(8){left:86%;top:10%;animation-delay:-2.7s;} .sp-h2-motes i:nth-child(9){left:93%;top:26%;animation-delay:-3.6s;} .sp-h2-motes i:nth-child(10){left:50%;top:40%;animation-delay:-6s;}
+.sp-h2-lvfx{inset:0;z-index:var(--zh-fx);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:radial-gradient(rgba(255,236,170,.85),rgba(255,255,255,.35) 60%,transparent);color:#7c2d12;animation:spH2Fx 3.2s ease forwards;text-align:center;padding:12px;}
+.sp-h2-lvfx b{font-size:clamp(16px,4cqw,26px);} .sp-h2-lvfx .burst{color:#f59e0b;animation:spH2Spin 1.6s linear infinite;}
+.sp-h2-emptytip{left:50%;top:50%;transform:translate(-50%,-50%);z-index:var(--zh-float);display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px 18px;border-radius:14px;background:rgba(255,255,255,.9);box-shadow:0 6px 18px rgba(0,0,0,.12);color:#334155;max-width:80%;text-align:center;}
+.sp-h2-bounce{animation:spH2Bounce .55s ease;}
+/* 布置面板（浮层 7，非弹窗、无遮罩）：桌面右侧；平板 / 手机底部 */
+.sp-h2-page.arr-open{padding-right:392px;}
+.sp-h2-arr{position:fixed;right:max(12px,env(safe-area-inset-right));top:72px;bottom:max(12px,env(safe-area-inset-bottom));width:372px;z-index:1600;display:flex;flex-direction:column;gap:8px;padding:12px;border:1px solid var(--border);border-radius:16px;background:var(--panel);box-shadow:0 16px 40px rgba(15,23,42,.22);overflow:hidden;}
+.sp-h2-arr-layout{display:flex;flex-direction:column;gap:6px;padding:8px;border-radius:12px;background:var(--panel-alt);font-size:12.5px;}
+.sp-h2-arr-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;} .sp-h2-arr-row label{display:inline-flex;align-items:center;gap:4px;}
+.sp-h2-arr-item b{margin-right:2px;}
+.sp-h2-seg{display:inline-flex;border:1px solid var(--border);border-radius:999px;overflow:hidden;} .sp-h2-seg button{border:none;background:var(--panel);font:inherit;font-size:12px;padding:3px 10px;cursor:pointer;color:var(--text-dim);} .sp-h2-seg button.active{background:var(--cold);color:#fff;}
+.sp-h2-arr-list{flex:1 1 auto;min-height:96px;}
+/* 底部导航（导航栏 9） */
+.sp-h2-nav{position:sticky;bottom:8px;z-index:20;display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:4px;padding:6px;border:1px solid var(--border);border-radius:16px;background:color-mix(in srgb,var(--panel) 92%,transparent);backdrop-filter:blur(6px);box-shadow:0 6px 18px rgba(15,23,42,.08);}
+.sp-h2-nav button{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 2px;border:none;background:none;font:inherit;font-size:.72rem;color:var(--text-dim);border-radius:10px;cursor:pointer;min-width:0;}
+.sp-h2-nav button span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;} .sp-h2-nav button:hover{background:var(--panel-alt);color:var(--text);}
+/* 弹窗（家园）：最大 90vh、内部滚动、底部按钮与关闭按钮固定、安全区 */
+.modal.sp-h2-upm,.modal.sp-guide{max-height:min(90vh,90dvh);display:flex;flex-direction:column;}
+.modal.sp-h2-upm>.modal-body,.modal.sp-guide>.modal-body{flex:1 1 auto;min-height:0;overflow:auto;overscroll-behavior:contain;}
+.modal.sp-h2-upm>.modal-head,.modal.sp-h2-upm>.modal-foot{flex:0 0 auto;} .modal.sp-h2-upm>.modal-head{position:relative;padding-right:52px;}
+.modal.sp-h2-upm .modal-close{position:absolute;top:10px;right:10px;}
+.modal.sp-h2-upm>.modal-foot{padding-bottom:max(12px,env(safe-area-inset-bottom));}
+/* 桌面 ≥1024：三列，侧栏固定 */
+@media (min-width:1024px){ .sp-h2-main>.sp-h2-tasks,.sp-h2-main>.sp-h2-side{position:sticky;top:84px;align-self:start;height:auto;} }
+/* 桌面布置模式：面板占右侧时，场景占满整行，任务与侧栏移到下方，展示位不被挤小 */
+@media (min-width:1024px){ .arr-open .sp-h2-main{grid-template-columns:repeat(2,minmax(0,1fr));} .arr-open .sp-h2-stage{grid-column:1 / -1;order:-1;} .arr-open .sp-h2-main>.sp-h2-tasks,.arr-open .sp-h2-main>.sp-h2-side{position:static;} }
+/* 平板 768~1023：双列（场景占满一行，下方任务 / 侧栏两列等高） */
+@media (min-width:768px) and (max-width:1023px){ .sp-h2-main{grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch;} .sp-h2-stage{grid-column:1 / -1;order:-1;} .sp-h2-side>.sp-h2-card:last-child{flex:1 1 auto;}
+  .sp-h2-top{grid-template-columns:minmax(0,1fr) auto;} .sp-h2-xp{grid-column:1 / -1;order:3;} }
+@media (max-width:1023px){ .sp-h2-page.arr-open{padding-right:0;padding-bottom:min(46vh,500px);} .sp-h2-arr{left:max(0px,env(safe-area-inset-left));right:max(0px,env(safe-area-inset-right));top:auto;bottom:0;width:auto;height:min(46vh,500px);border-radius:18px 18px 0 0;padding-bottom:max(12px,env(safe-area-inset-bottom));} }
+/* 手机 ≤767：单列、展示位居中、导航栏底部固定（替代全局底部导航，适配 Home Indicator） */
+@media (max-width:767px){
+  .sp-h2-main{grid-template-columns:minmax(0,1fr);} .sp-h2-stage{order:-1;} .sp-h2-top{grid-template-columns:minmax(0,1fr) auto;} .sp-h2-xp,.sp-h2-topact{grid-column:1 / -1;} .sp-h2-topact{justify-content:flex-start;}
+  body.sp-home-on .sp-bnav{display:none !important;} body.sp-home-on{--sp-bnav-h:64px;}
+  .sp-h2-page{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px));}
+  .sp-h2-nav{position:fixed;left:0;right:0;bottom:0;z-index:2050;border-radius:16px 16px 0 0;grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:minmax(64px,1fr);overflow-x:auto;overscroll-behavior-x:contain;padding:6px max(6px,env(safe-area-inset-right)) calc(6px + env(safe-area-inset-bottom,0px)) max(6px,env(safe-area-inset-left));}
+  body.sp-home-on .overlay{padding-bottom:calc(70px + env(safe-area-inset-bottom,0px)) !important;}
+  body.sp-home-on .sp-top-btn{z-index:2100;}
+  .sp-h2-arr{bottom:calc(64px + env(safe-area-inset-bottom,0px));padding-bottom:12px;height:min(42vh,400px);}
+  .sp-h2-page.arr-open{padding-bottom:calc(min(42vh,400px) + 70px);} }
+/* 字体放大：控件可换行，不撑出横向滚动 */
+.sp-h2-page .btn,.sp-h2-page .sp-pillbtn{white-space:normal;}
+body[data-theme="dark"] .sp-h2-scene{filter:brightness(.86) saturate(.92);} body[data-theme="dark"] .sp-h2-nm{background:rgba(15,23,42,.78);color:#e2e8f0;} body[data-theme="dark"] .sp-h2-deco{background:rgba(30,41,59,.7);}
 @media (prefers-reduced-motion:reduce){ .sp-h2-scene *,.sp-h2-dot{animation:none !important;transition:none !important;} }
+@media (forced-colors:active){ .sp-h2-sp,.sp-h2-deco,.sp-h2-plus{forced-color-adjust:auto;border:1px solid CanvasText;} }
 </style>
 </head>
 <body data-theme="light"><svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="spPixelF" x="0" y="0"><feFlood x="1" y="1" height="1" width="1"/><feComposite width="3" height="3"/><feTile result="a"/><feComposite in="SourceGraphic" in2="a" operator="in"/><feMorphology operator="dilate" radius="1.5"/></filter><filter id="spWcF" x="-15%" y="-15%" width="130%" height="130%"><feTurbulence type="fractalNoise" baseFrequency=".22" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.1" xChannelSelector="R" yChannelSelector="G" result="d"/><feGaussianBlur in="d" stdDeviation=".18"/></filter><filter id="spPaintF" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="turbulence" baseFrequency=".45" numOctaves="1" seed="11" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale=".38" xChannelSelector="R" yChannelSelector="B"/></filter></svg>
@@ -3886,7 +3924,7 @@ function labBootRescue(){
   document.getElementById('labBootReset').onclick = ()=>{ try{ Object.keys(localStorage).filter(k=>/^lab-scheduler-/.test(k) && !/remember|lang|device-id/.test(k)).forEach(k=>localStorage.removeItem(k)); }catch(_e){} location.reload(); };
 }
 window.addEventListener('load', ()=>setTimeout(labBootRescue, 4000));
-let APP_VERSION = '2026.10.08.13';
+let APP_VERSION = '2026.10.08.14';
 const SCHEMA_VERSION = 4;             /* v4：新增插单记录、试验优先级、扩展字段 */
 const TRANSLATIONS_CACHE_VERSION = '2026.09.28.1';
 const TAB_ID = Math.random().toString(36).slice(2,10);
@@ -21876,7 +21914,103 @@ function spHomeArt(u, k, size){
 var SP_HOME_RW_DECOS = {lantern:{i:'🏮', n:['庭院灯笼','Courtyard lantern','Đèn lồng sân vườn']}, fountain:{i:'⛲', n:['花园小喷泉','Garden fountain','Đài phun nước']},
   window:{i:'🪟', n:['庄园花窗','Manor window','Cửa sổ trang viên']}, banner:{i:'🚩', n:['城堡旗帜','Castle banner','Cờ lâu đài']}};
 var SP_HOME_DECO_IC = {plant:'leaf', lamp:'star', rug:'dot', shelf:'trophy', tank:'fish', flag:'flag', lantern:'flame', fountain:'spiral', window:'sun', banner:'crown'};
-var SP_HOME_DECO_SPOT = {plant:'fl', lamp:'lt', rug:'fc', shelf:'wr', tank:'fr', flag:'wl', lantern:'lt2', fountain:'fc2', window:'wc', banner:'wt'};
+/* ---------- 统一坐标系：家园舞台 4:3，所有元素用相对坐标（x / y = 舞台宽 / 高的百分比）；精灵与地台以「脚底」为锚点，装饰以中心为锚点 ---------- */
+var SP_HOME_AR = 4/3;   /* 舞台宽高比：任何屏幕都保持一致，坐标在各断点下含义相同 */
+var SP_HOME_FLOOR = 44;   /* 墙面 / 地面分界（%） */
+var SP_HOME_SLOT_DEF = [{x:25,y:62},{x:50,y:60},{x:75,y:62},{x:22,y:88},{x:50,y:90},{x:78,y:88}];
+/* 装饰几何：w = 宽（舞台宽 %），h = 高（舞台高 %，缺省为正方形），l = 默认图层（b 后层 / f 前层），key = 关键装饰（「隐藏非关键装饰」时保留） */
+var SP_HOME_DECO_GEO = {plant:{w:9,x:5,y:88,l:'f'}, lamp:{w:8,x:84,y:46,l:'b'}, rug:{w:46,h:8,x:50,y:95,l:'b'}, shelf:{w:10,x:90,y:28,l:'b',key:true}, tank:{w:9,x:95,y:86,l:'f'},
+  flag:{w:8,x:10,y:26,l:'b'}, lantern:{w:8,x:16,y:48,l:'b',key:true}, fountain:{w:11,x:90,y:70,l:'b',key:true}, window:{w:10,x:30,y:22,l:'b',key:true}, banner:{w:9,x:70,y:10,l:'b',key:true}};
+function spHomeGeo(k){ return SP_HOME_DECO_GEO[k] || {w:9, x:50, y:30, l:'b'}; }
+function spHomeSlotW(y){ return Math.max(14, Math.min(26, 12 + (y - 45) * 0.25)); }   /* 透视：越靠前越大（舞台宽 %） */
+function spHomeGrid(h){ const g = h.grid || {}; return {on:g.on!==false, size:[2.5,5,10].includes(+g.size) ? +g.size : 5, prec:[1,0.5,0.25].includes(+g.prec) ? +g.prec : 1}; }
+function spHomePos(h){
+  const p = h.pos || {}, s = SP_HOME_SLOT_DEF.map((d, i)=>{ const o = p.s?.[i]; return o && Number.isFinite(+o.x) && Number.isFinite(+o.y) ? {x:+o.x, y:+o.y} : {...d}; }), d = {};
+  Object.keys({...SP_DECOS, ...SP_HOME_RW_DECOS}).forEach(k=>{ const g = spHomeGeo(k), o = p.d?.[k] || {}; d[k] = {x:Number.isFinite(+o.x) ? +o.x : g.x, y:Number.isFinite(+o.y) ? +o.y : g.y, l:o.l==='f' || o.l==='b' ? o.l : g.l, r:+o.r||0, z:Math.max(0.6, Math.min(1.6, +o.z||1))}; });
+  return {s, d};
+}
+/* 包围盒（单位：舞台宽 %；y 乘 1/AR 换算到同一单位） */
+function spHomeSlotBox(P, i){ const c = P.s[i], w = spHomeSlotW(c.y), yb = c.y / SP_HOME_AR; return {x0:c.x - w/2, x1:c.x + w/2, y0:yb - w, y1:yb}; }
+function spHomeDecoBox(P, k){ const c = P.d[k], g = spHomeGeo(k), w = g.w * c.z, hh = (g.h ? g.h / SP_HOME_AR : g.w) * c.z, yc = c.y / SP_HOME_AR; return {x0:c.x - w/2, x1:c.x + w/2, y0:yc - hh/2, y1:yc + hh/2}; }
+function spHomeHit(a, b, pad=0){ return a.x0 < b.x1 - pad && a.x1 > b.x0 + pad && a.y0 < b.y1 - pad && a.y1 > b.y0 + pad; }
+/* 前层装饰若与任一精灵（面部 / 核心 / 主要剪影 = 精灵包围盒内缩 8%）重叠，自动降到后层：精灵永远不被装饰遮挡 */
+function spHomeDecoLayer(u, P, k){
+  const h = spHomeOf(u), c = P.d[k]; if(c.l!=='f') return 'b';
+  const db = spHomeDecoBox(P, k);
+  for(let i = 0; i < 6; i++){ if(!h.layout[i] || !spHomeSpirit(u, h.layout[i])) continue; const sb = spHomeSlotBox(P, i), m = (sb.x1 - sb.x0) * 0.08; if(spHomeHit(db, {x0:sb.x0+m, x1:sb.x1-m, y0:sb.y0+m, y1:sb.y1}, 0)) return 'b'; }
+  return 'f';
+}
+function spHomeClamp(id, p){
+  if(id.startsWith('s:')){ const w = spHomeSlotW(p.y); return {x:Math.max(w/2, Math.min(100 - w/2, p.x)), y:Math.max(SP_HOME_FLOOR + 8, Math.min(92, p.y))}   /* 底部留出名称标签的位置 */; }
+  const k = id.slice(2), g = spHomeGeo(k), u = spU(), z = spHomePos(spHomeOf(u)).d[k]?.z || 1, w = g.w * z, hh = (g.h || g.w * SP_HOME_AR) * z;
+  return {x:Math.max(w/2, Math.min(100 - w/2, p.x)), y:Math.max(hh/2, Math.min(100 - hh/2, p.y))};
+}
+function spHomeSnap(v, G){ if(!G.on) return Math.round(v * 2) / 2; const t = Math.round(v / G.size) * G.size; return G.prec>=1 || Math.abs(v - t) <= G.size * G.prec ? t : Math.round(v * 2) / 2; }
+/* 屏幕坐标 → 舞台相对坐标：反算舞台自身的旋转 / 缩放（transform，以中心为原点），再按外框比例修正祖先缩放 */
+function spHomeToLocal(cx, cy, el){
+  const r = el.getBoundingClientRect(), w = el.offsetWidth || r.width, h = el.offsetHeight || r.height, t = getComputedStyle(el).transform;
+  let m = new DOMMatrix(); try{ if(t && t!=='none') m = new DOMMatrix(t); }catch(_e){}
+  const lin = new DOMMatrix([m.a, m.b, m.c, m.d, 0, 0]), k = r.width / Math.max(1, Math.abs(m.a) * w + Math.abs(m.c) * h);
+  const p = new DOMPoint((cx - (r.left + r.width/2)) / k, (cy - (r.top + r.height/2)) / k).matrixTransform(lin.inverse());
+  return {x:(p.x + w/2) / w * 100, y:(p.y + h/2) / h * 100};
+}
+/* 撤销栈（本次打开页面期间，最多 30 步） */
+function spHomeSnapState(h){ return JSON.stringify({layout:h.layout, pos:h.pos||null, deco:h.deco}); }
+function spHomePushUndo(h){ const S = spS(); S.homeUndo = S.homeUndo || []; const snap = spHomeSnapState(h); if(S.homeUndo[S.homeUndo.length-1]!==snap) S.homeUndo.push(snap); if(S.homeUndo.length > 30) S.homeUndo.shift(); }
+function spHomeUndo(){
+  if(!spCanPlay()) return; const S = spS(), u = spU(), h = spHomeOf(u), snap = (S.homeUndo||[]).pop(); if(!snap) return toast(tx('没有可撤销的操作','Nothing to undo','Không có gì để hoàn tác'), 'info');
+  const o = JSON.parse(snap); spHomeSetLayout(h, o.layout); h.pos = o.pos || {}; h.deco = o.deco || []; spHomeCommit(u);
+}
+function spHomeResetPos(){
+  if(!spCanPlay()) return; const u = spU(), h = spHomeOf(u); spHomePushUndo(h); h.pos = {}; spHomeCommit(u);
+  toast(tx('已恢复默认布局（可撤销）','Default layout restored (undo available)','Đã khôi phục bố cục mặc định'), 'ok');
+}
+function spHomeSetPos(id, c, extra){
+  const u = spU(), h = spHomeOf(u); h.pos = h.pos || {};
+  if(id.startsWith('s:')){ const i = +id.slice(2); h.pos.s = spHomePos(h).s; h.pos.s[i] = {x:+c.x.toFixed(2), y:+c.y.toFixed(2)}; }
+  else { const k = id.slice(2), cur = spHomePos(h).d[k]; h.pos.d = h.pos.d || {}; h.pos.d[k] = {...cur, ...(c ? {x:+c.x.toFixed(2), y:+c.y.toFixed(2)} : {}), ...(extra||{})}; }
+}
+function spHomeDrop(id, p){
+  if(!spCanPlay()) return; const u = spU(), h = spHomeOf(u), G = spHomeGrid(h);
+  let c = spHomeClamp(id, p); c = spHomeClamp(id, {x:spHomeSnap(c.x, G), y:spHomeSnap(c.y, G)});
+  spHomePushUndo(h); spHomeSetPos(id, c);
+  if(id.startsWith('d:')){ const k = id.slice(2), P = spHomePos(h); if(P.d[k].l==='f' && spHomeDecoLayer(u, P, k)==='b'){ spHomeSetPos(id, null, {l:'b'}); toast(tx('该装饰会挡住精灵，已放到后层','That decoration would cover a spirit, so it moved to the back layer','Đồ trang trí sẽ che tinh linh nên đã chuyển ra sau'), 'info'); } }
+  spHomeArr().item = id; spHomeCommit(u); render();
+}
+/* 拖拽：只在自己家园的布置模式中；限制在家园容器内；松手吸附网格并保存 / 广播 */
+var spHomeDrag = null;
+document.addEventListener('pointerdown', e=>{
+  if(e.button > 0) return; const it = e.target?.closest?.('[data-hdrag]'); if(!it) return;
+  const stage = it.closest('.sp-h2-box'); if(!stage || stage.dataset.mine!=='1' || !spHomeArr().open || !spCanPlay()) return;
+  spHomeDrag = {id:it.dataset.hdrag, el:it, stage, x0:e.clientX, y0:e.clientY, moved:false, pid:e.pointerId};
+});
+document.addEventListener('pointermove', e=>{
+  const d = spHomeDrag; if(!d || e.pointerId!==d.pid) return;
+  if(!d.moved){ if(Math.hypot(e.clientX - d.x0, e.clientY - d.y0) < 5) return; d.moved = true; try{ d.el.setPointerCapture(e.pointerId); }catch(_e){} d.stage.classList.add('dragging'); d.el.classList.add('is-drag'); }
+  e.preventDefault();
+  const c = spHomeClamp(d.id, spHomeToLocal(e.clientX, e.clientY, d.stage)); d.cur = c;
+  d.stage.querySelectorAll(`[data-hpos="${d.id}"]`).forEach(f=>{ f.style.left = c.x + '%'; f.style.top = c.y + '%'; });
+}, {passive:false});
+function spHomeDragEnd(e, cancel){
+  const d = spHomeDrag; if(!d || (e && e.pointerId!==d.pid)) return; spHomeDrag = null;
+  if(!d.moved) return; d.stage.classList.remove('dragging');
+  if(cancel || !d.cur){ render(); return; }
+  window.__spHomeDragAt = Date.now(); spHomeDrop(d.id, d.cur);
+}
+document.addEventListener('pointerup', e=>spHomeDragEnd(e, false));
+document.addEventListener('pointercancel', e=>spHomeDragEnd(e, true));
+/* 拖拽结束后浏览器还会补一次 click：忽略它，避免把刚拖动的位置当成「选择展示位」以外的操作 */
+document.addEventListener('click', e=>{ if(window.__spHomeDragAt && Date.now() - window.__spHomeDragAt < 350 && e.target?.closest?.('.sp-h2-box')){ e.stopPropagation(); e.preventDefault(); } }, true);
+/* 键盘：布置模式中选中元素后，方向键按网格步长移动（关闭网格时 0.5%） */
+document.addEventListener('keydown', e=>{
+  if(!/^Arrow/.test(e.key) || state.modal) return; const A = spS().homeArr; if(!A?.open || !A.item || state.view!=='spirit' || spS().page!=='home') return;
+  if(e.target?.closest?.('input,select,textarea,[contenteditable="true"]')) return;
+  const u = spU(), h = spHomeOf(u), G = spHomeGrid(h), P = spHomePos(h), step = G.on ? G.size : 0.5;
+  const cur = A.item.startsWith('s:') ? P.s[+A.item.slice(2)] : P.d[A.item.slice(2)]; if(!cur) return;
+  const dx = e.key==='ArrowLeft' ? -step : e.key==='ArrowRight' ? step : 0, dy = e.key==='ArrowUp' ? -step : e.key==='ArrowDown' ? step : 0;
+  e.preventDefault(); spHomeDrop(A.item, {x:cur.x + dx, y:cur.y + dy});
+});
+
 function spHomeDecoDef(k){ return SP_DECOS[k] || SP_HOME_RW_DECOS[k] || null; }
 var SP_HOME_BG = ['cottage','courtyard','garden','manor','castle'];
 var SP_HOME_LV_RW = [null,
@@ -21942,7 +22076,7 @@ function spHomePlace(k, pos){
   if(!spHomeSpirit(u, k) || pos < 0 || pos > 5) return false;
   const L = h.layout.slice(), p0 = L.indexOf(k); if(p0===pos) return false;
   if(p0>=0) L[p0] = L[pos] && p0!==pos ? L[pos] : null;   /* 已在别的位置：与目标位互换 */
-  L[pos] = k; spHomeSetLayout(h, L);
+  spHomePushUndo(h); L[pos] = k; spHomeSetLayout(h, L);
   h.placedEver = h.placedEver || {}; h.placedEver[k] = h.placedEver[k] || gNowIso();
   const t = gToday(); h.placeDay = h.placeDay?.d===t ? {d:t, n:(+h.placeDay.n||0)+1} : {d:t, n:1};
   const next = [1,2,3,4,5,6].map(d=>(pos+d) % 6).find(i=>!L[i]); A.slot = next==null ? pos : next;
@@ -21953,14 +22087,14 @@ function spHomeFillEmpty(keys){
   keys.forEach(k=>{ if(!spHomeSpirit(u, k) || L.includes(k)) return; const i = L.indexOf(null); if(i<0){ skip++; return; } L[i] = k; n++; h.placedEver = h.placedEver || {}; h.placedEver[k] = h.placedEver[k] || gNowIso(); });
   if(!n) return toast(skip ? tx('展示位已满，请先清空一个位置','All spots are full — clear one first','Đã đầy chỗ') : tx('所选精灵都已在展示位上','Those spirits are already on display','Đã trưng bày'), 'info');
   const t = gToday(); h.placeDay = h.placeDay?.d===t ? {d:t, n:(+h.placeDay.n||0)+n} : {d:t, n};
-  spHomeSetLayout(h, L); spHomeArr().sel = []; spHomeCommit(u);
+  spHomePushUndo(h); spHomeSetLayout(h, L); spHomeArr().sel = []; spHomeCommit(u);
   toast(tx(`已放入 ${n} 只${skip?`，${skip} 只因展示位已满未放入`:''}`, `Placed ${n}${skip?`; ${skip} didn't fit`:''}`, `Đã đặt ${n}`), skip ? 'warn' : 'ok');
 }
 function spHomeSlotOp(op){
   if(!spCanPlay()) return; const u = spU(), h = spHomeOf(u), A = spHomeArr(), L = h.layout.slice(), i = A.slot;
   if(op==='clear'){ if(!L[i]) return; L[i] = null; }
   else { const j = i + (op==='left' ? -1 : 1); if(j<0 || j>5) return; [L[i], L[j]] = [L[j], L[i]]; A.slot = j; }
-  spHomeSetLayout(h, L); spHomeCommit(u);
+  spHomePushUndo(h); spHomeSetLayout(h, L); spHomeCommit(u);
 }
 function spHomePatOne(u, k, el){
   const h = spHomeOf(u), t = gToday(); h.patDay = h.patDay?.d===t ? h.patDay : {d:t, n:0}; if(h.patDay.n >= 30) return false;
@@ -21997,21 +22131,51 @@ function spHomeSaveName(){
 
 /* ---------- 视图：小屋场景 ---------- */
 function spHomeScene(u, mine){
-  const h = spHomeOf(u), st = spHomeStats(u), A = mine && spHomeArr().open ? spHomeArr() : null, fx = mine ? spS().homeLvFx : null;
+  const h = spHomeOf(u), st = spHomeStats(u), P = spHomePos(h), A = mine && spHomeArr().open ? spHomeArr() : null, fx = mine ? spS().homeLvFx : null, G = spHomeGrid(h);
   const showFx = fx && Date.now() - fx.at < 3200;
-  const decos = h.deco.filter(k=>u.decos?.[k] && spHomeDecoDef(k));
-  const deco = k=>{ const d = spHomeDecoDef(k); return `<span class="sp-h2-deco spot-${SP_HOME_DECO_SPOT[k]||'fl'} dk-${k}" title="${escapeAttr(trT(d.n))}">${spIcon(SP_HOME_DECO_IC[k]||'gift', 30, trT(d.n))}</span>`; };
-  const slot = (k, i)=>{ const ok = k && spHomeSpirit(u, k), act = A && A.slot===i ? 'active' : '', big = i >= 3, m = ok ? spHomeKeyMeta(u, k) : null;
-    if(ok) return `<div class="sp-h2-slot ${big?'front':'back'} ${act}" data-slot="${i}"><button type="button" class="sp-h2-sp" data-act="${A?'spHomeArrSlot':'spHomePat'}" data-v="${A?i:escapeAttr(k)}" data-id="${escapeAttr(u.user)}" ${mine?'':'disabled'} aria-label="${escapeAttr(`${i+1} · ${m.n}`)}">${spHomeArt(u, k, big?124:104)}</button><span class="sp-h2-pad" aria-hidden="true"></span><small class="sp-h2-nm" data-i18n-ignore="1">${escapeHtml(m.n)}</small><i class="sp-h2-no">${i+1}</i></div>`;
-    return `<div class="sp-h2-slot ${big?'front':'back'} empty ${act}" data-slot="${i}">${mine?`<button type="button" class="sp-h2-plus" data-act="${A?'spHomeArrSlot':'spHomeArrOpen'}" data-v="${i}" aria-label="${escapeAttr(tx(`${i+1} 号展示位：放置精灵`,`Spot ${i+1}: place a spirit`,`Chỗ ${i+1}: đặt tinh linh`))}">${spIcon('plus',22)}</button>`:''}<span class="sp-h2-pad" aria-hidden="true"></span><i class="sp-h2-no">${i+1}</i></div>`; };
+  const decos = h.deco.filter(k=>u.decos?.[k] && spHomeDecoDef(k) && !(h.hideMinor && !spHomeGeo(k).key));
+  const at = (c, extra='')=>`left:${c.x}%;top:${c.y}%;${extra}`;
+  const deco = k=>{ const d = spHomeDecoDef(k), g = spHomeGeo(k), c = P.d[k], lay = spHomeDecoLayer(u, P, k), sel = A && A.item===`d:${k}`;
+    const style = at(c, `width:${g.w}%;${g.h?`height:${g.h}%;`:''}--r:${c.r}deg;--z:${c.z};`);
+    const inner = `<span class="sp-h2-deco-ic">${spIcon(SP_HOME_DECO_IC[k]||'gift', 30, trT(d.n))}</span>`;
+    return A ? `<button type="button" class="sp-h2-deco L-${lay} dk-${k} ${g.h?'flat':''} ${sel?'sel':''} ${c.l==='f' && lay==='b'?'demoted':''}" style="${style}" data-hpos="d:${k}" data-hdrag="d:${k}" data-act="spHomeArrItem" data-v="d:${k}" aria-label="${escapeAttr(`${trT(d.n)} · ${lay==='f'?tx('前层','front','trước'):tx('后层','back','sau')}`)}">${inner}</button>`
+      : `<span class="sp-h2-deco L-${lay} dk-${k} ${g.h?'flat':''}" style="${style}" title="${escapeAttr(trT(d.n))}">${inner}</span>`; };
+  const slot = (k, i)=>{ const c = P.s[i], w = spHomeSlotW(c.y), ok = k && spHomeSpirit(u, k), m = ok ? spHomeKeyMeta(u, k) : null, act = A && A.slot===i ? 'active' : '', sel = A && A.item===`s:${i}` ? 'sel' : '';
+    const pos = at(c, `width:${w}%;`), id = `s:${i}`;
+    const pad = `<span class="sp-h2-pad" style="${at(c, `width:${(w*0.9).toFixed(2)}%;`)}" data-hpos="${id}" aria-hidden="true"></span>`;
+    const tag = `<span class="sp-h2-tag" style="${at(c)}" data-hpos="${id}"><i class="sp-h2-no">${i+1}</i>${ok?`<small class="sp-h2-nm" data-i18n-ignore="1">${escapeHtml(m.n)}</small>`:''}</span>`;
+    const body = ok ? `<button type="button" class="sp-h2-sp" data-act="${A?'spHomeArrSlot':'spHomePat'}" data-v="${A?i:escapeAttr(k)}" data-id="${escapeAttr(u.user)}" ${mine?'':'disabled'} aria-label="${escapeAttr(`${i+1} · ${m.n}`)}">${spHomeArt(u, k, 128)}</button>`
+      : mine ? `<button type="button" class="sp-h2-plus" data-act="${A?'spHomeArrSlot':'spHomeArrOpen'}" data-v="${i}" aria-label="${escapeAttr(tx(`${i+1} 号展示位：放置精灵`,`Spot ${i+1}: place a spirit`,`Chỗ ${i+1}: đặt tinh linh`))}">${spIcon('plus',22)}</button>` : '';
+    return pad + `<div class="sp-h2-slot ${ok?'':'empty'} ${act} ${sel}" style="${pos}" data-slot="${i}" data-hpos="${id}" ${A?`data-hdrag="${id}"`:''}>${body}</div>` + tag; };
   return `<div class="sp-h2-scene bg-${SP_HOME_BG[st.lv]} tod-${spHomeTod()} wx-${spHomeWeather()} ${A?'arranging':''}" role="group" aria-label="${escapeAttr(spHomeName(u))}">
-    <div class="sp-h2-wall"><div class="sp-h2-window" aria-hidden="true"><i class="orb"></i><i class="cl c1"></i><i class="cl c2"></i><i class="drops"></i></div>${decos.filter(k=>/^w|lt/.test(SP_HOME_DECO_SPOT[k]||'')).map(deco).join('')}<span class="sp-h2-beam" aria-hidden="true"></span></div>
-    <div class="sp-h2-floor">${decos.filter(k=>!/^w|lt/.test(SP_HOME_DECO_SPOT[k]||'')).map(deco).join('')}
-      <div class="sp-h2-row back">${h.layout.slice(0, 3).map((k, i)=>slot(k, i)).join('')}</div>
-      <div class="sp-h2-row front">${h.layout.slice(3, 6).map((k, i)=>slot(k, i+3)).join('')}</div></div>
+   <div class="sp-h2-box" data-mine="${mine?'1':'0'}" style="--floor:${SP_HOME_FLOOR}%">
+    <div class="sp-h2-bg" aria-hidden="true"><div class="sp-h2-wall"></div><div class="sp-h2-floor"></div>
+      <div class="sp-h2-window"><i class="orb"></i><i class="cl c1"></i><i class="cl c2"></i><i class="drops"></i></div><span class="sp-h2-beam"></span><span class="sp-h2-tint"></span></div>
+    ${A && G.on ? `<div class="sp-h2-gridov" style="--gs:${G.size}%" aria-hidden="true"></div>` : ''}
+    ${h.layout.map((k, i)=>slot(k, i)).join('')}
+    ${decos.map(deco).join('')}
     <div class="sp-h2-motes" aria-hidden="true">${'<i></i>'.repeat(10)}</div>
-    ${!h.slots.length && mine && !A ? `<div class="sp-h2-emptytip"><b>${escapeHtml(tx('小屋还空着','Your cottage is empty','Nhà còn trống'))}</b><button type="button" class="btn btn-primary btn-sm" data-act="spHomeArrOpen" data-v="0">${spIcon('edit',14)} ${escapeHtml(tx('进入布置模式','Start arranging','Bắt đầu bày trí'))}</button></div>`:''}
     ${showFx ? `<div class="sp-h2-lvfx" role="status"><div class="burst">${spIcon('sparkle',48)}</div><b>${escapeHtml(tx('家园升级！','Home level up!','Nhà lên cấp!'))}</b><span>Lv.${fx.from+1} → Lv.${fx.to+1} · ${escapeHtml(trT(SP_HOME_LV[fx.to].n))}</span>${fx.got?.length?`<small>${escapeHtml(tx('获得','Unlocked','Mở khóa'))}：${escapeHtml(fx.got.join('、'))}</small>`:''}</div>` : ''}
+    ${!h.slots.length && mine && !A ? `<div class="sp-h2-emptytip"><b>${escapeHtml(tx('小屋还空着','Your cottage is empty','Nhà còn trống'))}</b><button type="button" class="btn btn-primary btn-sm" data-act="spHomeArrOpen" data-v="0">${spIcon('edit',14)} ${escapeHtml(tx('进入布置模式','Start arranging','Bắt đầu bày trí'))}</button></div>`:''}
+   </div>
+  </div>`;
+}
+/* 布置面板：布局工具（网格 / 撤销 / 重置）与选中元素（图层 / 旋转 / 缩放） */
+function spHomeLayoutTools(u){
+  const A = spHomeArr(), h = spHomeOf(u), G = spHomeGrid(h), P = spHomePos(h), S = spS();
+  const it = A.item || '', isD = it.startsWith('d:') && h.deco.includes(it.slice(2)), k = isD ? it.slice(2) : '', c = isD ? P.d[k] : it.startsWith('s:') ? P.s[+it.slice(2)] : null;
+  const lay = isD ? spHomeDecoLayer(u, P, k) : '';
+  return `<div class="sp-h2-arr-layout">
+    <div class="sp-h2-arr-row"><label class="checkline"><input type="checkbox" data-home-grid="on" ${G.on?'checked':''}> ${escapeHtml(tx('网格吸附','Snap to grid','Bắt lưới'))}</label>
+      <label>${escapeHtml(tx('网格','Grid','Lưới'))} <select data-home-grid="size" ${G.on?'':'disabled'} aria-label="${escapeAttr(tx('网格大小','Grid size','Cỡ lưới'))}">${[2.5,5,10].map(v=>`<option value="${v}" ${G.size===v?'selected':''}>${v}%</option>`).join('')}</select></label>
+      <label>${escapeHtml(tx('精度','Precision','Độ chính xác'))} <select data-home-grid="prec" ${G.on?'':'disabled'} aria-label="${escapeAttr(tx('吸附精度','Snap precision','Độ bắt lưới'))}">${[[1,tx('严格','Strict','Chặt')],[0.5,tx('标准','Normal','Thường')],[0.25,tx('宽松','Loose','Lỏng')]].map(([v,n])=>`<option value="${v}" ${G.prec===v?'selected':''}>${escapeHtml(n)}</option>`).join('')}</select></label></div>
+    <div class="sp-h2-arr-row"><button type="button" class="btn btn-ghost btn-sm" data-act="spHomeUndo" ${(S.homeUndo||[]).length?'':'disabled'}>${spIcon('undo',14)} ${escapeHtml(tx('撤销','Undo','Hoàn tác'))}</button><button type="button" class="btn btn-ghost btn-sm" data-act="spHomeResetPos">${escapeHtml(tx('重置布局','Reset layout','Đặt lại bố cục'))}</button>
+      <label class="checkline"><input type="checkbox" data-home-minor="1" ${h.hideMinor?'checked':''}> ${escapeHtml(tx('隐藏非关键装饰','Hide minor decor','Ẩn trang trí phụ'))}</label></div>
+    ${c ? `<div class="sp-h2-arr-row sp-h2-arr-item"><b>${escapeHtml(isD ? trT(spHomeDecoDef(k).n) : tx(`${+it.slice(2)+1} 号位`, `Spot ${+it.slice(2)+1}`, `Chỗ ${+it.slice(2)+1}`))}</b><small class="hint">x ${c.x.toFixed(1)} · y ${c.y.toFixed(1)}</small>
+      ${isD ? `<span class="sp-h2-seg" role="group" aria-label="${escapeAttr(tx('图层','Layer','Lớp'))}"><button type="button" class="${c.l==='b'?'active':''}" data-act="spHomeDecoSet" data-v="l:b" aria-pressed="${c.l==='b'}">${escapeHtml(tx('后层','Back','Sau'))}</button><button type="button" class="${c.l==='f'?'active':''}" data-act="spHomeDecoSet" data-v="l:f" aria-pressed="${c.l==='f'}">${escapeHtml(tx('前层','Front','Trước'))}</button></span>
+        <button type="button" class="btn btn-ghost btn-sm" data-act="spHomeDecoSet" data-v="r:-15" aria-label="${escapeAttr(tx('逆时针旋转','Rotate left','Xoay trái'))}">${spIcon('undo',14)}</button><button type="button" class="btn btn-ghost btn-sm" data-act="spHomeDecoSet" data-v="r:15" aria-label="${escapeAttr(tx('顺时针旋转','Rotate right','Xoay phải'))}">${spIcon('repeat',14)}</button>
+        <button type="button" class="btn btn-ghost btn-sm" data-act="spHomeDecoSet" data-v="z:-0.1" aria-label="${escapeAttr(tx('缩小','Smaller','Nhỏ hơn'))}">−</button><button type="button" class="btn btn-ghost btn-sm" data-act="spHomeDecoSet" data-v="z:0.1" aria-label="${escapeAttr(tx('放大','Larger','Lớn hơn'))}">+</button>
+        ${c.l==='f' && lay==='b' ? `<small class="sp-why">${escapeHtml(tx('与精灵重叠，按后层显示','Overlaps a spirit, shown in the back layer','Chồng lên tinh linh, hiển thị lớp sau'))}</small>` : ''}` : ''}</div>` : `<p class="hint">${escapeHtml(tx('拖动小屋里的精灵或装饰即可移动（自动吸附网格），也可选中后用方向键微调。','Drag spirits or decorations in the cottage to move them (snaps to the grid), or select one and nudge it with the arrow keys.','Kéo tinh linh hoặc đồ trang trí để di chuyển.'))}</p>`}
   </div>`;
 }
 /* ---------- 视图：布置面板（常驻，非弹窗、无遮罩） ---------- */
@@ -22026,8 +22190,9 @@ function spHomeArrPanel(u){
     <div class="sp-h2-arr-slots" role="tablist" aria-label="${escapeAttr(tx('展示位','Display spots','Vị trí trưng bày'))}">${h.layout.map((k, i)=>`<button type="button" role="tab" aria-selected="${A.slot===i}" class="sp-h2-arr-slot ${A.slot===i?'active':''} ${k?'filled':''}" data-act="spHomeArrSlot" data-v="${i}"><i>${i+1}</i>${k && spHomeSpirit(u, k) ? spHomeArt(u, k, 34) : spIcon('plus',16)}</button>`).join('')}</div>
     <div class="sp-h2-arr-cur"><span>${escapeHtml(tx(`当前：${A.slot+1} 号位`, `Selected: spot ${A.slot+1}`, `Đang chọn: chỗ ${A.slot+1}`))}${curM?` · <b data-i18n-ignore="1">${escapeHtml(curM.n)}</b>`:''}</span>
       <button type="button" class="btn btn-ghost btn-sm" data-act="spHomeArrOp" data-v="left" ${A.slot===0?'disabled':''} aria-label="${escapeAttr(tx('左移','Move left','Sang trái'))}">‹</button><button type="button" class="btn btn-ghost btn-sm" data-act="spHomeArrOp" data-v="right" ${A.slot===5?'disabled':''} aria-label="${escapeAttr(tx('右移','Move right','Sang phải'))}">›</button><button type="button" class="btn btn-ghost btn-sm" data-act="spHomeArrOp" data-v="clear" ${cur?'':'disabled'}>${escapeHtml(tx('清空此位','Clear spot','Xóa chỗ'))}</button></div>
+    ${spHomeLayoutTools(u)}
     <div class="subview-toggle sp-h2-arr-tabs" role="tablist"><button type="button" role="tab" aria-selected="${A.tab!=='deco'}" class="${A.tab!=='deco'?'active':''}" data-act="spHomeArrF" data-id="tab" data-v="sp">${escapeHtml(tx('精灵','Spirits','Tinh linh'))}</button><button type="button" role="tab" aria-selected="${A.tab==='deco'}" class="${A.tab==='deco'?'active':''}" data-act="spHomeArrF" data-id="tab" data-v="deco">${escapeHtml(tx('装饰','Decor','Trang trí'))}</button></div>
-    ${A.tab==='deco' ? `<div class="sp-h2-arr-list" id="spHomeArrList">${owned.map(k=>{ const d = spHomeDecoDef(k), on = h.deco.includes(k); return `<button type="button" class="sp-h2-card ${on?'placed':''}" data-act="spHomeDecoToggle" data-v="${escapeAttr(k)}" aria-pressed="${on}"><span class="sp-h2-card-art">${spIcon(SP_HOME_DECO_IC[k]||'gift',30)}</span><span class="sp-h2-card-n">${escapeHtml(trT(d.n))}</span><small>${escapeHtml(on?tx('已摆放','Placed','Đã đặt'):tx('点击摆放','Tap to place','Bấm để đặt'))}</small></button>`; }).join('') || `<p class="hint">${escapeHtml(tx('还没有装饰，可在兑换商店获得，家园升级也会奖励装饰。','No decorations yet — get them in the exchange shop or from home level-ups.','Chưa có đồ trang trí.'))}</p>`}</div>`
+    ${A.tab==='deco' ? `<div class="sp-h2-arr-list" id="spHomeArrList">${owned.map(k=>{ const d = spHomeDecoDef(k), on = h.deco.includes(k); return `<button type="button" class="sp-h2-card ${on?'placed':''}" data-act="spHomeDecoToggle" data-v="${escapeAttr(k)}" aria-pressed="${on}"><span class="sp-h2-card-art">${spIcon(SP_HOME_DECO_IC[k]||'gift',30)}</span><span class="sp-h2-card-n">${escapeHtml(trT(d.n))}</span><small>${escapeHtml(on?`${tx('已摆放','Placed','Đã đặt')} · ${spHomePos(h).d[k].l==='f'?tx('前层','front','trước'):tx('后层','back','sau')}`:tx('点击摆放','Tap to place','Bấm để đặt'))}${spHomeGeo(k).key?'':` · ${tx('非关键','minor','phụ')}`}</small></button>`; }).join('') || `<p class="hint">${escapeHtml(tx('还没有装饰，可在兑换商店获得，家园升级也会奖励装饰。','No decorations yet — get them in the exchange shop or from home level-ups.','Chưa có đồ trang trí.'))}</p>`}</div>`
     : `<div class="sp-h2-arr-tools"><input type="search" id="spHomeArrQ" data-home-q="1" value="${escapeAttr(A.q)}" placeholder="${escapeAttr(tx('搜索精灵名称','Search spirit names','Tìm tên tinh linh'))}" aria-label="${escapeAttr(tx('搜索精灵','Search spirits','Tìm tinh linh'))}" autocomplete="off">
         <div class="sp-h2-arr-chips">${chip('src','all',tx('全部','All','Tất cả'))}${chip('src','season',tx('赛季','Season','Mùa'))}${chip('src','trial',tx('试验','Trials','Thử nghiệm'))}${chip('src','collect',tx('收藏','Collection','Sưu tầm'))}<span class="sp-h2-sep"></span>${chip('place','all',tx('全部','All','Tất cả'))}${chip('place','off',tx('未放置','Not placed','Chưa đặt'))}${chip('place','on',tx('已放置','Placed','Đã đặt'))}
           ${rars.length?`<select data-home-rar="1" aria-label="${escapeAttr(tx('稀有度','Rarity','Độ hiếm'))}"><option value="">${escapeHtml(tx('全部稀有度','All rarities','Mọi độ hiếm'))}</option>${rars.map(r=>`<option value="${escapeAttr(r)}" ${A.rar===r?'selected':''}>${escapeHtml(r)}</option>`).join('')}</select>`:''}</div></div>
@@ -22050,18 +22215,21 @@ function spHomeArrFilterDom(){
 /* 渲染后：恢复面板滚动位置与筛选；离开家园页时关闭布置模式；清理升级动画 */
 function spHomeAfterRender(){
   const S = spS(), A = S.homeArr;
+  document.body.classList.toggle('sp-home-on', state.view==='spirit' && S.page==='home' && spCanSee());
   if(A?.open && (state.view!=='spirit' || S.page!=='home' || !spCanPlay())) A.open = false;
   if(S.homeLvFx && Date.now() - S.homeLvFx.at > 3200) S.homeLvFx = null;
   if(!A?.open) return;
   spHomeArrFilterDom();
   const list = document.getElementById('spHomeArrList'); if(list) list.scrollTop = +A.scroll||0;
   /* 平板 / 手机：布置面板在底部，打开时把小屋场景滚到可见区域，放置结果一眼可见 */
-  if(A.justOpened){ A.justOpened = false; if(innerWidth <= 1100) document.querySelector('.sp-h2-stage')?.scrollIntoView({block:'start', behavior:'smooth'}); }
+  if(A.justOpened){ A.justOpened = false; if(innerWidth <= 1023) document.querySelector('.sp-h2-stage')?.scrollIntoView({block:'start'}); }
 }
 document.addEventListener('scroll', e=>{ if(e.target?.id==='spHomeArrList') spHomeArr().scroll = e.target.scrollTop; }, true);
 document.addEventListener('input', e=>{ const el = e.target; if(!el?.dataset?.homeQ) return; spHomeArr().q = el.value; spHomeArrFilterDom(); });
 document.addEventListener('change', e=>{
   const el = e.target; if(!el?.dataset || !window.__spReady) return;
+  if(el.dataset.homeGrid && spCanPlay()){ const u = spU(), h = spHomeOf(u), G = spHomeGrid(h), f = el.dataset.homeGrid; h.grid = {...G, [f]:f==='on' ? el.checked : +el.value}; gTouch(u); saveGrowth(true); render(); return; }
+  if(el.dataset.homeMinor && spCanPlay()){ const u = spU(), h = spHomeOf(u); h.hideMinor = el.checked; spHomeCommit(u); render(); return; }
   if(el.dataset.homeRar!=null && el.dataset.homeRar!==''){ spHomeArr().rar = el.value; spHomeArrFilterDom(); return; }
   if(el.dataset.homeSel){ const A = spHomeArr(), s = new Set(A.sel); el.checked ? s.add(el.dataset.homeSel) : s.delete(el.dataset.homeSel); A.sel = [...s];
     el.closest('.sp-h2-card')?.classList.toggle('sel', el.checked); const c = document.querySelector('[data-home-selcount]'); if(c) c.textContent = tx(`已选 ${s.size}`, `${s.size} selected`, `Đã chọn ${s.size}`); }
@@ -22170,13 +22338,22 @@ function spHomeAction(act, el, id){
   switch(act){
     case 'spHomeArrOpen': if(!spCanPlay()) return false; A.justOpened = !A.open; A.open = true; A.tab = 'sp'; if(v!=null && v!=='') A.slot = Math.max(0, Math.min(5, +v||0)); return true;
     case 'spHomeArrDone': A.open = false; return true;
-    case 'spHomeArrSlot': if(!spCanPlay()) return false; A.open = true; A.slot = Math.max(0, Math.min(5, +v||0)); return true;
+    case 'spHomeArrSlot': if(!spCanPlay()) return false; A.open = true; A.slot = Math.max(0, Math.min(5, +v||0)); A.item = `s:${A.slot}`; return true;
+    case 'spHomeArrItem': if(!spCanPlay() || !/^d:[a-z]+$/.test(String(v))) return false; A.item = v; return true;
+    case 'spHomeDecoSet': { if(!spCanPlay() || !String(A.item||'').startsWith('d:')) return false; const u = spU(), h = spHomeOf(u), k = A.item.slice(2), P = spHomePos(h), c = P.d[k], [f, val] = String(v).split(':');
+      spHomePushUndo(h);
+      if(f==='l'){ if(val==='f'){ spHomeSetPos(A.item, null, {l:'f'}); if(spHomeDecoLayer(u, spHomePos(h), k)==='b'){ spHomeSetPos(A.item, null, {l:'b'}); toast(tx('放到前层会挡住精灵，已保持后层','In front it would cover a spirit, so it stays in the back layer','Sẽ che tinh linh nên giữ lớp sau'), 'info'); } } else spHomeSetPos(A.item, null, {l:'b'}); }
+      else if(f==='r') spHomeSetPos(A.item, null, {r:((c.r + (+val||0)) % 360 + 360) % 360});
+      else if(f==='z'){ spHomeSetPos(A.item, null, {z:Math.max(0.6, Math.min(1.6, +(c.z + (+val||0)).toFixed(2)))}); const cc = spHomeClamp(A.item, spHomePos(h).d[k]); spHomeSetPos(A.item, cc); }
+      spHomeCommit(u); return true; }
+    case 'spHomeUndo': spHomeUndo(); return true;
+    case 'spHomeResetPos': spHomeResetPos(); return true;
     case 'spHomeArrPick': spHomePlace(v, A.slot); return true;
     case 'spHomeArrOp': spHomeSlotOp(v); return true;
     case 'spHomeArrF': { const k = el?.dataset?.id; if(!['src','place','tab'].includes(k)) return false; A[k] = v; if(k==='tab') A.scroll = 0; return true; }
     case 'spHomeArrFill': spHomeFillEmpty(A.sel.slice()); return true;
     case 'spHomeArrSelClear': A.sel = []; return true;
-    case 'spHomeDecoToggle': { if(!spCanPlay()) return false; const u = spU(), h = spHomeOf(u); if(!u.decos?.[v]) return false; h.deco = h.deco.includes(v) ? h.deco.filter(x=>x!==v) : [...h.deco, v]; h.decoSeen = [...new Set([...(h.decoSeen||[]), v])]; spHomeCommit(u); return true; }
+    case 'spHomeDecoToggle': { if(!spCanPlay()) return false; const u = spU(), h = spHomeOf(u); if(!u.decos?.[v]) return false; spHomePushUndo(h); h.deco = h.deco.includes(v) ? h.deco.filter(x=>x!==v) : [...h.deco, v]; h.decoSeen = [...new Set([...(h.decoSeen||[]), v])]; spHomeCommit(u); return true; }
     case 'spHomeDecoSeen': { if(!spCanPlay()) return false; const u = spU(), h = spHomeOf(u); h.decoSeen = Object.keys(u.decos||{}); gTouch(u); saveGrowth(true); return true; }
     case 'spHomeMsgSeen': { if(!spCanPlay()) return false; const u = spU(), h = spHomeOf(u); h.msgSeenAt = gNowIso(); gTouch(u); saveGrowth(true); return true; }
     case 'spHomePatAll': { if(!spCanPlay()) return false; const u = spU(), h = spHomeOf(u); let n = 0; h.slots.forEach(k=>{ const b = document.querySelector(`.sp-h2-slot [data-v="${CSS.escape(k)}"]`); if(spHomePatOne(u, k, b)) n++; }); if(!n) toast(tx('今天已经互动很多次了','Plenty of interaction today already','Hôm nay đã tương tác nhiều'), 'info'); gTouch(u); saveGrowth(); return false; }
@@ -22266,7 +22443,8 @@ function spStickyMeasure(){
   const tabs = page.querySelector('.sp-tabs'), tabsH = tabs ? tabs.offsetHeight : 0;
   page.style.setProperty('--sp-nav-h', navH + 'px'); page.style.setProperty('--sp-tabs-h', (navH + tabsH) + 'px');
   const sub = page.querySelector('.sp-sticky-sub'); page.style.setProperty('--sp-sub-h', (navH + tabsH + (sub ? sub.offsetHeight : 0)) + 'px');
-  const bn = document.getElementById('spBnav'); document.body.style.setProperty('--sp-bnav-h', bn && !bn.hidden && bn.offsetHeight ? bn.offsetHeight + 'px' : '0px');
+  const bn = document.getElementById('spBnav'), hn = document.body.classList.contains('sp-home-on') && innerWidth <= 767 ? document.querySelector('.sp-h2-nav') : null;   /* 家园页（手机）：底部导航由家园导航栏替代 */
+  document.body.style.setProperty('--sp-bnav-h', hn?.offsetHeight ? hn.offsetHeight + 'px' : bn && !bn.hidden && bn.offsetHeight ? bn.offsetHeight + 'px' : '0px');
 }
 var SP_STICKY_SUB = ['.sp-codex-tabs','.sp-adm-tabs','.adm-tabs','.sp-board-tabs','.achv-tabs','.sp-skin-chips'];
 function spStickyMark(){ const page = document.querySelector('.sp-page'); if(!page) return; const el = page.querySelector(SP_STICKY_SUB.join(',')); page.querySelectorAll('.sp-sticky-sub').forEach(x=>{ if(x!==el) x.classList.remove('sp-sticky-sub'); }); if(el) el.classList.add('sp-sticky-sub'); }
