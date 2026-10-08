@@ -3650,6 +3650,38 @@ body.art-noadj .spv .spirit-svg.art{filter:none;}
 .sp-domain-modal .modal-body{text-align:center;}
 .sp-domain-stage{display:flex;justify-content:center;padding:8px 0;}
 .sp-domain-law{font-size:15px;margin:6px 0;}
+/* ===== 兑换商店：商品卡（桌面 / 平板 / 手机自适应）+ 详情浮层 / 弹窗 ===== */
+.sp-shop{min-width:0;}
+.sp-shop .sp-shop-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,236px),1fr)) !important;gap:12px !important;margin-top:10px;min-width:0;}
+.sp-shop .sp-shop-i{position:relative;display:flex;flex-direction:column;align-items:stretch;gap:8px;min-width:0;padding:12px;border:1px solid var(--border);border-radius:12px;background:var(--panel);font-size:13px;transition:border-color .15s,box-shadow .15s;}
+.sp-shop .sp-shop-i:hover,.sp-shop .sp-shop-i:focus-visible{border-color:var(--cold);box-shadow:0 4px 14px rgba(15,23,42,.08);outline:none;}
+.sp-shop .sp-shop-i.off{opacity:.55;}
+.sp-shop-top{display:flex;gap:10px;align-items:center;min-width:0;}
+.sp-shop-art{flex:0 0 64px;width:64px;height:64px;display:flex;align-items:center;justify-content:center;border-radius:10px;background:var(--panel-alt);overflow:hidden;}
+.sp-shop-art .sp-shop-ico,.sp-shop-dt-art .sp-shop-ico{font-size:32px;line-height:1;}
+.sp-shop-art svg{max-width:100%;max-height:100%;}
+.sp-shop-meta{min-width:0;flex:1;display:flex;flex-direction:column;gap:2px;}
+.sp-shop-name{font-size:14px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sp-shop-cat{font-size:11.5px;color:var(--text-faint);}
+.sp-shop-badges{display:flex;flex-wrap:wrap;gap:4px;} .sp-shop-badges:empty{display:none;}
+.sp-shop-badges i{font-style:normal;font-size:10.5px;font-weight:700;padding:0 6px;border-radius:999px;background:var(--panel-alt);border:1px solid var(--border);color:var(--text-dim);}
+.sp-shop-badges i.warn{color:#b45309;border-color:#fcd34d;background:#fffbeb;}
+.sp-shop-desc{margin:0;font-size:12.5px;color:var(--text-dim);line-height:1.45;min-height:2.9em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.sp-shop-price{display:flex;flex-direction:column;gap:2px;border-top:1px dashed var(--border);padding-top:8px;margin-top:auto;}
+.sp-shop-act{display:flex;gap:6px;flex-wrap:wrap;align-items:center;} .sp-shop-act .sp-shop-more{margin-left:auto;}
+@media (max-width:1023px) and (min-width:601px){ .sp-shop .sp-shop-grid{grid-template-columns:repeat(auto-fill,minmax(min(100%,220px),1fr)) !important;} }
+@media (max-width:600px){ .sp-shop .sp-shop-grid{grid-template-columns:minmax(0,1fr) !important;gap:8px !important;} .sp-shop .sp-shop-i{padding:10px;gap:6px;} .sp-shop-art{flex-basis:56px;width:56px;height:56px;} .sp-shop-desc{min-height:0;} }
+.sp-shop-pop{position:fixed;left:0;top:0;z-index:950;width:min(320px,calc(100vw - 16px));max-height:calc(100vh - 16px);overflow:auto;background:var(--panel);border:1px solid var(--border);border-radius:12px;box-shadow:0 12px 32px rgba(15,23,42,.2);padding:12px;pointer-events:none;opacity:0;visibility:hidden;transform:translateY(4px);transition:opacity .12s,transform .12s,visibility .12s;}
+.sp-shop-pop.on{opacity:1;visibility:visible;transform:none;}
+.sp-shop-dt{display:flex;flex-direction:column;gap:8px;font-size:13px;}
+.sp-shop-dt-h{display:flex;gap:10px;align-items:center;}
+.sp-shop-dt-art{flex:0 0 88px;width:88px;height:88px;display:flex;align-items:center;justify-content:center;border-radius:12px;background:var(--panel-alt);overflow:hidden;}
+.sp-shop-dt-art svg{max-width:100%;max-height:100%;}
+.sp-shop-dt-t{display:flex;flex-direction:column;gap:4px;min-width:0;} .sp-shop-dt-t b{font-size:15px;font-weight:800;overflow-wrap:anywhere;}
+.sp-shop-dt-desc{margin:0;color:var(--text-dim);line-height:1.5;}
+.sp-shop-dl{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:4px 12px;margin:0;} .sp-shop-dl dt{color:var(--text-dim);white-space:nowrap;} .sp-shop-dl dd{margin:0;overflow-wrap:anywhere;}
+.sp-shop-fx{display:flex;flex-direction:column;gap:2px;padding:8px 10px;border-radius:10px;background:color-mix(in srgb,var(--cold) 8%,var(--panel));border:1px solid color-mix(in srgb,var(--cold) 25%,var(--border));}
+.modal.sp-shop-modal{width:min(440px,100%);}
 </style>
 </head>
 <body data-theme="light"><svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="spPixelF" x="0" y="0"><feFlood x="1" y="1" height="1" width="1"/><feComposite width="3" height="3"/><feTile result="a"/><feComposite in="SourceGraphic" in2="a" operator="in"/><feMorphology operator="dilate" radius="1.5"/></filter><filter id="spWcF" x="-15%" y="-15%" width="130%" height="130%"><feTurbulence type="fractalNoise" baseFrequency=".22" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.1" xChannelSelector="R" yChannelSelector="G" result="d"/><feGaussianBlur in="d" stdDeviation=".18"/></filter><filter id="spPaintF" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="turbulence" baseFrequency=".45" numOctaves="1" seed="11" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale=".38" xChannelSelector="R" yChannelSelector="B"/></filter></svg>
@@ -17261,8 +17293,7 @@ function spShopBuy(id, qty){
   qty = Math.max(1, Math.min(+qty||1, 10));
   const st = spShopState(u, it, qty); if(!st.ok) return toast(st.why, 'warn');
   const gv = it.give||{};
-  const gain = gv.spirit ? `${tx('精灵','Spirit','Tinh linh')} ${trT(spDef(gv.spirit)?.name||[gv.spirit])}` : gv.skin ? `${tx('皮肤','Skin','Trang phục')} ${trT(spSkin(gv.skin)?.name||[gv.skin])}` : gv.title ? `${tx('称号','Title','Danh hiệu')}「${trT(gv.title)}」` : gv.deco ? `${tx('家园装饰','Home decoration','Trang trí nhà')} ${trT(SP_DECOS[gv.deco]?.n||[gv.deco])}` : gv.skinRarity ? tx('随机未拥有皮肤','A random skin you don\'t own','Trang phục ngẫu nhiên chưa có')
-    : Object.entries(gv).map(([k,v])=>`${spResIcon(k==='feed'?'feed':k)} ${spResName(k==='feed'?'feed':k)} +${v}`).join(' · ');
+  const gain = spShopGain(it);
   spConfirm({type:'shop', icon:it.icon||'🛒', title:`${tx('兑换','Exchange','Đổi')}：${trT(it.name)}`, costs:[{res:it.cur, n:+it.price}], batch:qty, effect:`${tx('获得','Get','Nhận')}：${gain}${qty>1?` ×${qty}`:''} · ${tx('限购','Limit','Giới hạn')} ${st.bought+qty}/${st.lim}`}, ()=>spShopBuyDo(id, qty));
 }
 function spShopBuyDo(id, qty){
@@ -17809,6 +17840,65 @@ function spSkinsHtml(){
   </div>`;
 }
 
+/* ---------- 商品详情：名称 / 图标 / 描述 / 价格 / 库存 / 限购 / 来源 / 稀有度 / 效果预览（悬停浮层 · 触屏点「详情」弹窗） ---------- */
+function spShopGain(it){ const gv = it.give||{};
+  return gv.spirit ? `${tx('精灵','Spirit','Tinh linh')} ${trT(spDef(gv.spirit)?.name||[gv.spirit])}` : gv.skin ? `${tx('皮肤','Skin','Trang phục')} ${trT(spSkin(gv.skin)?.name||[gv.skin])}` : gv.title ? `${tx('称号','Title','Danh hiệu')}「${trT(gv.title)}」` : gv.deco ? `${tx('家园装饰','Home decoration','Trang trí nhà')} ${trT(SP_DECOS[gv.deco]?.n||[gv.deco])}` : gv.skinRarity ? tx('随机未拥有皮肤','A random skin you don\'t own','Trang phục ngẫu nhiên chưa có')
+    : Object.entries(gv).map(([k,v])=>`${spResIcon(k==='feed'?'feed':k)} ${spResName(k==='feed'?'feed':k)} +${v}`).join(' · '); }
+function spShopRar(it){ const gv = it.give||{}, sk = gv.skin && spSkin(gv.skin), rk = it.skRar || sk?.rarity || gv.skinRarity;
+  if(rk && SP_RARITY[rk]) return `<span class="rar-pill r-${rk}">${escapeHtml(trT(SP_RARITY[rk].n))}</span>`;
+  const r = it.rar || (gv.spirit && spDef(gv.spirit)?.rar); return r ? `<span class="sp-badge">${escapeHtml(r)}</span>` : escapeHtml(tx('普通','Standard','Thường')); }
+function spShopSource(it){
+  const out = [trT(SP_SHOP_CATS[it.cat]||SP_SHOP_CATS.all)];
+  if(String(it.id).startsWith('spsh_')) out.push(tx('精灵发布到商店池','Spirit released to the shop pool','Tinh linh phát hành vào cửa hàng'));
+  else if(String(it.id).startsWith('shx_')) out.push(tx('精灵专属皮肤','Spirit-exclusive skin','Trang phục riêng của tinh linh'));
+  if(it.evOnly){ const e = spEvents().find(x=>x.id===it.evOnly); out.push(`${tx('活动限定','Event only','Chỉ trong sự kiện')}：${e ? trT(e.name) : it.evOnly}`); }
+  else out.push(tx('常驻商品','Regular item','Hàng thường xuyên'));
+  return out.join(' · ');
+}
+function spShopArt(it, size){ const gv = it.give||{};
+  return gv.spirit && spDef(gv.spirit) ? spiritView(spDef(gv.spirit), size, 3, {nofx:true}) : gv.skin && spSkin(gv.skin) ? spSkinPreview(spSkin(gv.skin), size, 3, {nofx:true}) : `<span class="sp-shop-ico" aria-hidden="true">${escapeHtml(it.icon||'🎁')}</span>`; }
+function spShopDetailHtml(it, me){
+  const st = me ? spShopState(me, it, 1) : null, left = +it.stock ? Math.max(0, +it.stock - spShopSold(it)) : null;
+  const row = (k, v)=>`<dt>${escapeHtml(k)}</dt><dd>${v}</dd>`;
+  return `<div class="sp-shop-dt"><div class="sp-shop-dt-h"><div class="sp-shop-dt-art">${spShopArt(it, 88)}</div><div class="sp-shop-dt-t"><b data-i18n-ignore="1">${escapeHtml(it.icon||'')} ${escapeHtml(trT(it.name))}</b><small>${spShopRar(it)}</small></div></div>
+    ${it.desc && trT(it.desc) ? `<p class="sp-shop-dt-desc">${escapeHtml(trT(it.desc))}</p>` : ''}
+    <dl class="sp-shop-dl">${row(tx('价格','Price','Giá'), `${spResIcon(it.cur)} <b>${+it.price||0}</b> ${escapeHtml(spResName(it.cur))}${me?` <small class="hint">(${escapeHtml(tx('持有','you have','đang có'))} ${spResBal(me, it.cur)})</small>`:''}`)}
+      ${row(tx('库存','Stock','Tồn kho'), left==null ? escapeHtml(tx('不限','Unlimited','Không giới hạn')) : `${left} / ${+it.stock}`)}
+      ${row(tx('限购','Limit','Giới hạn'), `${escapeHtml(trT(SP_PERIOD2[it.period]||SP_PERIOD2.day))} ${+it.limit||1}${st?` · ${escapeHtml(tx('已兑','bought','đã đổi'))} ${st.bought}/${st.lim}`:''}`)}
+      ${row(tx('来源','Source','Nguồn'), escapeHtml(spShopSource(it)))}
+      ${row(tx('稀有度','Rarity','Độ hiếm'), spShopRar(it))}</dl>
+    <div class="sp-shop-fx"><b>${escapeHtml(tx('效果预览','Effect preview','Xem trước hiệu ứng'))}</b><span>${escapeHtml(tx('兑换后获得','You get','Bạn nhận'))}：${spShopGain(it)}</span></div>
+    ${st && !st.ok ? `<small class="sp-why">${escapeHtml(st.why)}</small>` : ''}</div>`;
+}
+function spShopDetailModalHtml(m){
+  const it = spShopItems().find(i=>i.id===m.id); if(!it || !spCanSee()) return '';
+  const me = spCanPlay() ? spU() : null, st = me ? spShopState(me, it, 1) : null;
+  return `<div class="modal sp-shop-modal" role="dialog" aria-modal="true" aria-labelledby="spShopDtT"><div class="modal-head"><h2 id="spShopDtT">${spIcon('cart',18)} ${escapeHtml(tx('商品详情','Item details','Chi tiết mặt hàng'))}</h2><button class="modal-close" data-act="closeModal" aria-label="${escapeAttr(tx('关闭','Close','Đóng'))}">${svgIcon('x',15)}</button></div>
+    <div class="modal-body">${spShopDetailHtml(it, me)}</div>
+    <div class="modal-foot"><span style="flex:1"></span><button class="btn btn-ghost btn-sm" data-act="closeModal">${escapeHtml(tx('关闭','Close','Đóng'))}</button>${me?`<button class="btn btn-primary btn-sm" data-act="spBuy" data-id="${escapeAttr(it.id)}" ${st.ok?'':'disabled'}>${escapeHtml(tx('兑换','Exchange','Đổi'))}</button>`:''}</div></div>`;
+}
+function spRenderModal5(m){ if(m.type==='spShopDetail') return spShopDetailModalHtml(m); return ''; }
+/* 悬停浮层：只在有鼠标悬停能力的设备上出现；键盘聚焦卡片同样显示；触屏用「详情」按钮 */
+var spShopPopEl = null, spShopPopId = '';
+function spShopPopHide(){ if(spShopPopEl){ spShopPopEl.classList.remove('on'); spShopPopEl.setAttribute('aria-hidden', 'true'); } spShopPopId = ''; }
+function spShopPopShow(card){
+  const id = card?.dataset?.shopId; if(!id || !spCanSee() || state.modal) return;
+  const it = spShopItems().find(i=>i.id===id); if(!it) return spShopPopHide();
+  if(!spShopPopEl){ spShopPopEl = document.createElement('div'); spShopPopEl.className = 'sp-shop-pop'; spShopPopEl.setAttribute('role', 'tooltip'); spShopPopEl.id = 'spShopPop'; document.body.appendChild(spShopPopEl); }
+  if(spShopPopId!==id){ spShopPopEl.innerHTML = spShopDetailHtml(it, spCanPlay() ? spU() : null); spShopPopId = id; }
+  const r = card.getBoundingClientRect(), W = spShopPopEl.offsetWidth || 320, H = spShopPopEl.offsetHeight || 300, vw = innerWidth, vh = innerHeight, gap = 10;
+  let x = r.right + gap; if(x + W > vw - 8) x = r.left - gap - W; if(x < 8) x = Math.max(8, Math.min(vw - W - 8, r.left));
+  let y = x===r.right + gap || x===r.left - gap - W ? r.top : r.bottom + gap; if(y + H > vh - 8) y = Math.max(8, (x===r.right + gap || x===r.left - gap - W) ? vh - H - 8 : r.top - gap - H);
+  spShopPopEl.style.left = `${Math.round(x)}px`; spShopPopEl.style.top = `${Math.round(Math.max(8, y))}px`; spShopPopEl.classList.add('on'); spShopPopEl.setAttribute('aria-hidden', 'false');
+  card.setAttribute('aria-describedby', 'spShopPop');
+}
+function spShopCanHover(){ try{ return matchMedia('(hover:hover) and (pointer:fine)').matches; }catch(_e){ return false; } }
+document.addEventListener('mouseover', e=>{ if(!spShopCanHover()) return; const c = e.target?.closest?.('.sp-shop-i[data-shop-id]'); if(c) spShopPopShow(c); else if(spShopPopId) spShopPopHide(); });
+document.addEventListener('focusin', e=>{ const c = e.target?.closest?.('.sp-shop-i[data-shop-id]'); if(c && e.target===c) spShopPopShow(c); else if(spShopPopId && !c) spShopPopHide(); });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape' && spShopPopId) spShopPopHide(); });
+addEventListener('scroll', ()=>{ if(spShopPopId) spShopPopHide(); }, {passive:true, capture:true});
+addEventListener('resize', ()=>{ if(spShopPopId) spShopPopHide(); });
+
 /* ---------- 兑换商店 v2 ---------- */
 function spShopHtml(){
   const me = spCanPlay() ? spU() : null, S = spS(), cat = S.shopCat || 'all', admin = spIsAdmin();
@@ -17822,13 +17912,13 @@ function spShopHtml(){
     <div class="sp-note">⭐ ${escapeHtml(tx('赛季积分 = 当季经验 ×','Season points = season XP ×','Điểm mùa = EXP mùa ×'))} ${gCfg().pointRate}% · ${escapeHtml(tx('赛季结束时清零；图鉴点、成就点、碎片与返场券永久保留。批量或大额兑换会再次确认。','They reset at season end; codex points, achievement points, shards and return tickets are permanent. Batch or large exchanges ask you to confirm again.','Điểm mùa đặt lại cuối mùa; điểm sách tranh, điểm thành tựu, mảnh và vé tái xuất được giữ vĩnh viễn. Đổi hàng loạt hoặc số lớn sẽ cần xác nhận lần nữa.'))}</div>
     ${bal}
     <div class="sp-evf__chips" role="tablist">${Object.entries(SP_SHOP_CATS).map(([k,n])=>`<button type="button" role="tab" aria-selected="${cat===k}" class="sp-pillbtn ${cat===k?'active':''}" data-act="spShopCat" data-v="${k}">${escapeHtml(trT(n))} <small>${cnt(k)}</small></button>`).join('')}</div>
-    <div class="sp-shop-grid">${items.map(it=>{ const st = me ? spShopState(me, it, 1) : null, gv = it.give||{};
-      const art = gv.spirit && spDef(gv.spirit) ? spiritView(spDef(gv.spirit), 64, 3, {nofx:true}) : gv.skin && spSkin(gv.skin) ? spSkinPreview(spSkin(gv.skin), 64, 3, {nofx:true}) : `<span class="sp-shop-ico" aria-hidden="true">${escapeHtml(it.icon||'🎁')}</span>`;
-      return `<div class="sp-shop-i sp-c4 ${it.enabled===false?'off':''}"><div class="c4-badges">${it.rar?`<i class="c4-badge">${it.rar}</i>`:''}${it.skRar?`<i class="c4-badge">${escapeHtml(trT(SP_RARITY[it.skRar]?.n||['','','']))}</i>`:''}${+it.stock?`<i class="c4-badge warn">${escapeHtml(tx('库存','Stock','Kho'))} ${Math.max(0, +it.stock - spShopSold(it))}</i>`:''}</div>
-        <header class="c4-h"><div class="c4-title"><b class="c4-name" title="${escapeAttr(trT(it.name))}">${escapeHtml(trT(it.name))}</b><small class="c4-label">${escapeHtml(trT(SP_SHOP_CATS[it.cat]||SP_SHOP_CATS.all))}</small></div></header>
-        <div class="c4-b"><div class="c4-art sm">${art}</div><p class="c4-desc" title="${escapeAttr(trT(it.desc||['','','']))}">${escapeHtml(trT(it.desc||['','','']))}</p></div>
-        <div class="c4-p"><div class="sp-price">${spResIcon(it.cur)} ${it.price} <small>${escapeHtml(spResName(it.cur))}</small></div><small class="hint">${escapeHtml(trT(SP_PERIOD2[it.period]||SP_PERIOD2.day))} ${escapeHtml(tx('限购','limit','giới hạn'))} ${+it.limit||1}${st?` · ${escapeHtml(tx('已兑','bought','đã đổi'))} ${st.bought}/${st.lim}`:''}</small>${st && !st.ok?`<small class="sp-why">${escapeHtml(st.why)}</small>`:''}</div>
-        <footer class="c4-f">${me?`<button type="button" class="btn ${st.ok?'btn-primary':'btn-ghost'} btn-sm" data-act="spBuy" data-id="${escapeAttr(it.id)}" ${st.ok?'':'disabled'}>${escapeHtml(tx('兑换','Exchange','Đổi'))}</button>${st.ok && (+it.limit||1) - st.bought >= 2 && !it.give?.spirit && !it.give?.skin && !it.give?.title && !it.give?.deco?`<button type="button" class="btn btn-ghost btn-sm" data-act="spBuy" data-id="${escapeAttr(it.id)}" data-v="2" ${spShopState(me, it, 2).ok?'':'disabled'}>×2</button>`:''}`:admin?`<button type="button" class="btn btn-ghost btn-sm" data-act="spAdmShopEdit" data-id="${escapeAttr(it.id)}">${escapeHtml(tx('编辑','Edit','Sửa'))}</button>`:''}</footer></div>`; }).join('') || spStateHtml('empty', tx('该分类暂无商品','No items in this category','Danh mục này chưa có mặt hàng'))}</div>
+    <div class="sp-shop-grid">${items.map(it=>{ const st = me ? spShopState(me, it, 1) : null, nm = trT(it.name), desc = trT(it.desc||['','','']);
+      return `<article class="sp-shop-i ${it.enabled===false?'off':''}" data-shop-id="${escapeAttr(it.id)}" tabindex="0" aria-label="${escapeAttr(nm)}">
+        <div class="sp-shop-top"><div class="sp-shop-art">${spShopArt(it, 60)}</div><div class="sp-shop-meta"><b class="sp-shop-name" title="${escapeAttr(nm)}">${escapeHtml(nm)}</b><small class="sp-shop-cat">${escapeHtml(trT(SP_SHOP_CATS[it.cat]||SP_SHOP_CATS.all))}</small>
+          <div class="sp-shop-badges">${it.rar?`<i>${escapeHtml(it.rar)}</i>`:''}${it.skRar?`<i>${escapeHtml(trT(SP_RARITY[it.skRar]?.n||['','','']))}</i>`:''}${+it.stock?`<i class="warn">${escapeHtml(tx('库存','Stock','Kho'))} ${Math.max(0, +it.stock - spShopSold(it))}</i>`:''}</div></div></div>
+        <p class="sp-shop-desc" title="${escapeAttr(desc)}">${escapeHtml(desc)}</p>
+        <div class="sp-shop-price"><div class="sp-price">${spResIcon(it.cur)} ${it.price} <small>${escapeHtml(spResName(it.cur))}</small></div><small class="hint">${escapeHtml(trT(SP_PERIOD2[it.period]||SP_PERIOD2.day))} ${escapeHtml(tx('限购','limit','giới hạn'))} ${+it.limit||1}${st?` · ${escapeHtml(tx('已兑','bought','đã đổi'))} ${st.bought}/${st.lim}`:''}</small>${st && !st.ok?`<small class="sp-why">${escapeHtml(st.why)}</small>`:''}</div>
+        <div class="sp-shop-act">${me?`<button type="button" class="btn ${st.ok?'btn-primary':'btn-ghost'} btn-sm" data-act="spBuy" data-id="${escapeAttr(it.id)}" ${st.ok?'':'disabled'}>${escapeHtml(tx('兑换','Exchange','Đổi'))}</button>${st.ok && (+it.limit||1) - st.bought >= 2 && !it.give?.spirit && !it.give?.skin && !it.give?.title && !it.give?.deco?`<button type="button" class="btn btn-ghost btn-sm" data-act="spBuy" data-id="${escapeAttr(it.id)}" data-v="2" ${spShopState(me, it, 2).ok?'':'disabled'}>×2</button>`:''}`:spIsAdmin()?`<button type="button" class="btn btn-ghost btn-sm" data-act="spAdmShopEdit" data-id="${escapeAttr(it.id)}">${escapeHtml(tx('编辑','Edit','Sửa'))}</button>`:''}<button type="button" class="btn btn-ghost btn-sm sp-shop-more" data-act="spShopDetail" data-id="${escapeAttr(it.id)}" aria-label="${escapeAttr(`${tx('详情','Details','Chi tiết')} · ${nm}`)}">${spIcon('eye',14)} ${escapeHtml(tx('详情','Details','Chi tiết'))}</button></div></article>`; }).join('') || spStateHtml('empty', tx('该分类暂无商品','No items in this category','Danh mục này chưa có mặt hàng'))}</div>
     ${me?`<div class="sp-sec-h"><h3>🧾 ${escapeHtml(tx('兑换记录','Exchange records','Lịch sử đổi'))}</h3></div><div class="table-scroll"><table class="data-table"><thead><tr><th>${escapeHtml(tx('时间','Time','Thời gian'))}</th><th>${escapeHtml(tx('商品','Item','Mặt hàng'))}</th><th>${escapeHtml(tx('消耗','Cost','Chi phí'))}</th></tr></thead><tbody>${hist.map(h=>{ const it = spShopItems().find(i=>i.id===h.item); return `<tr><td class="mono">${escapeHtml(localDT(h.at))}</td><td>${escapeHtml(it?trT(it.name):h.item)}${(+h.qty||1)>1?` ×${h.qty}`:''}${h.skin?` → ${escapeHtml(trT(spSkin(h.skin)?.name||[h.skin]))}`:''}</td><td>${spResIcon(h.cur||'pts')} −${(+h.price)*(+h.qty||1)}</td></tr>`; }).join('') || `<tr><td colspan="3" class="hint">${escapeHtml(tx('暂无记录','No records yet','Chưa có bản ghi'))}</td></tr>`}</tbody></table></div>`:''}
   </div>`;
 }
@@ -24058,6 +24148,7 @@ function spAction17(act, el, id){
   const S = spS();
   switch(act){
     case 'spDomainEnter': spDomainEnter(el?.dataset?.id || id); return false;
+    case 'spShopDetail': { const sid = el?.dataset?.id || id; if(!spShopItems().some(i=>i.id===sid)) return false; spShopPopHide(); state.modal = {type:'spShopDetail', id:sid}; return true; }
   }
   return null;
 }
