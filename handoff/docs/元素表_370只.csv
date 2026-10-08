@@ -1,0 +1,371 @@
+﻿id,名称,English,类别,本体,元素（本体；部件A；部件B；伙伴；核心）,部件A@挂点,部件B@挂点,伙伴图元（=LV1破口元素）,核心图元,三色,本体纹样,LV3队形,LV4质变,LV5法相,LV5领域,来源
+sp_obj_lantern,灯笼灵,Lantern Sprite,obj,lantern,灯芯/wick；灯罩/lantern shade；灯光/lamplight；提手/handle；烛火/candle flame,,,candle,wick,#e7b53c #c2272d #fff3c4,,,聚合质变·手写,手写,灯神觉醒·灯之域,手写示例
+sp_obj_book,书页灵,Book Sprite,obj,book,书页/book；书签/bookmark；墨滴/ink drop；书页/page；书脊印/spine seal,bookmark@顶部,inkDrop@身侧,page,stamp,#c9773b #e8463c #fff4dc,纸纹,竖列,维度质变·层叠,元素环阵,书灵觉醒·书之域,元素表
+sp_obj_teapot,茶壶灵,Teapot Sprite,obj,teapot,茶壶/teapot；蒸汽/steam；茶杯/teacup；茶叶/tea leaf；茶珠/tea pearl,steam@顶部,teacup@身侧,teaLeaf,pearl,#2fb5a2 #e8a33c #f6f0d8,无,四角散布,材质质变·琉璃化,本体法相,茶神觉醒·壶之域,元素表
+sp_obj_compass,罗盘灵,Compass Sprite,obj,compass,罗盘/compass；方位针/needle；航线/route；星位/star point；方位盘/bearing dial,compassNeedle@身侧,thread@尾部,sparkle,cipherWheel,#d8553a #f2c14e #fff3dc,同心纹,成簇,空间质变·折叠空间,元素雨,天枢觉醒·罗之域,元素表
+sp_obj_mirror,镜子灵,Mirror Sprite,obj,mirror,镜面/mirror；镜片/mirror shards；光斑/light spot；镜影/reflection；镜心/mirror core,mirrorShard@身边浮游,lightSpot@身侧,mirrorPane,diamond,#7fb8e6 #c9a24a #f2fbff,切面,成簇,分化质变·碎分,回响轮廓,镜界觉醒·镜之域,元素表
+sp_obj_key,钥匙灵,Key Sprite,obj,key,钥匙/key；锁/lock；钥匙圈/key ring；小钥匙/little key；锁芯/lock core,lock@身侧,chain@尾部,key,cipherWheel,#e0b030 #7a4b2a #fff3c4,无,环绕,聚合质变·聚团,本体法相,秘钥觉醒·钥之域,元素表
+sp_obj_brush,画笔灵,Brush Sprite,obj,brush,画笔/brush；颜料/paint；墨滴/ink drop；笔锋/brush tip；彩墨珠/ink pearl,paintDab@身侧,inkDrop@尾部,brushTip,pearl,#3b6fd8 #e8463c #fff4e0,无,侧弧,聚合质变·环形聚合,双生法相,创绘觉醒·画之域,元素表
+sp_obj_umbrella,雨伞灵,Umbrella Sprite,obj,umbrella,伞/umbrella；雨丝/rain；水洼/puddle；雨滴/raindrop；伞骨/umbrella ribs,rain@两侧,wave@尾部,drop,wheel,#d8473b #3fa8e8 #fff1e6,斜纹,环绕,聚合质变·环形聚合,元素漩涡,天幕觉醒·雨之域,元素表
+sp_obj_scissors,剪刀灵,Scissors Sprite,obj,scissors,剪刀/scissors；剪纸花/paper-cut flower；缎带/ribbon；纸屑/paper bits；剪纹/cut pattern,sakura@身侧,ribbon@尾部,errorShard,kaleido,#e8463c #c9d2dc #fff4e6,无,尾随,空间质变·折叠空间,元素雨,斩界觉醒·剪之域,元素表
+sp_obj_sand_glass,沙漏灵,Sand-glass Sprite,obj,hourglass,沙漏/sand-glass；沙堆/sand pile；玻璃光/glass glint；小沙漏/little sand-glass；时砂/time sand,sand@底部,mirrorShard@身侧,hourglass,amber,#c9a24a #3b7fd8 #fff4d0,无,侧弧,时间质变·流沙计时,元素环阵,时渊觉醒·沙之域,元素表
+sp_obj_mask,面具灵,Mask Sprite,obj,mask,面具/mask；缎带/ribbon；流苏/tassel；亮片/sequin；宝石/gem,ribbon@两侧,tassel@尾部,sparkle,gem,#7a3bd8 #f2c14e #fff0f6,无,四角散布,分化质变·一分为二,回响轮廓,万象觉醒·面之域,元素表
+sp_obj_wind_chime,风铃灵,Wind Chime Sprite,obj,bell,铃/bell；风铃管/chime tubes；风/wind；音符/note；铃心/clapper,chimeTube@底部,swirl@身侧,note,pearl,#3fb8d8 #f2c14e #effcff,无,竖列,概念质变·元素符阵,巨元素法相,音域觉醒·风之域,元素表
+sp_obj_kite,纸鸢灵,Kite Sprite,obj,kite,纸鸢/kite；风筝尾/kite tail；风筝线/kite string；云/cloud；蝴蝶结/bow,kiteTail@尾部,thread@底部,cloud,bow,#e8463c #3fa8e8 #fff4dc,无,左右一对,维度质变·层叠,元素漩涡,云海觉醒·纸之域,元素表
+sp_obj_seal,印章灵,Seal Sprite,obj,seal,印章/seal；印泥/ink paste；卷轴/scroll；印纹/seal mark；玉印/jade seal,paintDab@身侧,scroll@底部,stamp,jadeDisc,#c0392b #e8c56a #fff2e0,无,左右一对,概念质变·线稿化,双生法相,天印觉醒·印之域,元素表
+sp_obj_abacus,算盘灵,Abacus Sprite,obj,abacus,算盘/abacus；算珠串/bead row；铜钱/coin；算珠/bead；金锭/gold ingot,abacusRow@身侧,coin@身边浮游,bead,ingot,#8a5a2b #e8b030 #fff1d6,木纹,尾随,概念质变·元素符阵,巨元素法相,命数觉醒·算之域,元素表
+sp_arch_tower,塔灵,Tower Sprite,arch,tower,塔/tower；旗幡/banner；云/cloud；檐铃/eave bell；塔珠/tower pearl,flag@顶部,cloud@底部,bell,pearl,#c9773b #3b6fd8 #fff1dc,砖纹,竖列,结构质变·模块外挂,本体法相,塔界觉醒·塔之域,元素表
+sp_arch_bridge,桥灵,Bridge Sprite,arch,bridge,桥/bridge；流水/stream；栏柱/pillar；卵石/pebble；拱心石/keystone,wave@尾部,pillar@两侧,pebble,archMini,#8a96a8 #3fa8e8 #f0f4f8,无,尾随,结构质变·部件浮离,巨元素法相,虹桥觉醒·桥之域,元素表
+sp_arch_gate,门灵,Gate Sprite,arch,door,门/gate；门环/door knocker；钥匙/key；锁/lock；门钉/door stud,jadeDisc@身前,key@身侧,lock,button,#c0392b #e8b030 #fff0dc,无,竖列,空间质变·星轨门,双生法相,门界觉醒·门之域,元素表
+sp_arch_clock_tower,钟楼灵,Clock Tower Sprite,arch,clocktower,钟楼/clock tower；钟摆/pendulum；钟/bell；齿轮/gear；钟面/clock face,pendulum@底部,bell@顶部,gearMini,dial,#8a5a2b #e8b030 #fff4dc,无,侧弧,结构质变·脚手架重构,元素漩涡,时鸣觉醒·钟之域,元素表
+sp_arch_pavilion,亭灵,Pavilion Sprite,arch,pavilion,亭/pavilion；灯笼/lanterns；荷叶/lotus leaf；竹叶/bamboo leaf；亭心珠/pavilion pearl,lanternSeg@两侧,lotusPad@底部,bambooLeaf,pearl,#2f9e6a #d84a3b #fff4dc,无,左右一对,结构质变·脚手架重构,巨元素法相,云亭觉醒·亭之域,元素表
+sp_arch_rampart,城墙灵,Rampart Sprite,arch,wall,城墙/rampart；旗帜/banner；砖块/brick；石块/stone；城盾/wall shield,flag@顶部,brick@身侧,rock,shieldMini,#a08a6a #d8473b #f4ecdc,砖纹,尾随,结构质变·模块外挂,元素雨,铁壁觉醒·城之域,元素表
+sp_arch_window,窗灵,Window Sprite,arch,window,窗/window；窗花/window flowers；光斑/light spots；樱花瓣/petal；晨光/morning sun,blossom@底部,lightSpot@身边浮游,sakura,sunDisc,#3b8fd8 #f2c14e #effaff,无,成簇,结构质变·部件浮离,双生法相,瞳窗觉醒·窗之域,元素表
+sp_arch_stairway,台阶灵,Stairway Sprite,arch,stairs,台阶/stairway；石灯/stone lamps；苔/moss；石子/pebble；阶石/step stone,lampPost@两侧,moss@底部,pebble,step,#9a8a7a #5fbf4a #f4f0e8,无,环绕,结构质变·脚手架重构,元素环阵,登天觉醒·台之域,元素表
+sp_arch_eaves,屋檐灵,Eaves Sprite,arch,eaves,屋檐/eaves；风铃/chimes；檐雨/eave rain；瓦片/roof tile；檐铃/eave bell,chimeTube@两侧,rain@底部,roofTile,bell,#3b4f8a #e8b030 #eef2fa,无,左右一对,结构质变·模块外挂,元素雨,云顶觉醒·屋之域,元素表
+sp_arch_courtyard,庭院灵,Courtyard Sprite,arch,rock,假山/garden rock；松针/pine needles；池水/pond；圆叶/round leaf；月门/moon gate,pineNeedle@顶部,wave@尾部,leafR,archMini,#7a8a9a #3fae6a #eef4f0,无,成簇,结构质变·脚手架重构,元素环阵,桃园觉醒·庭之域,元素表
+sp_arch_archway,牌坊灵,Archway Sprite,arch,gate,牌坊/archway；中国结/knots；石阶/steps；祥云/auspicious cloud；匾印/plaque seal,knot@两侧,step@底部,cloud,stamp,#c0392b #e8b030 #fff1e0,无,环绕,结构质变·模块外挂,本体法相,圣坊觉醒·牌之域,元素表
+sp_arch_lamp_stand,灯架灵,Lamp Stand Sprite,arch,lamppost,灯架/lamp stand；光斑/light spots；藤蔓/vine；萤光/glow；灯泡/bulb,lightSpot@身边浮游,vine@底部,glow,bulb,#2f3f5a #f2c14e #fff6d0,无,四角散布,结构质变·部件浮离,回响轮廓,光架觉醒·灯之域,元素表
+sp_plant_vine,藤灵,Vine Sprite,plant,leaf,藤/vine；卷须/tendrils；花苞/bud；圆叶/round leaf；嫩芽/sprout,vine@两侧,bud@顶部,leafR,sprout,#2fae4a #e86a8a #f0ffe0,叶脉,四角散布,聚合质变·聚团,元素环阵,森罗觉醒·藤之域,元素表
+sp_moss,苔灵,Moss Sprite,plant,shp_tri2,苔/moss；苔团/moss tuft；孢子/spores；露珠/dewdrop；苔石/moss stone,moss@底部,spore@身边浮游,drop,pebble,#4d8a1a #9be05a #effbd6,斑块,成簇,聚合质变·聚团,回响轮廓,苔界觉醒·苔之域,元素表
+sp_flower,花灵,Blossom Sprite,plant,flower,花/flower；叶片/leaves；花苞/bud；花瓣/petal；花心/flower heart,leaf@两侧,bud@身侧,petal,blossom,#ff6fae #3fbf5a #ffd84a,无,尾随,聚合质变·环形聚合,巨元素法相,花神觉醒·花之域,元素表
+sp_plant_fruit,果实灵,Fruit Sprite,plant,fruit,果实/fruit；叶片/leaf；浆果/berries；种子/seed；樱桃/cherry,leafR@顶部,berry@身侧,seed,cherry,#e8463c #3fae4a #ffe6c9,无,竖列,聚合质变·环形聚合,巨元素法相,果神觉醒·果之域,元素表
+sp_sprout,种子灵,Seed Sprite,plant,seed,种子/seed；嫩芽/sprout；根须/roots；种子/seed；四叶草/clover,sprout@顶部,root@底部,seed,clover,#9a6a3a #5fd35a #f4ffe0,无,侧弧,分化质变·碎分,元素雨,生发觉醒·种之域,元素表
+sp_tree,树灵,Tree Sprite,plant,tree,树/tree；果子/fruit；根须/roots；叶片/leaf；年轮/tree rings,fruit@身边浮游,root@底部,leaf,agate,#4a9a2a #8a5a2b #e8ffd0,无,侧弧,结构质变·模块外挂,元素漩涡,树神觉醒·树之域,元素表
+sp_mush,蘑菇灵,Mushroom Sprite,plant,mushroom,蘑菇/mushroom；孢子/spores；菌丝/hyphae；小菌盖/little cap；菌石/mushroom stone,spore@身边浮游,hypha@底部,mushcap,pebble,#e8463c #fff4d6 #ffffff,无,左右一对,分化质变·碎分,元素雨,菌域觉醒·蘑之域,元素表
+sp_plant_bamboo,竹灵,Bamboo Sprite,plant,bamboo,竹/bamboo；竹叶/bamboo leaves；竹节/bamboo node；嫩芽/shoot；竹玉/bamboo jade,bambooLeaf@顶部,bambooNode@身侧,sprout,jadeDisc,#3fae4a #c9e86a #effbe0,无,四角散布,结构质变·模块外挂,双生法相,竹神觉醒·竹之域,元素表
+sp_lotus,莲灵,Lotus Sprite,plant,lotus,莲/lotus；荷叶/lotus leaf；莲瓣/petals；露珠/dewdrop；莲蓬/seed pod,lotusPad@底部,lotusPetal@两侧,drop,honeycomb,#f472b6 #3fae6a #fff0f8,无,竖列,聚合质变·堆叠聚合,元素环阵,莲台觉醒·莲之域,元素表
+sp_plant_pine,松灵,Pine Sprite,plant,pine,松/pine；松果/pine cone；积雪/snow cap；雪花/snowflake；松脂/resin,pinecone@身侧,cloud@顶部,snowflake,amber,#1f7a3a #8a5a2b #e8f8e0,无,尾随,概念质变·线稿化,元素漩涡,松神觉醒·松之域,元素表
+sp_plant_plum_blossom,梅灵,Plum Blossom Sprite,plant,flower,梅/plum blossom；梅枝/branch；雪花/snowflakes；梅花/plum flower；梅蕊/stamens,root@底部,snowflake@身边浮游,plum,pollen,#e8466a #6a3a2a #fff0f2,无,左右一对,聚合质变·环形聚合,双生法相,梅神觉醒·梅之域,元素表
+sp_plant_orchid,兰灵,Orchid Sprite,plant,orchid,兰/orchid；兰叶/orchid leaves；露珠/dew；花瓣/petal；兰露/orchid dew,orchid@两侧,drop@身边浮游,petal,pearl,#9a6ad8 #3fae6a #f6f0ff,无,环绕,概念质变·线稿化,回响轮廓,兰神觉醒·兰之域,元素表
+sp_plant_chrysanthemum,菊灵,Chrysanthemum Sprite,plant,daisy,菊/chrysanthemum；菊瓣/petals；叶片/leaves；小菊/little mum；秋阳/autumn sun,mum@身侧,leafR@两侧,mum,sunDisc,#f2b01e #3f8a3a #fff6d0,无,侧弧,聚合质变·聚团,本体法相,菊神觉醒·菊之域,元素表
+sp_plant_cactus,仙人掌灵,Cactus Sprite,plant,cactus,仙人掌/cactus；掌臂/cactus arms；小花/flower；尖刺/spine；储水/stored water,cactusArm@两侧,blossom@顶部,thorn,drop,#3fae4a #ff6fae #effbd6,无,环绕,概念质变·元素符阵,元素漩涡,荒神觉醒·仙之域,元素表
+sp_plant_snap_flower,食人花灵,Snap Flower Sprite,plant,venus,食人花/flytrap；叶片/leaf；藤蔓/vine；尖刺/thorn；蜜珠/nectar bead,leaf@尾部,vine@底部,thorn,amber,#3faa3a #e8466a #fff0d6,无,成簇,概念质变·元素符阵,本体法相,噬神觉醒·食之域,元素表
+sp_mineral_crystal,晶灵,Crystal Sprite,mineral,crystal,晶/crystal；晶簇/crystal cluster；晶片/shard；闪光/sparkle；宝石/gem,crystal@两侧,shard@顶部,sparkle,gem,#9a6ad8 #5fd3e8 #f6f0ff,切面,侧弧,材质质变·琉璃化,回响轮廓,晶界觉醒·晶之域,元素表
+sp_mineral_meteorite,陨灵,Meteorite Sprite,mineral,meteor,陨石/meteorite；焰尾/fire tail；碎石/rock chips；陨石/meteor；熔核/molten core,flame@尾部,flake@身边浮游,meteor,lavaDrop,#6a5a8a #ff8a3a #f0ecf8,冰裂,环绕,材质质变·金属化,元素漩涡,星陨觉醒·陨之域,元素表
+sp_mineral_sand,沙灵,Sand Sprite,mineral,dune,沙丘/dune；沙粒/sand；旋风/whirlwind；卵石/pebble；沙漠日/desert sun,sand@底部,swirl@身侧,pebble,sunDisc,#e8b85a #c9773b #fff6dc,水波纹,成簇,聚合质变·环形聚合,回响轮廓,沙界觉醒·沙之域,元素表
+sp_mineral_salt,盐灵,Salt Sprite,mineral,cube,盐晶/salt crystal；海浪/sea wave；盐晶/salt cube；气泡/bubble；盐核/salt core,wave@尾部,saltCube@身侧,bubble,shard,#dfe8f4 #3f8ae8 #ffffff,切面,四角散布,材质质变·琉璃化,元素环阵,盐界觉醒·盐之域,元素表
+sp_mineral_gem,宝石灵,Gem Sprite,mineral,gem,宝石/gem；闪光/sparkle；项链/necklace；宝石/gem；钻芯/diamond core,sparkle@身边浮游,chain@身侧,gem,diamond,#e8346a #f2c14e #ffe8f0,切面,竖列,材质质变·结晶化,巨元素法相,宝界觉醒·宝之域,元素表
+sp_mineral_jade,玉石灵,Jade Sprite,mineral,pebble,玉/jade；玉璧/jade disc；玉结/jade knot；祥云/cloud；玉珠/jade pearl,jadeDisc@身侧,knot@尾部,cloud,pearl,#4ac08a #c0392b #eafff4,无,尾随,材质质变·琉璃化,元素雨,玉界觉醒·玉之域,元素表
+sp_mineral_agate,玛瑙灵,Agate Sprite,mineral,agate,玛瑙/agate；玛瑙纹/agate bands；晶簇/crystals；卵石/pebble；玛瑙珠/agate bead,agate@尾部,crystal@身侧,pebble,pearl,#d8553a #f2c1a0 #fff0e8,同心纹,四角散布,材质质变·结晶化,双生法相,瑙界觉醒·玛之域,元素表
+sp_mineral_amber,琥珀灵,Amber Sprite,mineral,drop,琥珀/amber；松果/pine cone；琥珀/amber drop；蜜滴/honey drop；远古虫翅/ancient wing,pinecone@身侧,amber@身边浮游,drop,insectWing,#e8902a #7a4a1a #fff0c9,无,环绕,材质质变·金属化,元素环阵,珀界觉醒·琥之域,元素表
+sp_mineral_obsidian,黑曜灵,Obsidian Sprite,mineral,shard,黑曜石/obsidian；黑曜片/obsidian flakes；火岩/lava rock；火星/spark；熔核/molten core,obsidian@两侧,lavaRock@底部,spark,lavaDrop,#2a2440 #c04ad8 #d8d0f0,切面,侧弧,材质质变·结晶化,元素雨,曜界觉醒·黑之域,元素表
+sp_mineral_diamond,钻石灵,Diamond Sprite,mineral,diamond,钻石/diamond；光芒/rays；闪光/sparkle；晶片/shard；星芒/starburst,ray@两侧,sparkle@身边浮游,shard,burst,#8fe3ff #5aa8ff #ffffff,切面,左右一对,材质质变·金属化,本体法相,钻界觉醒·钻之域,元素表
+sp_mineral_pearl,珍珠灵,Pearl Sprite,mineral,pearl,珍珠/pearl；贝壳/shell；气泡/bubbles；珍珠/pearl；月华/moonlight,shell@身侧,bubble@身边浮游,pearl,moon,#f4eef8 #e88ab8 #ffffff,无,竖列,材质质变·金属化,双生法相,珠界觉醒·珍之域,元素表
+sp_mineral_coral_stone,珊瑚灵,Coral Stone Sprite,mineral,coral,珊瑚/coral；海星/starfish；海浪/wave；贝壳/shell；宝石/gem,starfish@身侧,wave@尾部,shell,gem,#ff6a5a #3fb8d8 #fff0ea,无,成簇,材质质变·琉璃化,元素漩涡,珊界觉醒·珊之域,元素表
+sp_flame,焰灵,Ember Sprite,elem,flame,火苗/flame；火舌/fire tongue；火星/spark；热浪/heat wave；火芯/fire core,,,spark,ember,#ff6a13 #ffd23f #7a1d0b,,,概念质变·手写,手写,焰神觉醒·焰之域,手写示例
+sp_water,水灵,Water Sprite,elem,drop,水/water；浪花/wave；气泡/bubbles；水滴/drop；漩涡/whirlpool,wave@尾部,bubble@身边浮游,drop,spiral,#2f9ae8 #8fe3ff #e8f8ff,水波纹,环绕,概念质变·元素符阵,回响轮廓,海神觉醒·水之域,元素表
+sp_wind,风灵,Wind Sprite,elem,cloud,风/wind；旋风/whirlwind；疾风线/gust lines；羽毛/feather；风车/pinwheel,swirl@两侧,speedLines@尾部,feather,pinwheel,#6ad8b8 #2f8ab8 #effffa,无,竖列,概念质变·回响轮廓,巨元素法相,风神觉醒·风之域,元素表
+sp_thunder,雷灵,Thunder Sprite,elem,bolt,雷/thunder；雷云/storm cloud；电光/electric sparks；闪电/lightning；雷核/thunder core,stormCloud@顶部,sparkle@两侧,zap,burst,#ffd23f #5b6cff #fff8d0,无,左右一对,概念质变·回响轮廓,元素雨,雷神觉醒·雷之域,元素表
+sp_elem_ice,冰灵,Ice Sprite,elem,crystal,冰/ice；冰棱/icicles；霜雾/frost mist；冰雹/hail；雪花/snowflake,iceShard@两侧,mist@底部,hail,snowflake,#8fd8ff #2f7ad8 #f0fbff,冰裂,竖列,材质质变·结晶化,巨元素法相,冰神觉醒·冰之域,元素表
+sp_elem_light,光灵,Light Sprite,elem,sun,光/light；光斑/light spots；光束/beam；闪光/sparkle；光核/light core,lightSpot@身边浮游,beam@身侧,sparkle,glow,#ffd84a #ff9a3a #fffbe0,无,成簇,概念质变·线稿化,元素漩涡,光神觉醒·光之域,元素表
+sp_elem_dusk,暗灵,Dusk Sprite,elem,shadow,暗/darkness；月牙/crescent；影团/shadow；暗萤/dim glow；暗核/dark core,moon@身侧,shadowBlob@底部,glow,voidRing,#3a2a6a #9a6ad8 #d8ccf8,无,环绕,概念质变·回响轮廓,本体法相,暗神觉醒·暗之域,元素表
+sp_earth,土灵,Earth Sprite,elem,rock,土/earth；石块/stones；嫩芽/sprout；卵石/pebble；土玛瑙/earth agate,rock@身边浮游,sprout@顶部,pebble,agate,#a0703a #5fae3a #f8ecd8,冰裂,四角散布,概念质变·元素符阵,元素环阵,地神觉醒·土之域,元素表
+sp_elem_metal,金灵,Metal Sprite,elem,ingot,金/metal；金铃/gold bell；金片/metal flakes；铜钱/coin；金核/metal core,bell@身侧,flake@身边浮游,coin,nut,#e8b830 #a0a8b8 #fff6d0,横带,左右一对,概念质变·元素符阵,回响轮廓,金神觉醒·金之域,元素表
+sp_elem_timber,木灵,Timber Sprite,elem,stump,木/wood；嫩芽/sprout；叶片/leaves；圆叶/round leaf；松果/pine cone,sprout@顶部,leaf@两侧,leafR,pinecone,#8a5a2b #4ac04a #f8e8c8,木纹,尾随,概念质变·回响轮廓,巨元素法相,木神觉醒·木之域,元素表
+sp_elem_lava_rock,火岩灵,Lava Rock Sprite,elem,volcano,火岩/lava rock；熔岩滴/lava drops；烟团/smoke；火星/spark；熔岩核/lava core,lavaDrop@两侧,smoke@顶部,spark,lavaRock,#5a3a2a #ff6a1a #ffd84a,冰裂,尾随,概念质变·元素符阵,双生法相,岩神觉醒·火之域,元素表
+sp_elem_cloudlet,云灵,Cloudlet Sprite,elem,cloud,云/cloud；雨丝/rain；阳光/sunshine；风丝/breeze；云珠/cloud pearl,rain@底部,sunDisc@身边浮游,mist,pearl,#e8f0ff #5a9ae8 #ffffff,无,侧弧,概念质变·线稿化,元素雨,云神觉醒·云之域,元素表
+sp_elem_mist,雾灵,Mist Sprite,elem,ghost,雾/mist；雾气/mist；露珠/dew；雾团/fog puff；雾中月/moon in mist,mist@底部,drop@身边浮游,smoke,moon,#b8c8d8 #6a8ab8 #f4f8fc,水波纹,成簇,概念质变·线稿化,本体法相,雾神觉醒·雾之域,元素表
+sp_elem_snow,雪灵,Snow Sprite,elem,snowflake,雪/snow；雪球/snowball；冰棱/icicles；雪花/snowflake；冰雹/hail,snowball@底部,iceShard@身边浮游,snowflake,hail,#dff0ff #3f8ae8 #ffffff,无,左右一对,概念质变·线稿化,元素雨,雪神觉醒·雪之域,元素表
+sp_frost,霜灵,Frost Sprite,elem,diamond,霜/frost；冰棱/icicles；霜叶/frosted leaf；霜花/frost pattern；冰晶/ice crystal,iceShard@两侧,leafR@底部,kaleido,crystal,#a8e0f8 #5a6ad8 #f4fcff,冰裂,四角散布,概念质变·线稿化,元素漩涡,霜神觉醒·霜之域,元素表
+sp_elem_rainbow,虹灵,Rainbow Sprite,elem,rainbow,虹/rainbow；云朵/clouds；雨滴/rain；光谱/spectrum；棱镜/prism,cloud@两侧,rain@身边浮游,spectrum,prismTri,#ff6a8a #5ab8ff #fff6d0,无,侧弧,概念质变·元素符阵,双生法相,虹神觉醒·虹之域,元素表
+sp_elem_star,星灵,Star Sprite,elem,star,星/star；星尘尾/stardust tail；闪光/sparkle；星/star；星芒/starburst,dustTail@尾部,sparkle@身边浮游,star,burst,#ffd84a #7c6cf6 #fffbe0,无,四角散布,概念质变·回响轮廓,元素漩涡,星神觉醒·星之域,元素表
+sp_elem_moon,月灵,Moon Sprite,elem,moon,月/moon；星星/stars；云纱/cloud veil；闪光/sparkle；月珠/moon pearl,star@身边浮游,cloud@底部,sparkle,pearl,#f2e6a0 #5a6ad8 #fffbe8,无,环绕,概念质变·回响轮廓,元素环阵,月神觉醒·月之域2,元素表
+sp_elem_sun,日灵,Sun Sprite,elem,sun,日/sun；日冕/corona；火焰/flames；日轮/sun disc；日徽/sun emblem,burst@身后,flame@身边浮游,sunDisc,badgeStar,#ff9a1a #e8463c #fff0b0,无,竖列,概念质变·线稿化,回响轮廓,日神觉醒·日之域2,元素表
+sp_elem_void,虚灵,Void Sprite,elem,shp_wide,虚/void；虚空环/void ring；星尘/stardust；黑洞/black hole；无限/infinity,voidRing@身后,dust@身边浮游,blackhole,infinity,#2a1a4a #8a5af8 #d8c8ff,无,侧弧,概念质变·元素符阵,本体法相,虚神觉醒·虚之域,元素表
+sp_hour,时针兽,Hour Hand Sprite,time,clock,指针/clock hand；表盘/dial；刻度/tick marks；齿轮/gears；秒针/second hand,,,tick,hands,#1aa7ec #0f2a4a #f2f7fb,,,时间质变·手写,手写,时主觉醒·时之域,手写示例
+sp_time_rift,裂隙灵,Rift Sprite,time,portal,裂隙/rift；裂纹/cracks；空间框/space frame；碎片/shards；时隙核/gap core,crack@身前,cubeFrame@身侧,errorShard,voidRing,#5a3ad8 #ff5ab8 #f0e8ff,无,左右一对,空间质变·折叠空间,本体法相,裂界觉醒·裂之域,元素表
+sp_sand,沙漏灵,Hourglass Sprite,time,hourglass,沙漏/hourglass；循环箭头/loop arrow；流沙/falling sand；小沙漏/little hourglass；钟面/clock face,loopArrow@身侧,sandStream@两侧,hourglass,dial,#3b7fd8 #e8c06a #eef4ff,无,四角散布,时间质变·流沙计时,双生法相,时渊觉醒·漏之域,元素表
+sp_time_calendar,日历灵,Calendar Sprite,time,calendar,日历/calendar；日历页/page；月牙/crescent；日轮/sun；年轮/year rings,calPage@身侧,moon@身边浮游,sunDisc,agate,#e8463c #3b6fd8 #fff4ee,方格,侧弧,时间质变·逆流,元素漩涡,历神觉醒·日之域,元素表
+sp_time_resonance,回响灵,Resonance Sprite,time,wave,回响/resonance；回声波/echoes；音符/notes；声波/sound wave；共鸣铃/resonant bell,echoArc@身侧,note@身边浮游,soundWave,bell,#5ab8d8 #e85ab8 #effaff,水波纹,尾随,概念质变·线稿化,回响轮廓,回响觉醒·回之域,元素表
+sp_time_shuttle,穿梭灵,Shuttle Sprite,time,shuttle,穿梭/shuttle；疾风线/speed lines；星环/orbit；闪光/sparkle；门核/gate core,speedLines@尾部,orbit@身后,sparkle,cubeFrame,#3ad8b8 #5a6ad8 #efffff,无,侧弧,概念质变·线稿化,巨元素法相,穿界觉醒·穿之域,元素表
+sp_time_stasis,停滞灵,Stasis Sprite,time,cube,停滞/stasis；停滞符/pause mark；冰棱/icicles；沙漏/hourglass；静止纹/stillness,pause@身前,iceShard@身边浮游,hourglass,hush,#7ab8e8 #3a4a8a #f0f8ff,方格,竖列,概念质变·回响轮廓,元素环阵,静界觉醒·停之域,元素表
+sp_minute,加速灵,Haste Sprite,time,bolt,加速/acceleration；火花/sparks；风/wind；彗星/comet；加速核/boost core,spark@两侧,swirl@底部,comet,burst,#ff8a1a #ffd23f #fff4dc,折线,尾随,概念质变·元素符阵,回响轮廓,速界觉醒·加之域,元素表
+sp_second,逆转灵,Reversal Sprite,time,spiral,逆转/reversal；逆转/rewind；时针/clock hand；循环箭头/loop arrow；密码轮/time wheel,rewind@身侧,needle@尾部,loopArrow,cipherWheel,#9a5ad8 #3ad8c8 #f6eeff,无,左右一对,时间质变·流沙计时,巨元素法相,逆界觉醒·逆之域,元素表
+sp_time_parallel,平行灵,Parallel Sprite,time,twin,平行/parallel；平行环/twin rings；镜片/mirror shards；镜影/reflection；双星/twin stars,twinRing@身后,mirrorShard@身边浮游,mirrorPane,twinStar,#5a8ad8 #ff8ab8 #eef4ff,无,环绕,概念质变·元素符阵,本体法相,平行觉醒·平之域,元素表
+sp_time_cycle,循环灵,Cycle Sprite,time,loop,循环/cycle；循环箭头/loop arrows；季叶/season leaves；雪花/snowflake；轮回轮/cycle wheel,loopArrow@身侧,leafR@身边浮游,snowflake,wheel,#3ab86a #e8a03a #effff4,无,成簇,概念质变·线稿化,元素环阵,循界觉醒·循之域,元素表
+sp_origin,纪元灵,Epoch Sprite,time,scroll,纪元/epoch；卷轴/scroll；星系/galaxy；符文石/rune stone；纪元日/epoch sun,scroll@身侧,galaxy@身后,runeStone,sunDisc,#c9a24a #5a3a8a #fff4dc,无,竖列,时间质变·残影,元素雨,纪神觉醒·纪之域,元素表
+sp_gear,齿轮卫,Gear Sprite,mech,gear,齿轮/gear；齿牙/gear teeth；轴心/axle；咬合/meshing；机械/machinery,,,gearMini,axle,#9aa7b8 #e07b2b #2c3442,,,结构质变·手写,手写,齿神觉醒·齿之域,手写示例
+sp_dog,发条犬,Windup Pup Sprite,mech,box,发条/clockwork；发条钥/wind-up key；犬耳/dog ears；螺母/nut；齿心/gear heart,gearToy@尾部,dogEars@顶部,nut,gearMini,#e8902a #7a8a9a #fff0d6,无,成簇,结构质变·模块外挂,双生法相,条神觉醒·发之域,元素表
+sp_quantum,量子机灵,Quantum Sprite,mech,shp_step,量子/quantum；电子轨道/electron orbit；量子位/qubits；量子点/quantum dot；原子核/nucleus,orbit@身后,pixel@身边浮游,sparkle,nucleus,#5a6ad8 #3ae8d8 #eef0ff,电路纹,成簇,分化质变·碎分,巨元素法相,量神觉醒·量之域,元素表
+sp_steam,蒸汽灵,Steam Sprite,mech,boiler,蒸汽/steam；蒸汽/steam；汽阀/valve；烟团/smoke；压力线圈/pressure coil,steam@顶部,steamValve@身侧,smoke,coil,#a0603a #c9d2dc #fff0dc,无,左右一对,维度质变·立体纵深,本体法相,汽神觉醒·蒸之域,元素表
+sp_mech_circuit,电路灵,Circuit Sprite,mech,chip,电路/circuit；电线/wire；电路纹/traces；闪电/spark；电池/battery,wire@尾部,circuit@两侧,zap,battery,#2f9e6a #ffd23f #eafff4,电路纹,尾随,结构质变·模块外挂,元素漩涡,路神觉醒·电之域,元素表
+sp_mech_chip,芯片灵,Chip Sprite,mech,chip,芯片/chip；数据块/data；信号格/signal bars；像素/pixel；逻辑门/logic gate,data@身侧,signalBars@身边浮游,pixel,logicGate,#3a4a6a #3ae8a8 #eafff8,方格,环绕,结构质变·脚手架重构,巨元素法相,芯神觉醒·芯之域,元素表
+sp_mech_motor,马达灵,Motor Sprite,mech,motor,马达/motor；线圈/coil；电线/wire；扇叶/fan blade；齿轮/gear,coil@身侧,wire@尾部,fanBlade,gearMini,#d84a3a #c9d2dc #fff0ea,无,左右一对,结构质变·部件浮离,回响轮廓,马神觉醒·马之域,元素表
+sp_mech_screw,螺丝灵,Screw Sprite,mech,screw,螺丝/screw；扳手/wrench；螺母/nuts；螺丝/screw；螺纹/thread,wrench@身侧,nut@身边浮游,screw,spiral,#a8b0c0 #e8902a #f4f6fa,无,尾随,结构质变·脚手架重构,元素环阵,螺神觉醒·螺之域,元素表
+sp_mech_spring,弹簧灵,Spring Sprite,mech,spring,弹簧/spring；小弹簧/springs；弹跳线/bounce lines；弹珠/marble；回弹/rebound,spring@两侧,echoArc@底部,pearl,loopArrow,#5ad86a #3a4a6a #f0fff0,无,四角散布,结构质变·模块外挂,元素漩涡,弹神觉醒·弹之域,元素表
+sp_mech_piston,活塞灵,Piston Sprite,mech,piston,活塞/piston；小活塞/pistons；齿轮/gear；螺母/hex nut；传动轮/drive wheel,piston@两侧,gear@尾部,bolt,wheel,#c04a3a #a8b0c0 #fff0ea,无,竖列,结构质变·部件浮离,本体法相,活神觉醒·活之域,元素表
+sp_mech_welder,焊枪灵,Welder Sprite,mech,welder,焊枪/welder；焊花/weld sparks；护盾/shield；火星/spark；焊火/weld flame,weldSpark@身侧,shieldMini@左侧,spark,flame,#3a6ad8 #ff8a1a #eef4ff,无,环绕,结构质变·脚手架重构,回响轮廓,焊神觉醒·焊之域,元素表
+sp_proto,引擎灵,Engine Sprite,mech,engine,引擎/engine；烟囱/exhaust；尾焰/exhaust flame；齿轮/gear；引擎核/engine core,chimney@顶部,flame@尾部,gearMini,burst,#5a6a7a #ff6a1a #eef0f4,无,侧弧,结构质变·部件浮离,元素雨,引神觉醒·引之域,元素表
+sp_mech_antenna,天线灵,Antenna Sprite,mech,antenna,天线/antenna；信号波/signal waves；卫星/satellite；电波/radio wave；接收镜/receiver lens,echoArc@两侧,planet@身边浮游,soundWave,lens,#3ab8d8 #e8463c #effaff,无,侧弧,结构质变·部件浮离,元素环阵,天灵觉醒·天之域,元素表
+sp_mech_radar,雷达灵,Radar Sprite,mech,radar,雷达/radar；雷达波/radar waves；屏幕/screen；光点/blip；方位针/bearing needle,radarArc@身侧,screen@底部,glow,compassNeedle,#2f8a5a #5af08a #eafff0,无,竖列,结构质变·模块外挂,双生法相,雷神觉醒·达之域,元素表
+sp_cybercat,机械龙,Mecha Dragon Sprite,mech,dragon,机械龙/mech dragon；机翼/mech wings；尾焰/exhaust flame；螺丝/screw；芯片/chip,wing@两侧,flame@尾部,screw,chip,#2a3a5a #3ae8f8 #e0f8ff,无,四角散布,维度质变·层叠,元素雨,机神觉醒·机之域,元素表
+sp_starbeast,星辉兽,Starbeast Sprite,myth,star,星光/starlight；星核/star core；星轨/star orbit；星座/constellation；星尘/stardust,,,dust,starCore,#7c6cf6 #ffd84a #e8e6ff,,,空间质变·手写,手写,辉神觉醒·星之域,手写示例
+sp_moon,月神使,Moon Envoy Sprite,myth,moon,月/moon；桂花/osmanthus；星星/star；闪光/sparkle；月华/moonlight,blossom@身边浮游,star@尾部,sparkle,moon,#e8dca0 #6a5ad8 #fffbe8,无,尾随,空间质变·折叠空间,本体法相,月神觉醒·月之域,元素表
+sp_sun,日耀龙,Sun Dragon Sprite,myth,dragon,日/sun；龙角/dragon horns；日冕/corona；火焰/flame；日轮/sun disc,hornPair@顶部,burst@身后,flame,sunDisc,#ff9a1a #e8463c #fff0b0,无,竖列,空间质变·空间门,巨元素法相,日神觉醒·日之域,元素表
+sp_qilin,创世灵,Genesis Sprite,myth,shp_tri,创世/genesis；鹿角/antlers；祥云/auspicious cloud；星/star；星系/galaxy,antler@顶部,cloud@底部,star,galaxy,#3ac08a #e8b030 #eafff4,无,成簇,概念质变·元素符阵,元素雨,创神觉醒·创之域,元素表
+sp_myth_chaos,混沌灵,Chaos Sprite,myth,shp_tri2,混沌/chaos；螺旋/spiral；碎片/shards；星云/nebula；阴阳/yin-yang,spiral@身后,errorShard@身边浮游,nebula,yinyang,#5a2a6a #e84a8a #f0d8f8,无,成簇,概念质变·线稿化,巨元素法相,混神觉醒·混之域,元素表
+sp_myth_order,秩序灵,Order Sprite,myth,cube,秩序/order；秩序格/order grid；天平/balance；字块/tile；空间框/frame,orderGrid@身侧,balance@顶部,tile,cubeFrame,#3a6ad8 #e8c06a #eef4ff,方格,竖列,概念质变·元素符阵,元素漩涡,序神觉醒·秩之域,元素表
+sp_myth_fate,命运灵,Fate Sprite,myth,shp_tri,命运/fate；命运线/fate threads；星星/stars；卡牌/card；牌扇/card fan,thread@尾部,star@身边浮游,card,cardFan,#6a3ad8 #e8c06a #f4eeff,无,侧弧,概念质变·线稿化,元素雨,命神觉醒·命之域,元素表
+sp_myth_karma,因果灵,Karma Sprite,myth,twin,因果/karma；链环/chains；多米诺/dominoes；循环箭头/loop arrow；天平/balance,chain@尾部,domino@身侧,loopArrow,balance,#3a8a8a #e8902a #eafafa,无,四角散布,概念质变·回响轮廓,回响轮廓,因神觉醒·因之域,元素表
+sp_myth_samsara,轮回灵,Samsara Sprite,myth,loop,轮回/samsara；轮回轮/wheel；莲瓣/lotus petals；魂火/soul flame；玉璧/jade disc,wheel@身后,lotusPetal@两侧,soulFlame,jadeDisc,#c08a3a #3a6a5a #fff4e0,无,侧弧,概念质变·回响轮廓,元素环阵,轮神觉醒·轮之域,元素表
+sp_myth_phoenix_rebirth,涅槃灵,Phoenix Rebirth Sprite,myth,flame,涅槃/rebirth；羽翼/phoenix wings；尾羽/tail feather；火星/spark；魂火/soul flame,wing@两侧,feather@尾部,spark,soulFlame,#ff5a1a #ffd23f #fff0c0,无,环绕,概念质变·线稿化,本体法相,涅神觉醒·涅之域,元素表
+sp_myth_nothingness,虚无灵,Nothingness Sprite,myth,ghost,虚无/nothingness；虚空环/void ring；雾气/mist；影团/shadow；空泡/empty bubble,voidRing@身后,mist@底部,shadowBlob,bubble,#c8c8d8 #5a5a7a #f8f8ff,无,环绕,概念质变·元素符阵,双生法相,虚神觉醒·无之域,元素表
+sp_myth_eternity,永恒灵,Eternity Sprite,myth,hourglass,永恒/eternity；无限环/infinity loop；星砂/star sand；星/star；永恒钻/eternal diamond,infinity@身前,sparkle@身边浮游,star,diamond,#3a3ad8 #e8c06a #eeeeff,无,左右一对,概念质变·元素符阵,元素环阵,永神觉醒·永之域,元素表
+sp_concept_memory,记忆灵,Memory Sprite,concept,shp_tri,记忆/memory；记忆片/snapshot；丝带/ribbon；回忆泡/memory bubble；记忆锁/memory lock,photo@身侧,ribbon@尾部,thoughtBubble,lock,#d88a5a #5a8ad8 #fff4ec,纸纹,尾随,概念质变·回响轮廓,本体法相,忆神觉醒·记之域,元素表
+sp_concept_dream,梦灵,Dream Sprite,concept,cloud,梦/dream；梦泡/dream bubbles；月牙/crescent；闪光/sparkle；枕头/pillow,dreamBubble@身边浮游,moon@身侧,sparkle,pillow,#b89af8 #ffd84a #f8f0ff,无,成簇,概念质变·回响轮廓,双生法相,梦神觉醒·梦之域,元素表
+sp_concept_echo,回声灵,Echo Sprite,concept,wave,回声/echo；回声波/echoes；山峰/mountain；声波/sound wave；衍射纹/ripples,echoArc@身侧,karst@底部,soundWave,wavelets,#5ad8c8 #3a5a8a #effffc,无,尾随,分化质变·碎分,回响轮廓,回神觉醒·回之域,元素表
+sp_concept_silence,沉默灵,Silence Sprite,concept,shp_long,沉默/silence；静默纹/hush mark；羽毛/feathers；雪花/snowflake；静珠/quiet pearl,hush@身前,feather@身边浮游,snowflake,pearl,#8a9ab8 #3a4a6a #f4f6fa,无,左右一对,概念质变·元素符阵,元素雨,静神觉醒·沉之域,元素表
+sp_concept_time,时间灵,Time Sprite,concept,clock,时间/time；沙漏/hourglass；循环箭头/loop arrow；时针/clock hand；无限/infinity,hourglass@身侧,loopArrow@尾部,needle,infinity,#e8b030 #3a5ad8 #fff6dc,无,环绕,时间质变·残影,双生法相,时神觉醒·时之域,元素表
+sp_concept_space,空间灵,Space Sprite,concept,cube,空间/space；空间框/space frame；星环/orbit；星/star；星系/galaxy,cubeFrame@身侧,orbit@身后,star,galaxy,#2a3a8a #5ae8f8 #e8f0ff,方格,四角散布,空间质变·空间门,元素环阵,空神觉醒·空之域,元素表
+sp_concept_causality,因果律灵,Causality Sprite,concept,scroll,因果律/causality；多米诺/dominoes；齿轮/gear；字块/tile；命运线/thread,domino@身侧,gearMini@尾部,tile,thread,#8a6a3a #3a8ad8 #fff4e4,无,竖列,概念质变·元素符阵,元素漩涡,律神觉醒·因之域,元素表
+sp_concept_probability,概率灵,Probability Sprite,concept,dice,概率/probability；卡牌/cards；硬币/coins；骰子/dice；四叶草/clover,card@身侧,coin@身边浮游,dice,clover,#e8463c #3a5ad8 #fff4f0,棋格,竖列,概念质变·元素符阵,巨元素法相,概神觉醒·概之域,元素表
+sp_concept_logic,逻辑灵,Logic Sprite,concept,chip,逻辑/logic；逻辑门/logic gate；电路纹/traces；积木/block；秩序格/grid,logicGate@身侧,circuit@两侧,block,orderGrid,#3a8ad8 #e8e83a #eef8ff,电路纹,侧弧,概念质变·线稿化,元素环阵,逻神觉醒·逻之域,元素表
+sp_egg,悖论灵,Paradox Sprite,concept,twin,悖论/paradox；莫比乌斯/mobius strip；镜片/mirror shards；碎片/shards；阴阳/yin-yang,mobius@身后,mirrorShard@身边浮游,errorShard,yinyang,#e85ab8 #3ad8c8 #fff0fa,无,四角散布,概念质变·回响轮廓,元素环阵,悖神觉醒·悖之域,元素表
+sp_concept_imagination,想象力灵,Imagination Sprite,concept,shp_long,想象/imagination；灵感灯泡/idea bulb；彩虹/rainbow；闪光/sparkle；万花纹/kaleidoscope,bulb@顶部,rainbow@底部,sparkle,kaleido,#ff8a3a #5a6ad8 #fff6e8,无,环绕,概念质变·回响轮廓,巨元素法相,想神觉醒·想之域,元素表
+sp_concept_creativity,创造力灵,Creativity Sprite,concept,brush,创造/creativity；颜料/paint；积木/blocks；铅笔/pencil；灯泡/bulb,paintDab@身侧,block@底部,pencil,bulb,#e8463c #3ab8d8 #fff4e8,无,左右一对,概念质变·线稿化,元素雨,创神觉醒·造之域,元素表
+sp_concept_will,意志灵,Will Sprite,concept,flame,意志/will；旗帜/banner；盾/shield；火星/spark；星徽/star badge,flag@身侧,shieldMini@左侧,spark,badgeStar,#ff3a3a #ffd23f #fff0e0,无,侧弧,概念质变·元素符阵,元素漩涡,意神觉醒·意之域,元素表
+sp_concept_feeling,情感灵,Feeling Sprite,concept,heart,情感/feeling；心/hearts；丝带/ribbon；气泡/bubble；宝石/gem,heart@身边浮游,ribbon@底部,bubble,gem,#ff5a8a #ffd84a #fff0f4,无,四角散布,概念质变·元素符阵,本体法相,情神觉醒·情之域,元素表
+sp_concept_soul,灵魂灵,Soul Sprite,concept,ghost,灵魂/soul；魂火/soul flames；光斑/light spot；萤光/glow；灵珠/soul pearl,soulFlame@身边浮游,lightSpot@尾部,glow,pearl,#a8c8ff #5a3ad8 #f4f8ff,无,成簇,概念质变·回响轮廓,回响轮廓,魂神觉醒·魂之域,元素表
+sp_text_rune,符文灵,Rune Sprite,text,tile,符文/rune；符文石/rune stone；闪光/sparkle；石片/stone flake；符文轮/rune wheel,runeStone@身侧,sparkle@身边浮游,flake,cipherWheel,#5a6a7a #3ae8d8 #eef4f6,冰裂,环绕,概念质变·元素符阵,巨元素法相,符神觉醒·符之域,元素表
+sp_code,代码灵,Code Sprite,text,monitor,代码/code；代码窗/code window；光标/cursor；像素/pixel；芯片/chip,codeBlock@身侧,cursor@身边浮游,pixel,chip,#2a3a4a #3ae86a #eafff0,方格,侧弧,聚合质变·环形聚合,双生法相,协议觉醒·代之域,元素表
+sp_text_poem,诗灵,Poem Sprite,text,scroll,诗/poem；羽毛笔/quill；梅花/plum flowers；墨滴/ink drop；诗月/poet's moon,quill@身侧,plum@身边浮游,inkDrop,moon,#f4ecd8 #3a3a5a #ffffff,纸纹,尾随,概念质变·线稿化,元素雨,诗神觉醒·诗之域,元素表
+sp_text_riddle,谜语灵,Riddle Sprite,text,question,谜语/riddle；放大镜/magnifier；灯谜灯笼/riddle lantern；便签/note card；谜锁/riddle lock,magnifier@身侧,lanternSeg@尾部,noteCard,lock,#e8902a #5a3ad8 #fff4e4,无,成簇,概念质变·回响轮廓,本体法相,谜神觉醒·谜之域,元素表
+sp_text_symbol,符号灵,Symbol Sprite,text,tile,符号/symbol；星徽/star badge；心/hearts；双星/twin stars；无限/infinity,badgeStar@身侧,heart@身边浮游,twinStar,infinity,#3a5ad8 #e84a6a #f0f4ff,无,左右一对,概念质变·元素符阵,元素雨,符神觉醒·号之域,元素表
+sp_text_letter,字母灵,Letter Sprite,text,tile,字母/letter；信封/envelope；邮票/stamps；字块/tile；印纹/seal mark,envelope@身侧,postStamp@身边浮游,tile,stamp,#e8463c #3a8ad8 #fff4ee,无,左右一对,概念质变·回响轮廓,本体法相,字神觉醒·字之域,元素表
+sp_text_number,数字灵,Number Sprite,text,tile,数字/number；算珠串/bead row；刻度尺/ruler；骰子/dice；铜钱/coin,abacusRow@身侧,rulerTicks@尾部,dice,coin,#3ab86a #e8b030 #effff4,方格,竖列,概念质变·元素符阵,回响轮廓,数神觉醒·数之域,元素表
+sp_text_formula,公式灵,Formula Sprite,text,book,公式/formula；烧瓶/flask；原子轨道/atomic orbit；原子核/nucleus；天平/balance,flask@身侧,orbit@身后,nucleus,balance,#3a4a8a #e8d83a #eef0ff,无,环绕,概念质变·线稿化,巨元素法相,式神觉醒·公之域,元素表
+sp_text_cipher,密码灵,Cipher Sprite,text,lock,密码/cipher；密码轮/cipher wheel；钥匙/key；条码/barcode；宝石/gem,cipherWheel@身侧,key@尾部,barcode,gem,#2a4a3a #3ae89a #eafff4,无,成簇,概念质变·元素符阵,元素漩涡,码神觉醒·密之域,元素表
+sp_text_pact,契约灵,Pact Sprite,text,scroll,契约/pact；契约卷/pact scroll；链环/chain；印纹/seal；小盾/shield,sealScroll@身侧,chain@尾部,stamp,shieldMini,#8a3a2a #e8c06a #fff4e4,无,四角散布,概念质变·线稿化,元素环阵,契神觉醒·契之域,元素表
+sp_light_silhouette,剪影灵,Silhouette Sprite,light,shadow,剪影/silhouette；聚光/spotlight；影团/shadow；蝙蝠剪影/bat cut-out；镜片/lens,beam@顶部,shadowBlob@底部,bat,lens,#2a2a3a #ffd84a #e8e0f0,无,成簇,概念质变·线稿化,巨元素法相,影神觉醒·剪之域,元素表
+sp_light_reflection,镜像灵,Reflection Sprite,light,mirror,镜像/mirror image；镜影/reflection；光斑/light spots；钻石/diamond；双星/twin stars,mirrorPane@身侧,lightSpot@身边浮游,diamond,twinStar,#9ad8f8 #5a5ad8 #f4fcff,无,左右一对,空间质变·空间门,元素环阵,镜神觉醒·镜之域,元素表
+sp_light_spectrum,虹灵,Spectrum Sprite,light,prism,光谱/spectrum；光谱带/spectrum band；光束/light beam；闪光/sparkle；星芒/starburst,spectrum@尾部,beam@左侧,sparkle,burst,#e8f4ff #8a5af8 #ffffff,无,竖列,概念质变·元素符阵,元素环阵,虹神觉醒·虹之域2,元素表
+sp_light_shadow,影子灵,Shadow Sprite,light,ghost,影子/shadow；影团/shadow；月牙/crescent；萤光/glow；暗环/dark ring,shadowBlob@尾部,moon@身边浮游,glow,voidRing,#3a3a5a #9a8af8 #dcd8f8,无,左右一对,概念质变·元素符阵,元素漩涡,影神觉醒·影之域,元素表
+sp_light_light_spot,光斑灵,Light Spot Sprite,light,shp_scurve,光斑/light spot；光斑/light spots；光束/beam；萤光/glow；日轮/sun,lightSpot@身边浮游,beam@尾部,glow,sunDisc,#ffe84a #ff9a3a #fffbe0,无,侧弧,概念质变·回响轮廓,巨元素法相,斑神觉醒·光之域,元素表
+sp_light_refraction,折射灵,Refraction Sprite,light,prism,折射/refraction；折射光/refracted ray；水滴/droplets；镜片/lens；钻石/diamond,refractRay@身侧,drop@身边浮游,lens,diamond,#5ad8f8 #ff6a8a #f0fcff,无,竖列,概念质变·回响轮廓,双生法相,折神觉醒·折之域,元素表
+sp_light_reflex,反射灵,Reflex Sprite,light,mirror,反射/reflection；反射光/reflected ray；闪光/sparkle；镜片/mirror shard；光斑/light spot,reflectRay@身侧,sparkle@身边浮游,mirrorShard,lightSpot,#c8d8e8 #e8902a #ffffff,无,四角散布,概念质变·回响轮廓,元素雨,反神觉醒·反之域,元素表
+sp_light_diffraction,衍射灵,Diffraction Sprite,light,wave,衍射/diffraction；衍射纹/ripples；光点/glow dots；闪光/sparkle；镜片/lens,wavelets@身侧,glow@身边浮游,sparkle,lens,#3a8ad8 #e8e83a #eef6ff,同心纹,环绕,概念质变·线稿化,元素漩涡,衍神觉醒·衍之域,元素表
+sp_light_interference,干涉灵,Interference Sprite,light,twin,干涉/interference；干涉纹/fringes；声波/wave；泡泡/soap bubble；平行环/twin rings,interfer@身侧,soundWave@底部,bubble,twinRing,#8a5ad8 #3ae8c8 #f4eeff,无,尾随,概念质变·元素符阵,回响轮廓,干神觉醒·干之域,元素表
+sp_light_polarisation,偏振灵,Polarisation Sprite,light,window,偏振/polarisation；偏振栅/polariser；光芒/rays；窗格/pane；萤光/glow,polar@身侧,ray@身边浮游,pane,glow,#3a5a8a #e8d83a #eef4fa,斜纹,成簇,概念质变·元素符阵,本体法相,偏神觉醒·偏之域,元素表
+sp_spring,福灵,Fortune Sprite,fest,redpacket,福/fortune；爆竹/firecrackers；铜钱/coins；灯笼/lantern；福金锭/gold ingot,firecracker@两侧,coin@身边浮游,lanternSeg,ingot,#e8343a #f2c14e #fff0d6,无,环绕,概念质变·元素符阵,元素环阵,福神觉醒·福之域,元素表
+sp_rabbit,月兔,Moon Rabbit Sprite,fest,shp_wide,月兔/moon rabbit；兔耳/rabbit ears；月牙/crescent；月饼/mooncake；玉珠/jade pearl,bunnyEars@顶部,moon@身侧,mooncakeMini,pearl,#f8f4f8 #e88ab8 #ffffff,无,左右一对,概念质变·线稿化,元素漩涡,兔神觉醒·月之域,元素表
+sp_snow,雪灵,Snowfolk Sprite,fest,snowman,雪人/snowman；围巾/scarf；雪花/snowflakes；雪球/snowball；纽扣/button,ribbon@底部,snowflake@身边浮游,snowball,button,#f0f8ff #e8463c #ffffff,无,四角散布,概念质变·回响轮廓,元素雨,雪神觉醒·雪之域2,元素表
+sp_pumpkin,南瓜灵,Pumpkin Sprite,fest,pumpkin,南瓜/pumpkin；藤蔓/vine；蝙蝠/bats；幽灵/ghost；烛心/candle,vine@顶部,bat@身边浮游,ghostWisp,candleStick,#ff8a1a #5a2a6a #fff0c0,无,侧弧,概念质变·线稿化,巨元素法相,瓜神觉醒·南之域,元素表
+sp_fest_rice_dumpling,粽子灵,Rice Dumpling Sprite,fest,zongzi,粽子/zongzi；粽叶/bamboo leaves；龙舟桨/paddle；饭团/rice ball；粽结/knot,riceLeaf@两侧,paddle@身侧,riceBall,knot,#4aa84a #e8c06a #f4fff0,无,左右一对,概念质变·回响轮廓,巨元素法相,粽神觉醒·粽之域,元素表
+sp_fest_mooncake,月饼灵,Mooncake Sprite,fest,mooncake,月饼/mooncake；月牙/crescent；桂花/osmanthus；小月饼/little mooncake；月珠/moon pearl,moon@身侧,blossom@身边浮游,mooncakeMini,pearl,#e8a83a #8a4a2a #fff4d6,无,侧弧,概念质变·线稿化,回响轮廓,饼神觉醒·月之域,元素表
+sp_fest_festival_lamp,花灯灵,Festival Lamp Sprite,fest,lantern,花灯/festival lamp；流苏/tassels；桃花/blossoms；烛火/candle flame；灯泡/bulb,tassel@底部,sakura@身边浮游,candle,bulb,#ff5a7a #f2c14e #fff0f4,无,左右一对,概念质变·回响轮廓,巨元素法相,灯神觉醒·花之域,元素表
+sp_fest_firecracker,鞭炮灵,Firecracker Sprite,fest,firecracker,鞭炮/firecracker；爆光/burst；烟团/smoke；火星/spark；爆竹/cracker,burst@顶部,smoke@底部,spark,firecracker,#e8343a #ffd23f #fff0d6,无,四角散布,概念质变·元素符阵,元素雨,炮神觉醒·鞭之域,元素表
+sp_fest_red_envelope,红包灵,Red Envelope Sprite,fest,redpacket,红包/red envelope；金锭/gold ingot；中国结/knot；铜钱/coin；福印/luck seal,ingot@身侧,knot@尾部,coin,stamp,#e8343a #f2c14e #fff0d6,无,成簇,概念质变·回响轮廓,本体法相,包神觉醒·红之域,元素表
+sp_fest_yuletide,圣诞灵,Yuletide Sprite,fest,pine,圣诞/yuletide；彩球/ornaments；树顶星/tree star；礼盒/gift；拐杖糖/candy cane,ornament@两侧,star@顶部,gift,candyCane,#2f8a3a #e8343a #fff4d6,无,成簇,概念质变·元素符阵,本体法相,诞神觉醒·圣之域,元素表
+sp_fest_hallowed,万圣灵,Hallowed Sprite,fest,ghost,万圣/Halloween；小南瓜/pumpkin；糖果/candy；蝙蝠/bat；月牙/crescent,pumpkinMini@身侧,candy@底部,bat,moon,#6a3ad8 #ff8a1a #f4eeff,无,环绕,概念质变·回响轮廓,元素漩涡,圣神觉醒·万之域,元素表
+sp_fest_gratitude,感恩灵,Gratitude Sprite,fest,cake,感恩/gratitude；麦穗/wheat；心/hearts；圆叶/leaf；果子/fruit,wheat@身侧,heart@身边浮游,leafR,fruit,#e8902a #c0392b #fff4dc,无,尾随,概念质变·元素符阵,双生法相,恩神觉醒·感之域,元素表
+sp_glitch,故障灵,Glitch Sprite,glitch,monitor,故障/glitch；错位条/offset bars；碎片/shards；噪点/noise；闪电/zap,glitchBar@两侧,errorShard@身边浮游,noiseDots,zap,#3a3a5a #e83a8a #e8f0ff,横带,环绕,分化质变·生芽,元素漩涡,障神觉醒·故之域,元素表
+sp_glitch_garble,乱码灵,Garble Sprite,glitch,tile,乱码/garbled text；像素/pixels；代码窗/code window；扫描线/scanlines；密码轮/cipher wheel,pixel@身边浮游,codeBlock@身侧,scanline,cipherWheel,#2a4a2a #3ae86a #eaffee,棋格,四角散布,分化质变·碎分,本体法相,码神觉醒·乱之域,元素表
+sp_glitch_noise,噪点灵,Noise Sprite,glitch,cube,噪点/noise；噪点/noise dots；扫描线/scanlines；像素/pixel；信号格/signal bars,noiseDots@身侧,scanline@底部,pixel,signalBars,#8a8a9a #e83a3a #f4f4f8,圆点,左右一对,分化质变·碎分,元素雨,噪神觉醒·噪之域,元素表
+sp_glitch_freeze,死机灵,Freeze Sprite,glitch,monitor,死机/freeze；冰棱/icicles；加载环/loading ring；雪花/snowflake；静默纹/hush,iceShard@身边浮游,loading@身侧,snowflake,hush,#5a8ab8 #2f4a8a #f0f8ff,冰裂,侧弧,时间质变·残影,双生法相,机神觉醒·死之域,元素表
+sp_glitch_blue_screen,蓝屏灵,Blue Screen Sprite,glitch,monitor,蓝屏/blue screen；错误碎片/error shards；光标/cursor；错位条/glitch bar；芯片/chip,errorShard@身边浮游,cursor@身侧,glitchBar,chip,#2a5ad8 #8fe3ff #eef6ff,横带,竖列,概念质变·元素符阵,回响轮廓,屏神觉醒·蓝之域,元素表
+sp_glitch_lag,卡顿灵,Lag Sprite,glitch,hourglass,卡顿/lag；加载环/loading ring；流沙/falling sand；沙漏/hourglass；停滞符/pause,loading@身侧,sandStream@两侧,hourglass,pause,#e8b030 #3a3a5a #fff6dc,无,成簇,概念质变·回响轮廓,巨元素法相,顿神觉醒·卡之域,元素表
+sp_glitch_latency,延迟灵,Latency Sprite,glitch,signal,延迟/latency；信号格/signal bars；雷达波/radio waves；加载环/loading；天线/antenna,signalBars@身侧,radarArc@身边浮游,loading,antennaRod,#3ab8a8 #e85a3a #effcfa,无,尾随,概念质变·元素符阵,元素环阵,迟神觉醒·延之域,元素表
+sp_glitch_overflow,溢出灵,Overflow Sprite,glitch,cup,溢出/overflow；溢出杯/overflowing cup；气泡/bubbles；数据块/data；水滴/drop,overflowCup@身侧,bubble@身边浮游,data,drop,#3a8ae8 #e8e83a #eef6ff,无,侧弧,概念质变·元素符阵,巨元素法相,出神觉醒·溢之域,元素表
+sp_food_steamed_bun,包子灵,Steamed Bun Sprite,food,bun,包子/steamed bun；蒸汽/steam；竹叶/steamer leaf；小包子/little bun；红点/red dot,steam@顶部,bambooLeaf@底部,bunMini,berry,#f4ecd8 #e8463c #ffffff,无,成簇,聚合质变·环形聚合,回响轮廓,包神觉醒·包之域,元素表
+sp_food_candy,糖灵,Candy Sprite,food,candy,糖/candy；糖粒/sprinkles；拐杖糖/candy cane；糖果/sweet；心/heart,sprinkle@身边浮游,candyCane@身侧,candy,heart,#ff5ab8 #5ad8f8 #fff0fa,斜纹,尾随,材质质变·琉璃化,回响轮廓,糖神觉醒·糖之域,元素表
+sp_food_tea,茶灵,Tea Sprite,food,cup,茶/tea；茶叶/tea leaves；茶香/aroma；气泡/bubble；珍珠/tapioca pearl,teaLeaf@身边浮游,mist@顶部,bubble,pearl,#8a5a2a #5ab84a #fff0dc,无,四角散布,材质质变·金属化,元素雨,茶神觉醒·茶之域,元素表
+sp_food_noodles,面灵,Noodles Sprite,food,bowl,面/noodles；筷子/chopsticks；面条/noodles；葱花/scallion；蛋黄/egg yolk,chopsticks@身侧,noodle@顶部,leafR,glow,#f2c14e #e8463c #fff8e0,无,侧弧,概念质变·线稿化,元素环阵,面神觉醒·面之域,元素表
+sp_food_jelly,果冻灵,Jelly Sprite,food,jelly,果冻/jelly；樱桃/cherry；果冻块/jelly cube；浆果/berries；宝石/gem,cherry@顶部,jellyCube@身侧,berry,gem,#ff5a7a #ffd84a #fff0f4,无,环绕,概念质变·回响轮廓,双生法相,冻神觉醒·果之域,元素表
+sp_food_ice_cream,冰淇淋灵,Ice Cream Sprite,food,icecream,冰淇淋/ice cream；冰淇淋球/scoops；甜筒/cone；糖粒/sprinkles；雪花/snowflake,iceScoop@身边浮游,cone@身侧,sprinkle,snowflake,#ffb8d8 #8a5a2a #fff8fa,无,四角散布,概念质变·线稿化,巨元素法相,淇淋觉醒·冰之域,元素表
+sp_food_cake,蛋糕灵,Cake Sprite,food,cake,蛋糕/cake；奶油/cream；樱桃/cherries；蛋糕块/cake slice；蜡烛/candle,cream@顶部,cherry@身边浮游,cakeSlice,candleStick,#ff8ab8 #e8463c #fff4e8,无,左右一对,概念质变·回响轮廓,元素漩涡,糕神觉醒·蛋之域,元素表
+sp_food_chocolate,巧克力灵,Chocolate Sprite,food,choco,巧克力/chocolate；巧克力块/chocolate square；心/hearts；奶油/cream；巧克力币/chocolate coin,chocoSquare@身侧,heart@身边浮游,cream,coin,#6a3a1a #ff5a8a #f8e8dc,方格,竖列,概念质变·元素符阵,本体法相,巧神觉醒·巧之域,元素表
+sp_food_biscuit,饼干灵,Biscuit Sprite,food,cookie,饼干/biscuit；牛奶滴/milk drops；小饼干/little cookie；麦穗/wheat；星/star,drop@身边浮游,cookie@身侧,wheat,star,#d8a05a #6a3a1a #fff4e0,圆点,成簇,概念质变·线稿化,元素雨,干神觉醒·饼之域,元素表
+sp_food_pudding,布丁灵,Pudding Sprite,food,pudding,布丁/pudding；焦糖/caramel；小碟/plate；果冻块/jelly cube；焦糖日/caramel sun,drop@顶部,bowl@底部,jellyCube,sunDisc,#f2c14e #8a4a1a #fff8e0,无,尾随,概念质变·回响轮廓,双生法相,丁神觉醒·布之域,元素表
+sp_food_rice_ball,汤圆灵,Rice Ball Sprite,food,pearl,汤圆/tangyuan；碗/bowl；月牙/crescent；雪球/snowball；元宵灯/festival lantern,bowl@尾部,moon@身边浮游,snowball,lanternSeg,#fff4f8 #e85a7a #ffffff,无,环绕,概念质变·元素符阵,元素漩涡,圆神觉醒·汤之域,元素表
+sp_food_sushi,寿司灵,Sushi Sprite,food,sushi,寿司/sushi；寿司卷/sushi roll；海浪/wave；饭团/rice ball；樱花/cherry blossom,sushiRoll@身侧,wave@尾部,riceBall,sakura,#e8603a #2a4a3a #ffffff,无,竖列,概念质变·元素符阵,元素环阵,司神觉醒·寿之域,元素表
+sp_music_zither,琴灵,Zither Sprite,music,qin,琴/zither；琴弦/strings；音符/notes；琴码/bridge；梅花/plum flower,strings@底部,note@身边浮游,bridgePeg,plum,#8a4a2a #e8c06a #fff4dc,木纹,四角散布,概念质变·回响轮廓,回响轮廓,琴神觉醒·琴之域,元素表
+sp_music_drum,鼓灵,Drum Sprite,music,drum,鼓/drum；鼓槌/drumsticks；声波/sound wave；音符/note；鼓心/drum heart,drumstick@两侧,soundWave@身侧,note,coin,#e8344e #8a5a2b #ffe9c9,无,竖列,维度质变·立体纵深,元素雨,鼓神觉醒·鼓之域,元素表
+sp_music_bell,铃灵,Bell Sprite,music,bell,铃/bell；蝴蝶结/bow；回声波/echoes；双音符/notes；铃珠/bell pearl,bow@顶部,echoArc@两侧,notes2,pearl,#f2c14e #e8463c #fff8dc,无,成簇,概念质变·回响轮廓,双生法相,铃神觉醒·铃之域,元素表
+sp_music_flute,笛灵,Flute Sprite,music,flute,笛/flute；双音符/notes；笛风/breath；竹叶/bamboo leaf；玉/jade,notes2@身边浮游,swirl@尾部,bambooLeaf,jadeDisc,#6ab84a #e8463c #f4ffe8,无,尾随,概念质变·回响轮廓,元素漩涡,笛神觉醒·笛之域,元素表
+sp_music_xiao_flute,箫灵,Xiao Flute Sprite,music,flute,箫/xiao flute；流苏/tassel；月牙/crescent；音符/note；箫珠/flute pearl,tassel@尾部,moon@身边浮游,note,pearl,#4a6a3a #c0392b #f0f8e8,无,侧弧,概念质变·元素符阵,元素环阵,箫神觉醒·箫之域,元素表
+sp_music_pipa,琵琶灵,Pipa Sprite,music,pipa,琵琶/pipa；拨片/plectrum；珠落/falling pearls；玉盘/jade plate；小花/blossom,pick@身侧,pearl@身边浮游,jadeDisc,blossom,#c0602a #f2c14e #fff0e0,无,环绕,概念质变·线稿化,巨元素法相,琶神觉醒·琵之域,元素表
+sp_music_erhu,二胡灵,Erhu Sprite,music,erhu,二胡/erhu；琴弦/strings；声波/sound wave；月牙/moon；松香/rosin,strings@身侧,soundWave@尾部,moon,amber,#6a3a1a #e8c06a #fff0dc,无,四角散布,概念质变·线稿化,回响轮廓,胡神觉醒·二之域,元素表
+sp_music_guzheng,古筝灵,Guzheng Sprite,music,qin,古筝/guzheng；琴码/bridges；流水/flowing water；高山/mountain；筝珠/zither pearl,bridgePeg@身侧,wave@尾部,karst,pearl,#c08a3a #3a8ab8 #fff4e0,木纹,左右一对,概念质变·元素符阵,本体法相,筝神觉醒·古之域,元素表
+sp_weather_cloud,云灵,Cloud Sprite,weather,cloud,云/cloud；风丝/breeze；彩虹/rainbow；小云/cloudlet；太阳/sun,mist@尾部,rainbow@底部,cloud,sunDisc,#f0f6ff #3ab8f8 #ffffff,无,成簇,概念质变·线稿化,元素漩涡,云神觉醒·云之域2,元素表
+sp_weather_rain,雨灵,Rain Sprite,weather,rain,雨/rain；雨丝/rain；伞/umbrella；水滴/drop；气泡/bubble,rain@底部,umbrella@身侧,drop,bubble,#3a7ad8 #8fd8ff #eef6ff,无,四角散布,概念质变·元素符阵,回响轮廓,雨神觉醒·雨之域,元素表
+sp_weather_snowfall,雪灵,Snowfall Sprite,weather,snowflake,雪/snowfall；雪花/snowflakes；雪云/snow cloud；雪球/snowball；霜花/frost pattern,snowflake@身边浮游,cloud@尾部,snowball,kaleido,#e8f4ff #5a8ae8 #ffffff,无,尾随,概念质变·线稿化,元素环阵,雪神觉醒·雪之域3,元素表
+sp_weather_fog,雾灵,Fog Sprite,weather,ghost,雾/fog；雾气/fog；灯塔光/lighthouse beam；烟团/fog puff；光斑/light spot,mist@底部,lightBeam@身侧,smoke,lightSpot,#c8d0dc #e8b030 #f6f8fa,水波纹,左右一对,概念质变·回响轮廓,巨元素法相,雾神觉醒·雾之域2,元素表
+sp_weather_thundercloud,雷云灵,Thundercloud Sprite,weather,stormcloud,雷云/thundercloud；闪电/lightning；雨丝/rain；闪光/sparkle；雷爆/thunderclap,zap@底部,rain@两侧,sparkle,burst,#4a4a6a #ffd23f #e8e8f4,无,竖列,概念质变·回响轮廓,回响轮廓,雷神觉醒·云之域,元素表
+sp_weather_typhoon,台风灵,Typhoon Sprite,weather,spiral,台风/typhoon；旋风/whirlwind；浪花/waves；飞叶/flying leaf；风眼/eye,swirl@身后,wave@尾部,leafR,voidRing,#3a6a8a #5ad8f8 #eef8fc,无,尾随,概念质变·元素符阵,元素雨,台神觉醒·台之域,元素表
+sp_weather_tornado,龙卷灵,Tornado Sprite,weather,tornado,龙卷/tornado；疾风线/gusts；尘烟/dust；碎石/debris；漏斗云/funnel,speedLines@两侧,dustCloud@底部,flake,funnel,#8a8a9a #c0a06a #f4f4f6,无,环绕,概念质变·元素符阵,元素漩涡,卷神觉醒·龙之域,元素表
+sp_weather_hail,冰雹灵,Hail Sprite,weather,pebble,冰雹/hail；冰雹/hailstones；雷云/storm cloud；冰棱/icicle；冰钻/ice diamond,hail@身边浮游,stormCloud@身侧,iceShard,diamond,#a8d8f8 #3a5ad8 #f4fcff,无,竖列,概念质变·线稿化,双生法相,雹神觉醒·冰之域,元素表
+sp_weather_rainbow_arc,彩虹灵,Rainbow Arc Sprite,weather,rainbow,彩虹/rainbow；太阳/sun；云/cloud；水滴/drop；光谱/spectrum,sunDisc@身侧,cloud@底部,drop,spectrum,#ff8a3a #3ab86a #fff8e0,无,环绕,概念质变·回响轮廓,本体法相,虹神觉醒·彩之域,元素表
+sp_weather_aurora,极光灵,Aurora Sprite,weather,aurora,极光/aurora；极光带/aurora ribbon；星/stars；雪花/snowflake；月/moon,aurora@尾部,sparkle@身边浮游,snowflake,moon,#3ae8a8 #8a5af8 #e8fff8,无,侧弧,概念质变·元素符阵,元素雨,光神觉醒·极之域,元素表
+sp_astro_comet,彗星灵,Comet Sprite,astro,comet,彗星/comet；星尘尾/stardust tail；冰晶/ice；星尘/stardust；陨核/comet core,dustTail@尾部,iceShard@身边浮游,dust,meteor,#8fd8ff #5a6ad8 #f4fcff,无,环绕,概念质变·线稿化,回响轮廓,彗神觉醒·彗之域,元素表
+sp_astro_planet,行星灵,Planet Sprite,astro,planet,行星/planet；卫星/moons；星环/ring；星/star；地球仪/globe,moon@身边浮游,orbit@身后,star,globe,#e8903a #5a6ad8 #fff4e4,无,竖列,概念质变·线稿化,双生法相,星神觉醒·行之域,元素表
+sp_astro_nebula,星云灵,Nebula Sprite,astro,nebula,星云/nebula；星云团/nebula cloud；星星/stars；闪光/sparkle；星系/galaxy,nebula@尾部,star@身边浮游,sparkle,galaxy,#c05af8 #5ad8f8 #f8eeff,无,左右一对,概念质变·回响轮廓,元素雨,云神觉醒·星之域,元素表
+sp_astro_black_hole,黑洞灵,Black Hole Sprite,astro,blackhole,黑洞/black hole；吸积盘/accretion disk；碎星/star shards；螺旋/spiral；视界/event horizon,orbit@身后,errorShard@身边浮游,spiral,voidRing,#2a1a3a #ff8a3a #e8d8f8,无,侧弧,概念质变·元素符阵,本体法相,洞神觉醒·黑之域,元素表
+sp_astro_white_hole,白洞灵,White Hole Sprite,astro,whitehole,白洞/white hole；光芒/rays；闪光/sparkle；爆光/burst；光核/light core,ray@身边浮游,sparkle@尾部,burst,glow,#f8f8ff #5ad8f8 #ffffff,无,尾随,概念质变·元素符阵,元素环阵,洞神觉醒·白之域,元素表
+sp_astro_galaxy,星系灵,Galaxy Sprite,astro,galaxy,星系/galaxy；星星/stars；星云/nebula；小星系/little galaxy；中心黑洞/central black hole,star@身边浮游,nebula@底部,galaxy,blackhole,#5a3ad8 #ffd84a #eeeaff,无,成簇,概念质变·元素符阵,元素环阵,系神觉醒·星之域,元素表
+sp_astro_supernova,超新星灵,Supernova Sprite,astro,burst,超新星/supernova；爆光/burst；火星/sparks；石片/debris；日轮/sun,burst@身后,spark@身边浮游,flake,sunDisc,#ff5a3a #ffd23f #fff0e0,无,环绕,概念质变·线稿化,巨元素法相,星神觉醒·超之域,元素表
+sp_astro_pulsar,脉冲星灵,Pulsar Sprite,astro,pulsar,脉冲星/pulsar；光束/beam；脉冲波/pulse；闪光/sparkle；原子核/core,beam@顶部,soundWave@底部,sparkle,nucleus,#5ad8f8 #ff5ab8 #effcff,无,尾随,概念质变·元素符阵,元素漩涡,冲神觉醒·脉之域,元素表
+sp_astro_quasar,类星灵,Quasar Sprite,astro,quasar,类星体/quasar；喷流/jets；吸积盘/accretion disk；爆光/burst；镜片/lens,quasarJet@身侧,blackhole@尾部,burst,lens,#8a5af8 #ffd84a #f4eeff,无,成簇,概念质变·回响轮廓,元素漩涡,类神觉醒·类之域,元素表
+sp_astro_dark_matter,暗物质灵,Dark Matter Sprite,astro,shp_twin,暗物质/dark matter；影团/shadow；星环/ring；虚空环/void ring；无限/infinity,shadowBlob@尾部,orbit@身后,voidRing,infinity,#3a2a5a #5a8af8 #d8d0f0,无,四角散布,概念质变·回响轮廓,巨元素法相,质神觉醒·暗之域,元素表
+sp_emotion_joy,喜灵,Joy Sprite,emotion,sun,喜/joy；闪光/sparkles；彩带/streamer；心/heart；日轮/sun,sparkle@身边浮游,ribbon@底部,heart,sunDisc,#ffd23f #ff5a8a #fff8dc,无,尾随,概念质变·线稿化,元素雨,喜神觉醒·喜之域,元素表
+sp_emotion_anger,怒灵,Anger Sprite,emotion,flame,怒/anger；怒纹/anger marks；蒸汽/steam；火星/spark；爆光/burst,angerMark@身边浮游,steam@顶部,spark,burst,#e8343a #ff9a1a #fff0e0,无,四角散布,概念质变·线稿化,元素环阵,怒神觉醒·怒之域,元素表
+sp_emotion_sorrow,哀灵,Sorrow Sprite,emotion,rain,哀/sorrow；雨丝/rain；泪滴/tears；云/cloud；月/moon,rain@底部,drop@身边浮游,cloud,moon,#5a7ab8 #a8c8f8 #eef4fc,无,左右一对,概念质变·线稿化,元素环阵,哀神觉醒·哀之域,元素表
+sp_emotion_delight,乐灵,Delight Sprite,emotion,shp_drop,乐/delight；双音符/notes；气球泡/balloon；音符/note；双星/twin stars,notes2@身边浮游,bubble@身侧,note,twinStar,#ff9a3a #5ad86a #fff4e4,无,竖列,概念质变·元素符阵,本体法相,乐神觉醒·乐之域,元素表
+sp_emotion_fear,惧灵,Fear Sprite,emotion,ghost,惧/fear；颤线/shivers；影团/shadow；幽灵/ghost；静默纹/hush,shiver@两侧,shadowBlob@底部,ghostWisp,hush,#6a5a8a #c8e8ff #f0eef8,无,左右一对,概念质变·回响轮廓,元素漩涡,惧神觉醒·惧之域,元素表
+sp_emotion_love,爱灵,Love Sprite,emotion,heart,爱/love；双心/hearts；丝带/ribbon；心/heart；宝石/gem,heartPair@身边浮游,ribbon@底部,heart,gem,#ff3a6a #ffd84a #fff0f4,无,成簇,概念质变·回响轮廓,双生法相,爱神觉醒·爱之域,元素表
+sp_emotion_grudge,恨灵,Grudge Sprite,emotion,shard,恨/grudge；尖刺/thorns；裂纹/crack；影团/shadow；黑曜/obsidian,thorn@身边浮游,crack@身前,shadowBlob,obsidian,#4a1a2a #e8344a #f0d8dc,无,环绕,概念质变·元素符阵,回响轮廓,恨神觉醒·恨之域,元素表
+sp_emotion_surprise,惊灵,Surprise Sprite,emotion,burst,惊/surprise；爆光/burst；弹簧/spring；闪光/sparkle；闪电/zap,burst@身后,spring@底部,sparkle,zap,#ffd23f #3ab8f8 #fff8dc,无,竖列,概念质变·元素符阵,回响轮廓,惊神觉醒·惊之域,元素表
+sp_emotion_thought,思灵,Thought Sprite,emotion,shp_twin,思/thought；思绪泡/thought bubble；齿轮/gears；灯泡/bulb；螺旋/spiral,thoughtBubble@身侧,gearMini@身边浮游,bulb,spiral,#5a6ad8 #ffd84a #eef0ff,无,尾随,概念质变·回响轮廓,元素漩涡,思神觉醒·思之域,元素表
+sp_emotion_insight,悟灵,Insight Sprite,emotion,lotus,悟/insight；灵光灯泡/bulb；光芒/rays；莲瓣/lotus petal；光核/light core,bulb@身侧,ray@身边浮游,lotusPetal,glow,#f2c14e #e86aa8 #fff8e0,无,侧弧,概念质变·回响轮廓,巨元素法相,悟神觉醒·悟之域,元素表
+sp_dream_nightmare,梦魇灵,Nightmare Sprite,dream,shadow,梦魇/nightmare；蝙蝠/bats；月牙/crescent；幽灵/ghost；黑曜/obsidian,bat@身边浮游,moon@身侧,ghostWisp,obsidian,#2a1a3a #c03a6a #e0d0f0,无,尾随,分化质变·一分为二,元素环阵,魇神觉醒·梦之域,元素表
+sp_dream_slumber,安眠灵,Slumber Sprite,dream,moon,安眠/slumber；枕头/pillow；星星/stars；梦泡/dream bubble；光斑/light spot,pillow@底部,star@身边浮游,dreamBubble,lightSpot,#6a7ad8 #ffd84a #eef0ff,无,左右一对,材质质变·金属化,元素雨,眠神觉醒·安之域,元素表
+sp_dream_illusion,幻境灵,Illusion Sprite,dream,nebula,幻境/illusion；万花纹/kaleidoscope；镜片/mirror shards；泡泡/bubble；莫比乌斯/mobius,kaleido@身侧,mirrorShard@身边浮游,bubble,mobius,#c05af8 #3ae8c8 #f8eeff,无,竖列,分化质变·碎分,回响轮廓,幻神觉醒·幻之域,元素表
+sp_dream_lucid,清醒灵,Lucid Sprite,dream,sun,清醒梦/lucid dream；闪光/sparkles；梦泡/dream bubble；星/star；镜片/lens,sparkle@身边浮游,dreamBubble@身侧,star,lens,#ffd84a #5a8ad8 #fffbe8,无,成簇,概念质变·回响轮廓,巨元素法相,醒神觉醒·清之域,元素表
+sp_dream_daydream,白日梦灵,Daydream Sprite,dream,cloud,白日梦/daydream；彩虹/rainbow；泡泡/bubbles；小云/cloudlet；心/heart,rainbow@底部,bubble@身边浮游,cloud,heart,#f8f0ff #ff9ab8 #ffffff,无,四角散布,概念质变·线稿化,双生法相,梦神觉醒·白之域,元素表
+sp_dream_bad_dream,噩梦灵,Bad Dream Sprite,dream,ghost,噩梦/bad dream；裂纹/cracks；雷云/storm cloud；碎片/shards；黑洞/black hole,crack@身前,stormCloud@顶部,errorShard,blackhole,#3a2a4a #8af85a #e8e0f0,无,侧弧,概念质变·回响轮廓,本体法相,噩神觉醒·噩之域,元素表
+sp_dream_sweet_dream,美梦灵,Sweet Dream Sprite,dream,shp_scurve,美梦/sweet dream；星星/stars；糖果/candy；月牙/crescent；枕头/pillow,star@身边浮游,candy@身侧,moon,pillow,#ffb8d8 #8a7af8 #fff6fa,无,左右一对,概念质变·元素符阵,本体法相,美神觉醒·美之域,元素表
+sp_dream_dreamless,无梦灵,Dreamless Sprite,dream,shp_drop,无梦/dreamless；静默纹/hush；雾气/mist；虚空环/void ring；静珠/quiet pearl,hush@身前,mist@底部,voidRing,pearl,#a8b0c8 #3a4a6a #f4f6fa,无,环绕,概念质变·元素符阵,元素漩涡,无神觉醒·无之域,元素表
+sp_ocean_coral,珊瑚灵,Coral Sprite,ocean,coral,珊瑚/coral；海藻/kelp；气泡/bubbles；海星/starfish；珍珠/pearl,kelp@尾部,bubble@身边浮游,starfish,pearl,#ff8a7a #3ac8b8 #fff0ec,无,侧弧,概念质变·线稿化,元素漩涡,珊神觉醒·珊之域,元素表
+sp_ocean_seashell,贝壳灵,Seashell Sprite,ocean,shell,贝壳/seashell；珍珠/pearl；海浪/wave；沙粒/sand；海螺纹/conch spiral,pearl@身侧,wave@尾部,sand,spiral,#ffd8c8 #e8708a #fff8f4,无,左右一对,概念质变·回响轮廓,双生法相,壳神觉醒·贝之域,元素表
+sp_ocean_kelp,海藻灵,Kelp Sprite,ocean,leaf,海藻/kelp；海藻须/kelp fronds；气泡/bubbles；贝壳/shell；水滴/drop,kelp@底部,bubble@顶部,shell,drop,#3a9a5a #8fe8d8 #eafff4,无,环绕,概念质变·元素符阵,本体法相,藻神觉醒·海之域,元素表
+sp_ocean_abyss,深海灵,Abyss Sprite,ocean,anglerfish,深海/abyss；深海光/deep glow；暗流/undercurrent；气泡/bubble；诱光核/lure core,glow@身边浮游,wave@尾部,bubble,lightSpot,#1a2a5a #5af8f8 #d8e8ff,无,四角散布,概念质变·元素符阵,巨元素法相,深神觉醒·深之域,元素表
+sp_ocean_jellyfish,水母灵,Jellyfish Sprite,ocean,jellyfish,水母/jellyfish；水母须/tentacles；光点/sparkles；气泡/bubble；伞心/bell core,jellyTail@底部,sparkle@身边浮游,bubble,pearl,#ff8fd1 #8fe3ff #fff0fb,无,竖列,概念质变·回响轮廓,回响轮廓,母神觉醒·水之域,元素表
+sp_ocean_starfish,海星灵,Starfish Sprite,ocean,star,海星/starfish；贝壳/shell；沙粒/sand；小海星/little starfish；水滴/drop,shell@身侧,sand@底部,starfish,drop,#ff7a4a #ffd8a8 #fff4ec,圆点,尾随,概念质变·线稿化,巨元素法相,星神觉醒·海之域,元素表
+sp_ocean_seahorse,海马灵,Seahorse Sprite,ocean,seahorse,海马/seahorse；卷尾/curled tail；海藻/kelp；气泡/bubble；珊瑚/coral,curlTail@尾部,kelp@身侧,bubble,coral,#f2a03a #3ab8a8 #fff4e0,无,成簇,概念质变·回响轮廓,元素雨,马神觉醒·海之域,元素表
+sp_ocean_octopus,章鱼灵,Octopus Sprite,ocean,octopus,章鱼/octopus；墨滴/ink drops；贝壳/shell；海藻/kelp；宝石/gem,inkDrop@身边浮游,shell@身侧,kelp,gem,#e85a8a #5a3a8a #fff0f6,无,尾随,概念质变·线稿化,元素环阵,鱼神觉醒·章之域,元素表
+sp_ocean_shark,鲨鱼灵,Shark Sprite,ocean,shark,鲨鱼/shark；背鳍/dorsal fin；浪花/waves；锚/anchor；锯齿/teeth,fin@顶部,wave@尾部,anchor,tooth,#5a7a9a #2f6ad8 #f4f8ff,无,侧弧,概念质变·元素符阵,元素漩涡,鱼神觉醒·鲨之域,元素表
+sp_ocean_whale,鲸灵,Whale Sprite,ocean,whale,鲸/whale；水柱/spout；星星/stars；水滴/drop；月/moon,spout@顶部,star@身边浮游,drop,moon,#3a6ad8 #8fe3ff #eef6ff,无,竖列,概念质变·回响轮廓,元素环阵,鲸神觉醒·鲸之域,元素表
+sp_insect_butterfly,蝶灵,Butterfly Sprite,insect,shp_dia,蝶/butterfly；蝶翼/wings；触角/antennae；花粉/pollen；小花/flower,bflyWing@两侧,antenna@顶部,pollen,blossom,#ff8a3a #5a3ad8 #fff0e0,无,四角散布,概念质变·回响轮廓,元素环阵,蝶神觉醒·蝶之域,元素表
+sp_insect_beetle,甲虫灵,Beetle Sprite,insect,beetle,甲虫/beetle；甲角/horn；透明翅/wings；圆叶/leaf；甲片/shell plate,beetleHorn@顶部,insectWing@两侧,leafR,shellPlate,#2a8a5a #e8c03a #eafff4,无,左右一对,概念质变·元素符阵,元素漩涡,虫神觉醒·甲之域,元素表
+sp_insect_bee,蜂灵,Bee Sprite,insect,shp_tri2,蜂/bee；透明翅/wings；尾针/stinger；蜂巢/honeycomb；蜂蜜/honey,insectWing@两侧,stinger@底部,honeycomb,amber,#ffd23f #2a2a2a #fff8dc,横带,环绕,概念质变·回响轮廓,巨元素法相,蜂神觉醒·蜂之域,元素表
+sp_insect_ant,蚁灵,Ant Sprite,insect,ant,蚁/ant；饼干屑/crumb；叶片/leaf；种子/seed；圆叶/round leaf,cookie@身侧,leaf@身后,seed,leafR,#8a2a1a #5ab84a #f8e8e0,无,尾随,概念质变·线稿化,本体法相,蚁神觉醒·蚁之域,元素表
+sp_insect_firefly,萤火灵,Firefly Sprite,insect,shp_drop,萤火/firefly；透明翅/wings；萤光/tail light；光斑/light spot；月/moon,insectWing@两侧,glow@尾部,lightSpot,moon,#3a4a2a #e8f83a #f8ffe0,无,竖列,概念质变·元素符阵,元素雨,火神觉醒·萤之域,元素表
+sp_insect_dragonfly,蜻蜓灵,Dragonfly Sprite,insect,shp_tri,蜻蜓/dragonfly；透明翅/wings；荷叶/lotus leaf；水滴/drop；复眼/compound eye,insectWing@两侧,lotusPad@底部,drop,lens,#3ab8d8 #8af85a #efffff,无,成簇,概念质变·线稿化,回响轮廓,蜓神觉醒·蜻之域,元素表
+sp_insect_mantis,螳螂灵,Mantis Sprite,insect,mantis,螳螂/mantis；镰臂/blade arms；叶片/leaf；尖刺/thorn；晶片/shard,mantisBlade@两侧,leaf@底部,thorn,shard,#5ad84a #e8a03a #f4ffe8,无,成簇,概念质变·回响轮廓,元素环阵,螂神觉醒·螳之域,元素表
+sp_insect_cicada,蝉灵,Cicada Sprite,insect,beetle,蝉/cicada；透明翅/wings；声波/song；回声波/echo；夏日/summer sun,insectWing@两侧,soundWave@身边浮游,echoArc,sunDisc,#6a5a3a #8fe3d8 #f4f0e0,无,侧弧,概念质变·元素符阵,双生法相,蝉神觉醒·蝉之域,元素表
+sp_flying_plume,羽灵,Plume Sprite,flying,feather,羽/plume；羽毛/feathers；风/wind；小羽/little feather；宝石/gem,feather@两侧,swirl@底部,feather,gem,#5ab8f8 #f2c14e #effaff,无,左右一对,概念质变·元素符阵,回响轮廓,羽神觉醒·羽之域,元素表
+sp_flying_wing,翼灵,Wing Sprite,flying,shp_scurve,翼/wing；羽翼/wings；云/cloud；疾风线/gust；星徽/star badge,wing@两侧,cloud@底部,speedLines,badgeStar,#e8eef8 #5a6ad8 #ffffff,无,环绕,概念质变·回响轮廓,本体法相,翼神觉醒·翼之域,元素表
+sp_flying_falcon,风隼灵,Falcon Sprite,flying,bird,风隼/falcon；疾风线/gust lines；旋风/whirlwind；羽毛/feather；方位针/bearing,speedLines@尾部,swirl@两侧,feather,compassNeedle,#8a5a3a #5ad8f8 #f8eee4,无,侧弧,概念质变·线稿化,元素漩涡,隼神觉醒·风之域,元素表
+sp_flying_eagle,鹰灵,Eagle Sprite,flying,bird,鹰/eagle；疾风/wind；山峰/peaks；云/cloud；日/sun,swirl@两侧,karst@底部,cloud,sunDisc,#6a4a2a #f2c14e #fff4e0,无,成簇,概念质变·元素符阵,元素雨,鹰神觉醒·鹰之域,元素表
+sp_flying_crane,鹤灵,Crane Sprite,flying,bird,鹤/crane；丹顶/red crest；松针/pine；雾气/mist；月/moon,crest@顶部,pineNeedle@底部,mist,moon,#f4f4f8 #e8343a #ffffff,无,尾随,概念质变·回响轮廓,双生法相,鹤神觉醒·鹤之域,元素表
+sp_flying_swallow,燕灵,Swallow Sprite,flying,bird,燕/swallow；燕尾/forked tail；柳叶/willow leaves；雨滴/rain；桃花/spring blossom,swallowTail@尾部,leaf@身边浮游,rain,sakura,#2a3a5a #e8463c #f0f4ff,无,四角散布,概念质变·线稿化,巨元素法相,燕神觉醒·燕之域,元素表
+sp_reptile_scale,鳞灵,Scale Sprite,reptile,shell,鳞/scale；鳞片/scales；水波/ripples；宝石/gem；晶片/shard,scaleChip@尾部,wave@身侧,gem,shard,#3ab88a #e8c03a #eafff4,鳞纹,侧弧,概念质变·元素符阵,回响轮廓,鳞神觉醒·鳞之域,元素表
+sp_reptile_serpent,蛇灵,Serpent Sprite,reptile,snake,蛇/serpent；蛇信/forked tongue；草叶/grass；鳞片/scale；宝石/gem,snakeTongue@身侧,leaf@底部,scaleChip,gem,#5a9a3a #e8463c #f0ffe0,鳞纹,四角散布,概念质变·线稿化,元素雨,蛇神觉醒·蛇之域,元素表
+sp_reptile_lizard,蜥灵,Lizard Sprite,reptile,lizard,蜥/lizard；卷尾/curled tail；石块/rock；日轮/sun；宝石/gem,curlTail@尾部,rock@底部,sunDisc,gem,#8ac03a #e8902a #f4ffe0,无,竖列,概念质变·线稿化,元素环阵,蜥神觉醒·蜥之域,元素表
+sp_reptile_tortoise,龟灵,Tortoise Sprite,reptile,turtle,龟/tortoise；荷叶/lotus leaf；水滴/drops；甲片/shell plate；玉璧/jade disc,lotusPad@底部,drop@身边浮游,shellPlate,jadeDisc,#4a8a4a #c0a03a #eef8e4,六角纹,尾随,概念质变·回响轮廓,双生法相,龟神觉醒·龟之域,元素表
+sp_reptile_crocodile,鳄灵,Crocodile Sprite,reptile,croc,鳄/crocodile；浪花/waves；芦苇/reeds；锯齿/teeth；鳞片/scale,wave@身侧,orchid@尾部,tooth,scaleChip,#3a7a3a #e8d83a #eef8e0,鳞纹,成簇,概念质变·回响轮廓,巨元素法相,鳄神觉醒·鳄之域,元素表
+sp_chrono,龙灵,Dragon Sprite,reptile,dragon,龙/dragon；龙须/whiskers；龙珠/dragon pearl；祥云/cloud；龙鳞/dragon scale,whisker@两侧,pearl@身侧,cloud,scaleChip,#3a6ad8 #f2c14e #eef4ff,无,左右一对,概念质变·元素符阵,本体法相,龙神觉醒·龙之域,元素表
+sp_micro_spore,孢子灵,Spore Sprite,micro,spore,孢子/spore；孢子/spores；菌丝/hyphae；花粉/pollen；细胞核/nucleus,spore@身边浮游,hypha@底部,pollen,nucleus,#a8c83a #5a3a8a #f8ffe0,无,尾随,分化质变·生芽,巨元素法相,孢神觉醒·孢之域,元素表
+sp_micro_fungus,菌灵,Fungus Sprite,micro,mushroom,菌/fungus；小菌盖/little caps；孢子/spores；苔团/moss；卵石/pebble,mushcap@身边浮游,spore@顶部,moss,pebble,#c08a5a #5ad8a8 #fff4e8,斑块,竖列,概念质变·回响轮廓,元素雨,菌神觉醒·菌之域,元素表
+sp_micro_cell,细胞灵,Cell Sprite,micro,cell,细胞/cell；小泡/vesicles；线粒体/mitochondrion；细胞核/nucleus；平行环/twin rings,bubble@身边浮游,coffeeBean@身侧,nucleus,twinRing,#8ae8a8 #e85a8a #f4fff8,无,成簇,概念质变·线稿化,回响轮廓,胞神觉醒·细之域,元素表
+sp_micro_virus,病毒灵,Virus Sprite,micro,virus,病毒/virus；刺突/spikes；衣壳/capsids；小衣壳/little capsid；宝石/gem,spike@两侧,capsid@身边浮游,capsid,gem,#8a3ad8 #e8e83a #f4eeff,无,四角散布,分化质变·一分为二,元素漩涡,毒神觉醒·病之域,元素表
+sp_micro_bacterium,细菌灵,Bacterium Sprite,micro,bacterium,细菌/bacterium；鞭毛/flagellum；孢子/spores；菌毛/pili；菌珠/bacterial pearl,flagellum@尾部,spore@身边浮游,pili,pearl,#5ac8a8 #e8a03a #effcf8,无,侧弧,概念质变·元素符阵,元素环阵,菌神觉醒·细之域,元素表
+sp_micro_phage,噬菌灵,Phage Sprite,micro,phage,噬菌体/phage；衣壳/capsid；尾丝/tail fibres；刺突/spike；螺母/hex core,capsid@身侧,antenna@底部,spike,nut,#5a8ad8 #e8a03a #eef4ff,无,左右一对,概念质变·线稿化,双生法相,菌神觉醒·噬之域,元素表
+sp_collab_boe_car_display,车载屏灵,BOE Car Display Sprite,collab,monitor,车载屏/car display；方向盘/steering wheel；导航针/navigation needle；像素/pixel；芯片/chip,wheel@身侧,compassNeedle@身边浮游,pixel,chip,#2a3a5a #3ad8f8 #e8f8ff,方格,环绕,概念质变·线稿化,元素雨,BOE 觉醒·车之域,元素表
+sp_collab_boe_lumen,光显灵,BOE Lumen Sprite,collab,pixelpanel,光显/light display；显示屏/display screen；光斑/light spots；闪光/sparkle；光核/light core,screen@身侧,lightSpot@身边浮游,sparkle,glow,#5a3ad8 #ffd84a #f0eeff,棋格,竖列,概念质变·回响轮廓,巨元素法相,光显觉醒·光之域,元素表
+sp_collab_vung_tau,头顿灵,Vung Tau Sprite,collab,lighthouse,头顿/Vung Tau；灯塔光/lighthouse beam；浪花/waves；贝壳/shell；锚/anchor,lightBeam@身侧,wave@尾部,shell,anchor,#e8463c #3a8ad8 #fff4ee,无,尾随,概念质变·线稿化,双生法相,港神觉醒·头之域,元素表
+sp_collab_ho_chi_minh_city,胡志明灵,Ho Chi Minh City Sprite,collab,skyline,胡志明市/Ho Chi Minh City；莲瓣/lotus petals；星星/star；灯笼/lantern；星徽/star badge,lotusPetal@身边浮游,star@身侧,lanternSeg,badgeStar,#e8343a #ffd23f #fff0e0,无,四角散布,概念质变·元素符阵,元素环阵,都神觉醒·胡之域,元素表
+sp_collab_phu_my,富美灵,Phu My Sprite,collab,factory,富美/Phu My；烟囱/chimney；齿轮/gear；螺母/hex nut；电池/power cell,chimney@顶部,gear@身侧,bolt,battery,#5a7a8a #e8b030 #eef4f6,无,竖列,概念质变·回响轮廓,本体法相,美神觉醒·富之域,元素表
+sp_collab_rice_noodle,米粉灵,Rice Noodle Sprite,collab,bowl,米粉/rice noodles；米粉/noodles；香草/herbs；蒸汽/steam；筷子/chopsticks,noodle@顶部,leafR@身边浮游,steam,chopsticks,#f0e0c0 #3ab84a #ffffff,无,左右一对,概念质变·元素符阵,元素漩涡,粉神觉醒·米之域,元素表
+sp_collab_spring_roll,春卷灵,Spring Roll Sprite,collab,springroll,春卷/spring roll；香草叶/herb leaves；酱汁/sauce drops；小春卷/little roll；虾/prawn,leaf@两侧,drop@身边浮游,springRoll,prawn,#f0d8a0 #5ab84a #fff8e8,无,侧弧,概念质变·回响轮廓,巨元素法相,卷神觉醒·春之域,元素表
+sp_collab_banh_mi,法棍灵,Banh Mi Sprite,collab,baguette,法棍/banh mi；香菜/coriander；酱料/sauce；麦穗/wheat；暖阳/warm sun,sprout@顶部,paintDab@身侧,wheat,sunDisc,#e8a85a #3ab84a #fff4e0,无,左右一对,概念质变·元素符阵,回响轮廓,棍神觉醒·法之域,元素表
+sp_collab_drip_coffee,咖啡灵,Drip Coffee Sprite,collab,cup,咖啡/coffee；蒸汽/steam；咖啡豆/beans；咖啡滴/coffee drop；拉花/latte heart,steam@顶部,coffeeBean@身边浮游,drop,heart,#6a3a1a #e8b07a #fff0e0,无,四角散布,概念质变·元素符阵,回响轮廓,啡神觉醒·咖之域,元素表
+sp_collab_beef_pho,牛粉灵,Beef Pho Sprite,collab,bowl,牛粉/beef pho；葱花/scallion；筷子/chopsticks；香草/herb；热气/heat,sprout@顶部,chopsticks@身侧,leafR,flame,#c0602a #3ab84a #fff0dc,无,四角散布,概念质变·回响轮廓,双生法相,牛粉觉醒·牛之域,元素表
+sp_collab_sizzling_pancake,煎饼灵,Sizzling Pancake Sprite,collab,pancake,煎饼/banh xeo；虾/prawn；生菜/lettuce；蒸汽/steam；金饼/golden crepe,prawn@身侧,leafR@两侧,steam,sunDisc,#f2c14e #e8603a #fff8dc,无,环绕,概念质变·线稿化,双生法相,饼神觉醒·煎之域,元素表
+sp_collab_sticky_rice,糯米饭灵,Sticky Rice Sprite,collab,riceleaf,糯米饭/sticky rice；稻穗/rice ears；蒸汽/steam；饭团/rice ball；糯米珠/rice pearl,wheat@身侧,steam@顶部,riceBall,pearl,#5ab84a #f2c14e #fff8e8,无,竖列,概念质变·元素符阵,本体法相,米神觉醒·糯之域,元素表
+sp_collab_sugarcane_prawn,甘蔗虾灵,Sugarcane Prawn Sprite,collab,shrimp,甘蔗虾/sugarcane prawn；甘蔗/sugarcane；生菜/lettuce；虾/prawn；火星/sizzle,bambooNode@身侧,leafR@底部,prawn,spark,#ff8a5a #c8a05a #fff4ec,无,左右一对,概念质变·元素符阵,元素环阵,虾神觉醒·甘之域,元素表
+sp_collab_phin_filter,滴漏灵,Phin Filter Sprite,collab,phin,滴漏/phin filter；咖啡滴/drips；冰块/ice cube；咖啡豆/bean；计时沙漏/timer,drop@底部,saltCube@身侧,coffeeBean,hourglass,#a0a8b8 #6a3a1a #f4f6fa,无,侧弧,概念质变·回响轮廓,元素漩涡,壶神觉醒·滴之域,元素表
+sp_collab_coffee_bean,咖啡豆灵,Coffee Bean Sprite,collab,shp_wide,咖啡豆/coffee bean；咖啡豆/beans；咖啡叶/leaf；咖啡果/coffee cherry；种子/seed,coffeeBean@身边浮游,leaf@顶部,cherry,seed,#6a3a1a #e8463c #f8e8dc,无,左右一对,概念质变·线稿化,本体法相,豆神觉醒·咖之域,元素表
+sp_collab_conical_hat,斗笠灵,Conical Hat Sprite,collab,conehat,斗笠/conical hat；稻穗/rice ears；系带/chin strap；竹叶/bamboo leaf；莲瓣/lotus petal,wheat@身侧,ribbon@底部,bambooLeaf,lotusPetal,#e8d8a0 #3a9a4a #fff8e0,无,尾随,概念质变·线稿化,元素雨,笠神觉醒·斗之域,元素表
+sp_collab_ao_dai,奥黛灵,Ao Dai Sprite,collab,aodai,奥黛/ao dai；丝带/silk ribbons；莲花/lotus flower；莲瓣/lotus petal；中国结/knot,ribbon@尾部,blossom@身侧,lotusPetal,knot,#f4f0f8 #e8346a #ffffff,无,侧弧,概念质变·线稿化,元素漩涡,黛神觉醒·奥之域,元素表
+sp_collab_lotus_bloom,莲花灵,Lotus Bloom Sprite,collab,lotus,莲花/lotus bloom；莲灯/lotus lanterns；水波/water；莲瓣/lotus petal；莲子/lotus seed,lanternSeg@身边浮游,wave@尾部,lotusPetal,seed,#ff8ab8 #f2c14e #fff0f6,无,四角散布,概念质变·回响轮廓,巨元素法相,莲神觉醒·莲之域,元素表
+sp_collab_village_bamboo,竹灵,Village Bamboo Sprite,collab,bamboo,乡竹/village bamboo；竹篱/bamboo fence；稻穗/rice ears；竹叶/bamboo leaf；小屋/village house,pane@底部,wheat@身侧,bambooLeaf,houseMini,#8ac03a #c08a3a #f4ffe0,无,环绕,概念质变·回响轮廓,元素漩涡,竹神觉醒·竹之域2,元素表
+sp_collab_water_puppet,木偶灵,Water Puppet Sprite,collab,puppet,木偶/water puppet；提线/strings；水波/water；小旗/flag；拨浪鼓/drum,puppetString@顶部,wave@尾部,flag,toyDrum,#e8a03a #3a8ad8 #fff4e4,无,成簇,概念质变·回响轮廓,巨元素法相,偶神觉醒·木之域,元素表
+sp_collab_hoi_an_lantern,灯笼灵,Hoi An Lantern Sprite,collab,lantern,会安灯笼/Hoi An lantern；小灯笼/little lanterns；流苏/tassels；烛火/candle flame；樱花/blossom,lanternSeg@身边浮游,tassel@底部,candle,sakura,#f2c14e #e8343a #fff6d6,无,侧弧,概念质变·回响轮廓,双生法相,灯神觉醒·笼之域,元素表
+sp_collab_ha_long_bay,下龙灵,Ha Long Bay Sprite,collab,karst,下龙湾/Ha Long Bay；浪花/waves；小舟桨/oar；石峰/karst peak；龙珠/dragon pearl,wave@尾部,paddle@身侧,karst,pearl,#3ab8a8 #5a8a6a #eafffa,无,成簇,概念质变·元素符阵,本体法相,湾神觉醒·下之域,元素表
+sp_collab_gothic_cutie,暗萌灵,Gothic Cutie Sprite,collab,bat,暗萌/gothic cutie；蝴蝶结/bow；月牙/crescent；心/heart；宝石/gem,bow@顶部,moon@身边浮游,heart,gem,#3a2a4a #e8346a #f4e8f8,无,尾随,概念质变·线稿化,元素雨,暗萌觉醒·暗之域,元素表
+sp_collab_sweet_dreamer,甜梦灵,Sweet Dreamer Sprite,collab,cloud,甜梦/sweet dreamer；糖果/candy；星星/stars；梦泡/dream bubble；心/heart,candy@身侧,star@身边浮游,dreamBubble,heart,#ffd8f0 #8a7af8 #ffffff,无,四角散布,概念质变·线稿化,元素雨,甜梦觉醒·甜之域,元素表
+sp_collab_star_wish_girl,星愿少女灵,Star Wish Girl Sprite,collab,star,星愿/star wish；缎带/ribbon；闪光/sparkles；流星/shooting star；心/heart,ribbon@底部,sparkle@身边浮游,comet,heart,#ffd84a #ff7ab8 #fffbe8,无,成簇,概念质变·线稿化,本体法相,星愿觉醒·星之域,元素表
+sp_collab_star_sailor,水手灵,Star Sailor Sprite,collab,shp_drop,星海水手/star sailor；锚/anchor；浪花/waves；星/star；方位针/compass needle,anchor@身侧,wave@尾部,star,compassNeedle,#3a5ad8 #e8343a #eef2ff,无,尾随,概念质变·回响轮廓,元素雨,航星觉醒·水之域,元素表
+sp_collab_magical_girl,魔法灵,Magical Girl Sprite,collab,wand,魔法/magic；星星/stars；心/heart；闪光/sparkle；宝石/gem,star@身边浮游,heart@身侧,sparkle,gem,#ff7ab8 #ffd84a #fff0f8,无,尾随,概念质变·线稿化,回响轮廓,魔女觉醒·魔之域,元素表
+sp_collab_moon_mirror,月光灵,Moon Mirror Sprite,collab,mirror,月光/moonlight；月牙/crescent；闪光/sparkles；星/star；月珠/moon pearl,moon@身侧,sparkle@身边浮游,star,pearl,#c8c0f8 #ffd84a #f8f6ff,无,环绕,空间质变·空间门,双生法相,月镜觉醒·月之域,元素表
+sp_collab_star_dream,星梦灵,Star Dream Sprite,collab,nebula,星梦/star dream；梦泡/dream bubble；星星/stars；闪光/sparkle；月/moon,dreamBubble@身侧,star@身边浮游,sparkle,moon,#8a6af8 #ffd84a #f4eeff,无,竖列,概念质变·元素符阵,元素环阵,星梦觉醒·星之域,元素表
+sp_collab_zodiac_armour,星座铠灵,Zodiac Armour Sprite,collab,shield,星座铠/zodiac armour；星环/star orbit；星徽/star badge；星/star；宝石/gem,orbit@身后,badgeStar@身前,star,gem,#f2c14e #3a3a8a #fff8dc,无,侧弧,概念质变·元素符阵,回响轮廓,圣铠觉醒·星之域,元素表
+sp_collab_detective,侦探灵,Detective Sprite,collab,magnifier,侦探/detective；脚印/footprints；便签/clue card；钥匙/key；锁/lock,pawPrint@尾部,noteCard@身侧,key,lock,#8a6a3a #3a5a8a #fff4e4,无,成簇,概念质变·元素符阵,元素环阵,侦探觉醒·侦之域,元素表
+sp_collab_gadget_box,道具箱灵,Gadget Box Sprite,collab,chest,道具/gadgets；扳手/wrenches；弹簧/spring；发条钥/wind-up key；灯泡/bulb,wrench@身侧,spring@顶部,gearToy,bulb,#3a8ad8 #ffd23f #eef6ff,无,环绕,概念质变·回响轮廓,元素漩涡,百宝觉醒·道之域,元素表
+sp_collab_card_magic,卡牌魔法灵,Card Magic Sprite,collab,cards,卡牌魔法/card magic；牌扇/card fan；闪光/sparkles；卡牌/card；宝石/gem,cardFan@身侧,sparkle@身边浮游,card,gem,#c0392b #2a2a3a #fff4ee,无,尾随,概念质变·元素符阵,本体法相,魔牌觉醒·卡之域,元素表
+sp_collab_mecha_pilot,机甲灵,Mecha Pilot Sprite,collab,box,机甲/mecha；天线/antenna；推进焰/thruster flame；螺母/hex nut；电池/battery,antennaRod@顶部,flame@底部,bolt,battery,#3a6ad8 #e8463c #eef2ff,无,成簇,维度质变·立体纵深,元素雨,机甲觉醒·机之域,元素表
+sp_collab_hero_squad,英雄灵,Hero Squad Sprite,collab,shield,英雄/hero squad；闪电/lightning；星星/star；小盾/shield；星徽/star badge,zap@身边浮游,star@身侧,shieldMini,badgeStar,#e8343a #ffd23f #fff0e0,无,左右一对,概念质变·线稿化,巨元素法相,英雄觉醒·英之域,元素表
+sp_collab_designer_toy,潮玩灵,Designer Toy Sprite,collab,toy,潮玩/designer toy；积木/block；闪光/sparkles；糖粒/sprinkles；宝石/gem,block@身侧,sparkle@身边浮游,sprinkle,gem,#8a5af8 #3ae8c8 #f6f0ff,斑块,环绕,概念质变·回响轮廓,元素漩涡,潮玩觉醒·潮之域,元素表
+sp_collab_energy_fighter,气功灵,Energy Fighter Sprite,collab,shp_wide,气功/qi energy；气团/qi ball；旋风/whirlwind；闪光/sparkle；阴阳/yin-yang,qiBall@身侧,swirl@两侧,sparkle,yinyang,#3ab8f8 #ffd23f #eefaff,无,侧弧,概念质变·线稿化,巨元素法相,武斗觉醒·气之域,元素表
+sp_collab_slice_of_life,日常喜剧灵,Slice of Life Sprite,collab,shp_twin,日常/slice of life；对话框/speech bubble；茶杯/teacup；心/heart；小屋/home,speech@身侧,teacup@底部,heart,houseMini,#ff9a5a #3ab8a8 #fff4ec,无,四角散布,概念质变·线稿化,回响轮廓,喜剧觉醒·日之域,元素表
+sp_collab_chase_comedy,追逐喜剧灵,Chase Comedy Sprite,collab,comet,追逐/chase comedy；疾风线/speed lines；尘烟/dust cloud；脚印/footprint；火星/spark,speedLines@尾部,dustCloud@底部,pawPrint,spark,#ff8a3a #5a6ad8 #fff4e4,无,竖列,概念质变·元素符阵,双生法相,追逐觉醒·追之域,元素表
+sp_collab_inventor,发明家灵,Inventor Sprite,collab,gear,发明/invention；灯泡/idea bulb；扳手/wrench；螺丝/screw；齿轮/gear,bulb@顶部,wrench@身侧,screw,gearMini,#c08a3a #3ab8f8 #fff4e0,无,左右一对,概念质变·元素符阵,元素环阵,发明觉醒·发之域,元素表
+sp_collab_fairy_castle,童话城堡灵,Fairy Castle Sprite,collab,castle,童话城堡/fairy castle；旗帜/pennant；塔楼/turrets；闪光/sparkle；心/heart,flag@顶部,castleTower@两侧,sparkle,heart,#ff9ac8 #8a7af8 #fff4fa,无,竖列,概念质变·回响轮廓,回响轮廓,童话觉醒·童之域,元素表
+sp_collab_cartoon_caper,卡通喜剧灵,Cartoon Caper Sprite,collab,shp_sq,卡通/cartoon caper；爆光/pow burst；弹簧/spring；星/star；闪光/sparkle,burst@身后,spring@底部,star,sparkle,#ffd23f #e8343a #fff8dc,无,成簇,概念质变·回响轮廓,元素环阵,卡通觉醒·卡之域,元素表
+sp_collab,委托灵,S10 Commission Sprite,link,scroll,委托/commission；印章/seal；信封/envelopes；便签/note card；星徽/star badge,stamp@身侧,envelope@身边浮游,noteCard,badgeStar,#8a6a3a #3a6ad8 #fff4e4,无,侧弧,结构质变·部件浮离,双生法相,委神觉醒·委之域,元素表
+sp_link_test_lab,试验灵,Test Lab Sprite,link,flask,试验/test lab；试管/test tubes；气泡/bubbles；小烧瓶/little flask；原子核/nucleus,tube@两侧,bubble@顶部,flask,nucleus,#3ab8a8 #e8463c #effffc,无,竖列,结构质变·脚手架重构,元素雨,验神觉醒·试之域,元素表
+sp_link_data,数据灵,Data Sprite,link,chip,数据/data；数据块/data blocks；柱状图/chart；像素/pixel；密码轮/cipher,data@身侧,chart@身边浮游,pixel,cipherWheel,#3a6ad8 #3ae8a8 #eef4ff,电路纹,成簇,结构质变·部件浮离,巨元素法相,数神觉醒·据之域,元素表
+sp_link_sample,样本灵,Sample Sprite,link,vial,样本/sample；标签/label；载玻片/slide；水滴/drop；孢子/spore,tag@身侧,slideGlass@底部,drop,spore,#5ab8f8 #e8a03a #f0faff,无,环绕,结构质变·部件浮离,本体法相,样神觉醒·样之域,元素表
+sp_link_report,报告灵,Report Sprite,link,book,报告/report；柱状图/chart；书签/bookmark；书页/page；奖章/medal,chart@身侧,bookmark@顶部,page,medal,#3a5a8a #e8b030 #eef4fa,纸纹,四角散布,结构质变·模块外挂,元素雨,报神觉醒·报之域,元素表
+sp_link_batch_no,批号灵,Batch No. Sprite,link,tile,批号/batch number；条码/barcode；标签/tags；档案盒/archive box；印纹/stamp,barcode@身侧,tag@身边浮游,archiveBox,stamp,#6a7a8a #e8603a #f4f6f8,无,左右一对,结构质变·模块外挂,回响轮廓,批神觉醒·批之域,元素表
+sp_link_inspection,检测灵,Inspection Sprite,link,magnifier,检测/inspection；夹板/clipboard；检测光/scan light；试管/test tube；小盾/shield,clipboard@身侧,lightSpot@身边浮游,tube,shieldMini,#2f9e6a #e8b030 #eafff4,无,环绕,结构质变·脚手架重构,元素环阵,检神觉醒·检之域,元素表
+sp_link_analysis,分析灵,Analysis Sprite,link,chart,分析/analysis；放大镜/magnifier；数据块/data；骰子/dice；镜片/lens,magnifier@身侧,data@身边浮游,dice,lens,#8a5ad8 #3ab8f8 #f4eeff,方格,尾随,结构质变·脚手架重构,元素漩涡,析神觉醒·分之域,元素表
+sp_link_archive,归档灵,Archive Sprite,link,box,归档/archive；档案盒/archive box；书页/pages；标签/tag；锁/lock,archiveBox@身侧,page@身边浮游,tag,lock,#a07a4a #3a6a8a #fff4e4,无,竖列,结构质变·模块外挂,本体法相,档神觉醒·归之域,元素表
+sp_link_review,审核灵,Review Sprite,link,seal,审核/review；天平/balance；羽毛笔/quill；印纹/stamp；宝石/gem,balance@尾部,quill@身侧,stamp,gem,#c0392b #e8c06a #fff2ea,无,尾随,结构质变·脚手架重构,回响轮廓,审神觉醒·审之域,元素表
+sp_event_check_in,签到灵,Check-in Sprite,event,calendar,签到/check-in；日历页/calendar page；闪光/sparkles；星/star；星徽/star badge,calPage@身侧,sparkle@身边浮游,star,badgeStar,#3ab86a #ffd23f #effff4,无,四角散布,概念质变·元素符阵,双生法相,签神觉醒·签之域,元素表
+sp_event_double_xp,双倍灵,Double XP Sprite,event,twin,双倍/double XP；双星/twin stars；光芒/rays；爆光/burst；闪电/zap,twinStar@身侧,ray@身边浮游,burst,zap,#8a5af8 #ffd23f #f6f0ff,无,成簇,概念质变·线稿化,元素雨,倍神觉醒·双之域,元素表
+sp_event_anniversary,周年灵,Anniversary Sprite,event,cake,周年/anniversary；蜡烛/candle；彩带/streamer；礼盒/gift；心/heart,candleStick@顶部,ribbon@底部,gift,heart,#ff7ab8 #ffd23f #fff4fa,无,尾随,时间质变·流沙计时,巨元素法相,年神觉醒·周之域,元素表
+sp_event_ladder_climber,冲榜灵,Ladder Climber Sprite,event,stairs,冲榜/leaderboard climb；奖杯/trophy；旗帜/flag；奖章/medal；柱状图/chart,trophy@顶部,flag@身侧,medal,chart,#e8b030 #3a6ad8 #fff6dc,无,成簇,概念质变·线稿化,巨元素法相,榜神觉醒·冲之域,元素表
+sp_event_jigsaw,拼图灵,Jigsaw Sprite,event,puzzle,拼图/jigsaw；拼图块/pieces；图片/picture；字块/tile；宝石/gem,puzzle@身边浮游,photo@身侧,tile,gem,#3a8ad8 #ff8a3a #eef6ff,无,四角散布,概念质变·回响轮廓,本体法相,拼神觉醒·拼之域,元素表
+sp_event_treasure_hunt,寻宝灵,Treasure Hunt Sprite,event,chest,寻宝/treasure hunt；藏宝图/treasure map；罗盘针/compass needle；铜钱/coin；钻石/diamond,scroll@身侧,compassNeedle@身边浮游,coin,diamond,#c08a3a #e8343a #fff4e0,无,竖列,概念质变·线稿化,元素雨,宝神觉醒·寻之域,元素表
+sp_event_punch_card,打卡灵,Punch Card Sprite,event,tile,打卡/punch card；打孔卡/punch card；闹铃/alarm bells；星/star；日历页/calendar page,punchCard@身侧,alarmBell@尾部,star,calPage,#e8603a #3a5a8a #fff4ee,无,侧弧,概念质变·元素符阵,回响轮廓,卡神觉醒·打之域,元素表
+sp_event_fortune_stick,抽签灵,Fortune Stick Sprite,event,phin,抽签/fortune stick；签条/sticks；祥云/cloud；签/stick；中国结/knot,stick@顶部,cloud@底部,stick,knot,#c0392b #e8c06a #fff2e4,无,左右一对,概念质变·回响轮廓,元素漩涡,签神觉醒·抽之域,元素表
+sp_event_victory_toast,庆功灵,Victory Toast Sprite,event,cup,庆功/victory toast；碰杯/cheers；爆光/burst；闪光/sparkle；奖杯/trophy,cheers@身侧,burst@身后,sparkle,trophy,#f2c14e #e8343a #fff8dc,无,竖列,概念质变·回响轮廓,元素漩涡,功神觉醒·庆之域,元素表
+sp_event_night_watch,守夜灵,Night Watch Sprite,event,lantern,守夜/night watch；月牙/crescent；灯光/lamplight；萤光/glow；小盾/shield,moon@身边浮游,lightSpot@身侧,glow,shieldMini,#2a3a6a #f2c14e #eef0fa,无,尾随,概念质变·线稿化,双生法相,夜神觉醒·守之域,元素表
+sp_event_patrol,巡检灵,Patrol Sprite,event,compass,巡检/patrol；手电光/torch beam；足迹/footprints；小旗/flag；星徽/star badge,lightBeam@身侧,pawPrint@底部,flag,badgeStar,#3a8a5a #e8b030 #eefaf4,无,左右一对,概念质变·回响轮廓,元素漩涡,巡神觉醒·巡之域,元素表
+sp_event_calibration,校准灵,Calibration Sprite,event,radar,校准/calibration；刻度尺/scale；准星/reticle；螺母/nut；天平/balance,rulerTicks@底部,cipherWheel@身侧,nut,balance,#3a6ad8 #e8603a #eef2ff,无,侧弧,概念质变·线稿化,元素环阵,准神觉醒·校之域,元素表
+sp_event_metronome,节拍灵,Metronome Sprite,event,metronome,节拍/metronome；音符/notes；声波/beat；双音符/notes；摆锤/pendulum,note@身边浮游,soundWave@底部,notes2,pendulum,#8a4a2a #f2c14e #fff0e0,无,环绕,概念质变·元素符阵,元素环阵,拍神觉醒·节之域,元素表
+sp_event_gift_box,礼盒灵,Gift Box Sprite,event,giftbox,礼盒/gift box；蝴蝶结/bow；彩纸/confetti；糖果/candy；星/star,bow@顶部,sprinkle@身边浮游,candy,star,#e8346a #ffd23f #fff0f6,无,环绕,概念质变·元素符阵,回响轮廓,盒神觉醒·礼之域,元素表
+sp_event_badge,徽章灵,Badge Sprite,event,badge,徽章/badge；绶带/ribbon；星星/stars；奖章/medal；小盾/shield,ribbon@底部,star@身边浮游,medal,shieldMini,#3a5ad8 #ffd23f #eef2ff,无,竖列,概念质变·元素符阵,本体法相,章神觉醒·徽之域,元素表
+sp_lab_folding_fan,折扇灵,Folding Fan Sprite,lab,fan,折扇/folding fan；流苏/tassel；梅花/plum flowers；风丝/breeze；玉璧/jade disc,tassel@尾部,plum@身边浮游,mist,jadeDisc,#e8463c #2a2a3a #fff4e8,无,环绕,结构质变·部件浮离,元素环阵,扇神觉醒·折之域,元素表
+sp_lab_spinning_top,陀螺灵,Spinning Top Sprite,lab,top,陀螺/spinning top；旋风/whirl；疾风线/spin lines；小陀螺/little top；螺旋/spiral,swirl@尾部,speedLines@底部,topSpin,spiral,#3a8ad8 #ffd23f #eef6ff,同心纹,四角散布,结构质变·部件浮离,元素环阵,陀神觉醒·陀之域,元素表
+sp_lab_pinwheel,风车灵,Pinwheel Sprite,lab,pinwheel,风车/pinwheel；风丝/breeze；云/clouds；小风车/little pinwheel；太阳/sun,mist@两侧,cloud@身边浮游,pinwheel,sunDisc,#ff5a8a #3ab8f8 #fff4f8,无,侧弧,结构质变·模块外挂,元素环阵,风车觉醒·风之域,元素表
+sp_lab_kaleidoscope,万花筒灵,Kaleidoscope Sprite,lab,flute,万花筒/kaleidoscope；万花纹/pattern；镜片/mirror shards；宝石/gem；棱镜/prism,kaleido@身侧,mirrorShard@身边浮游,gem,prismTri,#8a5af8 #ffd23f #f6f0ff,棋格,尾随,结构质变·部件浮离,巨元素法相,筒神觉醒·万之域,元素表
+sp_lab_music_box,八音盒灵,Music Box Sprite,lab,giftbox,八音盒/music box；音梳/comb；发条钥/wind-up key；音符/note；双音符/notes,musicComb@身侧,gearToy@尾部,note,notes2,#c08a3a #ff7ab8 #fff4e8,无,左右一对,结构质变·脚手架重构,双生法相,音盒觉醒·八之域,元素表
+sp_lab_building_block,积木灵,Building Block Sprite,lab,cube,积木/building block；积木/block；拱/arch；像素/pixel；空间框/frame,block@身侧,archMini@底部,pixel,cubeFrame,#e8463c #3a8ad8 #fff4ee,棋格,左右一对,结构质变·部件浮离,回响轮廓,积神觉醒·积之域,元素表
+sp_lab_yarn,毛线灵,Yarn Sprite,lab,pearl,毛线/yarn；毛线球/yarn ball；纽扣/buttons；心/heart；蝴蝶结/bow,yarnBall@身侧,button@身边浮游,heart,bow,#ff8a8a #3ab8a8 #fff0f0,无,成簇,结构质变·部件浮离,双生法相,线神觉醒·毛之域,元素表
+sp_lab_button,纽扣灵,Button Sprite,lab,cookie,纽扣/button；针线/thread；布带/fabric strip；小纽扣/little button；宝石/gem,thread@尾部,ribbon@底部,button,gem,#3a6ad8 #f2c14e #eef4ff,无,环绕,结构质变·模块外挂,元素环阵,扣神觉醒·纽之域,元素表
+sp_lab_candlestick,烛台灵,Candlestick Sprite,lab,candle,烛台/candlestick；烛火/candle flame；烛托/dish；萤光/glow；火焰/flame,candle@顶部,bowl@底部,glow,flame,#e8c06a #ff6a1a #fff8e0,无,侧弧,结构质变·部件浮离,元素雨,烛神觉醒·烛之域,元素表
+sp_lab_globe,地球仪灵,Globe Sprite,lab,planet,地球仪/globe；指针/pointer；云/clouds；圆叶/leaf；地球/earth,compassNeedle@身侧,cloud@身边浮游,leafR,globe,#3a8ad8 #5ab84a #eef6ff,无,成簇,结构质变·模块外挂,本体法相,球神觉醒·地之域,元素表
+sp_lab_telescope,望远镜灵,Telescope Sprite,lab,telescope,望远镜/telescope；星星/stars；镜片/lens；彗星/comet；行星/planet,star@身边浮游,lens@身侧,comet,planet,#3a3a6a #f2c14e #eeeef8,无,尾随,结构质变·模块外挂,元素雨,望神觉醒·望之域,元素表
+sp_lab_microscope,显微镜灵,Microscope Sprite,lab,microscope,显微镜/microscope；载玻片/slide；细胞/cells；孢子/spore；镜片/lens,slideGlass@身侧,nucleus@身边浮游,spore,lens,#c8d4e0 #3a6ad8 #ffffff,无,尾随,结构质变·模块外挂,元素漩涡,微神觉醒·显之域,元素表
+sp_lab_beaker,烧杯灵,Beaker Sprite,lab,beaker,烧杯/beaker；蒸汽/vapour；药滴/drops；气泡/bubble；宝石/gem,steam@顶部,drop@身边浮游,bubble,gem,#5ad8c8 #e8603a #effffc,无,尾随,结构质变·模块外挂,元素漩涡,杯神觉醒·烧之域,元素表
+sp_lab_test_tube,试管灵,Test Tube Sprite,lab,vial,试管/test tube；药滴/drop；气泡/bubbles；小试管/little tube；烧瓶/flask,drop@底部,bubble@身边浮游,tube,flask,#8a5af8 #5ae8a8 #f6f0ff,无,竖列,结构质变·脚手架重构,回响轮廓,管神觉醒·试之域,元素表
+sp_lab_thermometer,温度计灵,Thermometer Sprite,lab,thermo,温度计/thermometer；热浪/heat；雪花/snowflake；水滴/drop；火焰/flame,steam@顶部,snowflake@身边浮游,drop,flame,#e8343a #3ab8f8 #fff0f0,无,左右一对,结构质变·模块外挂,元素漩涡,温神觉醒·温之域,元素表
+sp_lab_magnet,磁铁灵,Magnet Sprite,lab,magnet,磁铁/magnet；磁力线/magnetic field；回形针/paper clips；螺母/nut；闪电/zap,echoArc@两侧,clip@身边浮游,nut,zap,#e8343a #c8d0dc #fff0f0,无,左右一对,结构质变·脚手架重构,元素雨,磁神觉醒·磁之域,元素表
+sp_lab_prism,棱镜灵,Prism Sprite,lab,prism,棱镜/prism；光谱带/spectrum；闪光/sparkles；光芒/ray；钻石/diamond,spectrum@尾部,sparkle@身边浮游,ray,diamond,#e8f4ff #8a5af8 #ffffff,切面,左右一对,结构质变·脚手架重构,本体法相,棱神觉醒·棱之域,元素表
+sp_lab_envelope,信封灵,Envelope Sprite,lab,envelope,信封/envelope；邮票/stamp；心/hearts；便签/note；火漆印/wax seal,postStamp@身侧,heart@身边浮游,noteCard,stamp,#f4ecd8 #e8343a #ffffff,无,侧弧,结构质变·模块外挂,双生法相,信神觉醒·信之域,元素表
+sp_lab_stamp,邮票灵,Stamp Sprite,lab,tile,邮票/postage stamp；邮戳/postmark；飞燕/swallows；小邮票/little stamp；地球仪/globe,stamp@身侧,swallowTail@身边浮游,postStamp,globe,#3ab86a #e8603a #effff4,无,尾随,结构质变·模块外挂,双生法相,邮神觉醒·邮之域,元素表
+sp_lab_candle,蜡烛灵,Candle Sprite,lab,candle,蜡烛/candle；火苗/flame；烛泪/wax drops；火星/spark；暖阳/warm sun,flame@顶部,drop@身边浮游,spark,sunDisc,#f4e8d0 #ff8a1a #ffffff,无,成簇,结构质变·脚手架重构,双生法相,蜡神觉醒·蜡之域,元素表
+sp_lab_matchstick,火柴灵,Matchstick Sprite,lab,match,火柴/match；火花/spark；烟/smoke；小火柴/little match；余烬/ember,spark@顶部,smoke@身边浮游,matchStick,ember,#c08a3a #e8343a #fff0e0,无,竖列,结构质变·模块外挂,元素雨,柴神觉醒·火之域,元素表
+sp_lab_notebook,笔记本灵,Notebook Sprite,lab,book,笔记本/notebook；铅笔/pencil；便签/notes；书页/page；书签/bookmark,pencil@身侧,noteCard@身边浮游,page,bookmark,#3a6ad8 #f2c14e #eef4ff,纸纹,四角散布,结构质变·部件浮离,回响轮廓,本神觉醒·笔之域,元素表
+sp_lab_sticky_note,便签灵,Sticky Note Sprite,lab,note,便签/sticky note；回形针/paper clip；心/hearts；小便签/little note；星/star,clip@顶部,heart@身边浮游,noteCard,star,#ffe84a #ff5a8a #fffbe0,无,环绕,结构质变·脚手架重构,元素漩涡,贴神觉醒·便之域,元素表
+sp_lab_stapler,订书机灵,Stapler Sprite,lab,stapler,订书机/stapler；订书钉/staples；纸页/paper；回形针/paper clip；螺母/nut,staple@身边浮游,page@身侧,clip,nut,#e8343a #a8b0c0 #fff0f0,无,成簇,结构质变·部件浮离,元素雨,订神觉醒·订之域,元素表
+sp_lab_paper_clip,回形针灵,Paper Clip Sprite,lab,clip,回形针/paper clip；便签/note；磁铁/magnet；小回形针/little clip；链环/chain,noteCard@身侧,magnet@身边浮游,clip,chain,#a8b8c8 #3a8ad8 #f4f8fc,无,成簇,结构质变·部件浮离,本体法相,针神觉醒·回之域,元素表
+sp_lab_eraser,橡皮灵,Eraser Sprite,lab,eraser,橡皮/eraser；碎屑/crumbs；铅笔/pencil；小橡皮/little eraser；心/heart,sprinkle@底部,pencil@尾部,eraser,heart,#ff8ab8 #3a8ad8 #fff4fa,无,竖列,结构质变·脚手架重构,回响轮廓,擦神觉醒·橡之域,元素表
+sp_lab_ruler,尺子灵,Ruler Sprite,lab,ruler,尺子/ruler；直角尺/set square；圆规针/compass point；铅笔/pencil；天平/balance,step@身侧,compassNeedle@身边浮游,pencil,balance,#f2c14e #3a5a8a #fff8dc,无,竖列,结构质变·模块外挂,巨元素法相,尺神觉醒·尺之域,元素表
+sp_lab_tape,胶带灵,Tape Sprite,lab,taperoll,胶带/tape；剪刀刃/scissor blade；胶条/tape strip；小胶带/little roll；闪光/sparkle,blade@身侧,ribbon@底部,tape,sparkle,#ffd23f #3ab8a8 #fffbe8,无,侧弧,结构质变·部件浮离,回响轮廓,胶神觉醒·胶之域,元素表
+sp_lab_desk_lamp,台灯灵,Desk Lamp Sprite,lab,desklamp,台灯/desk lamp；光束/light beam；书页/pages；灯泡/bulb；光核/light core,beam@身侧,page@身边浮游,bulb,glow,#3a8ad8 #ffd84a #eef6ff,无,四角散布,结构质变·脚手架重构,元素漩涡,台灯觉醒·台之域,元素表
+sp_lab_alarm_clock,闹钟灵,Alarm Clock Sprite,lab,alarm,闹钟/alarm clock；声波/ringing；月牙/crescent；晨日/morning sun；钟面/clock face,echoArc@两侧,moon@身边浮游,sunDisc,dial,#e8343a #f2c14e #fff0ec,无,竖列,结构质变·脚手架重构,巨元素法相,闹神觉醒·闹之域,元素表
+sp_lab_desk_fan,风扇灵,Desk Fan Sprite,lab,deskfan,风扇/desk fan；疾风线/breeze lines；雪花/snowflake；扇叶/fan blade；传动轮/wheel,speedLines@尾部,snowflake@身边浮游,fanBlade,wheel,#5ab8f8 #3a5a8a #f4fbff,无,四角散布,结构质变·部件浮离,本体法相,风扇觉醒·风之域,元素表
+sp_lab_pencil,铅笔灵,Pencil Sprite,lab,brush,铅笔/pencil；橡皮头/eraser cap；纸页/paper；刻度尺/ruler；钻石/diamond,eraser@顶部,page@身侧,rulerTicks,diamond,#ffd23f #ff8ab8 #fff8dc,无,环绕,结构质变·脚手架重构,巨元素法相,铅神觉醒·铅之域,元素表
+sp_fest_peach_blossom,桃花灵,Peach Blossom Sprite,fest,flower,桃花/peach blossom；桃叶/leaves；花瓣/petals；桃花/blossom；桃子/peach,leaf@两侧,petal@身边浮游,sakura,fruit,#ff8ab8 #5ab84a #fff0f6,无,四角散布,概念质变·线稿化,元素环阵,桃神觉醒·桃之域,元素表
+sp_fest_red_banner,红旗灵,Red Banner Sprite,fest,kite,红旗/red banner；旗帜/banner；星星/stars；缎带/ribbon；星徽/star badge,flag@身侧,star@身边浮游,ribbon,badgeStar,#e8343a #ffd23f #fff0e0,无,尾随,概念质变·元素符阵,元素雨,旗神觉醒·红之域,元素表
+sp_fest_dragon_boat,龙舟灵,Dragon Boat Sprite,fest,riceleaf,龙舟/dragon boat；船桨/paddles；浪花/waves；鼓槌/drumstick；龙鳞/dragon scale,paddle@两侧,wave@尾部,drumstick,scaleChip,#e8463c #3ab86a #fff4e0,无,环绕,概念质变·回响轮廓,回响轮廓,舟神觉醒·龙之域,元素表
+sp_fest_dumpling,饺子灵,Dumpling Sprite,fest,bun,饺子/dumpling；筷子/chopsticks；蒸汽/steam；饺子/dumpling；碗/bowl,chopsticks@身侧,steam@顶部,dumpling,bowl,#f4ecd8 #c0392b #ffffff,无,竖列,概念质变·线稿化,本体法相,饺神觉醒·饺之域,元素表
+sp_fest_childhood,童灵,Childhood Sprite,fest,toy,童心/childhood；风车/pinwheel；气球泡/bubbles；拨浪鼓/rattle drum；糖果/candy,pinwheel@身侧,bubble@身边浮游,toyDrum,candy,#ff8a3a #3ab8f8 #fff4e8,无,侧弧,概念质变·元素符阵,元素漩涡,童神觉醒·童之域,元素表
+sp_fest_toy_box,玩具灵,Toy Box Sprite,fest,top,玩具/toy；积木/blocks；发条钥/wind-up key；毛线球/yarn ball；摇杆/joystick,block@底部,gearToy@尾部,yarnBall,joystick,#3a8ad8 #ffd23f #eef6ff,无,竖列,概念质变·元素符阵,双生法相,具神觉醒·玩之域,元素表
+sp_fest_writing_brush,笔灵,Writing Brush Sprite,fest,brush,笔/writing brush；卷轴/scroll；墨滴/ink drop；竹叶/bamboo leaf；印章/seal,scroll@身侧,inkDrop@尾部,bambooLeaf,stamp,#2a2a3a #c0392b #fff4e0,无,尾随,概念质变·回响轮廓,回响轮廓,笔神觉醒·笔之域,元素表
+sp_fest_family,家庭灵,Family Sprite,fest,heart,家庭/family；小屋/house；灯光/warm light；心/heart；双心/two hearts,houseMini@身侧,lightSpot@身边浮游,heart,heartPair,#ff7a5a #ffd84a #fff4ec,无,成簇,概念质变·线稿化,元素环阵,家神觉醒·家之域,元素表
+sp_fest_sweetheart,情人灵,Sweetheart Sprite,fest,heart,情人/sweetheart；蝴蝶结/bow；玫瑰/rose；巧克力/chocolate；宝石/gem,bow@顶部,blossom@身侧,chocoSquare,gem,#e8346a #ff9ab8 #fff0f4,无,竖列,概念质变·线稿化,双生法相,情神觉醒·人之域,元素表
