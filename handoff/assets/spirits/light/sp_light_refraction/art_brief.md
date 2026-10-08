@@ -1,0 +1,51 @@
+# 折射灵 · sp_light_refraction
+
+## LV1
+
+【LV1 折点灵】核心元素：折射、折射光、水滴、镜片、钻石。单一元素：双团叠蛋，壳纹：竖向接缝，蛋壳正面印有「折射」剪影，顶部破口露出镜片（单一元素）。
+画风：赛尔号式粗描边赛璐璐：粗黑描边 3~5px，大色块，主色 ≤ 3 色（#5ad8f8 / #ff6a8a / #f0fcff），两阶硬阴影，无渐变，高饱和，头大身小、造型夸张；Q 版精灵，不拟人；透明背景，512×512 起；脚下不画光圈 / 地圈 / 法阵；翅膀 / 光环 / 皇冠不默认添加
+禁止：拟人化、脚下光圈、脱离名称、与同类 / 跨类雷同、套模板
+
+[LV1 Refraction Mote] Core elements: refraction, refracted ray, droplets, lens, diamond. a single element: Stacked twin egg, shell pattern: Vertical seams, a Refraction silhouette stamped on the front, the top crack reveals lens (a single element).
+Style: Seer-style thick-outline cel: bold black outlines 3–5px, big flat colour blocks, at most 3 main colours (#5ad8f8 / #ff6a8a / #f0fcff), two-step hard shadows, no gradients, saturated, big head and small body, exaggerated; chibi spirit, never humanoid; transparent background, 512×512 or larger; no ground ring, floor glow or magic circle; no wings, halo or crown unless they are core elements
+Avoid: anything humanoid, ground rings, anything unrelated to the name, looking like other spirits, templated designs
+
+## LV2
+
+【LV2 折射灵】核心元素：折射、折射光、水滴、镜片、钻石。元素组合：折射本体 + 身侧的折射光。
+画风：赛尔号式粗描边赛璐璐：粗黑描边 3~5px，大色块，主色 ≤ 3 色（#5ad8f8 / #ff6a8a / #f0fcff），两阶硬阴影，无渐变，高饱和，头大身小、造型夸张；Q 版精灵，不拟人；透明背景，512×512 起；脚下不画光圈 / 地圈 / 法阵；翅膀 / 光环 / 皇冠不默认添加
+禁止：拟人化、脚下光圈、脱离名称、与同类 / 跨类雷同、套模板
+
+[LV2 Refraction Sprite] Core elements: refraction, refracted ray, droplets, lens, diamond. element combination: the refraction body with refracted ray at its beside it.
+Style: Seer-style thick-outline cel: bold black outlines 3–5px, big flat colour blocks, at most 3 main colours (#5ad8f8 / #ff6a8a / #f0fcff), two-step hard shadows, no gradients, saturated, big head and small body, exaggerated; chibi spirit, never humanoid; transparent background, 512×512 or larger; no ground ring, floor glow or magic circle; no wings, halo or crown unless they are core elements
+Avoid: anything humanoid, ground rings, anything unrelated to the name, looking like other spirits, templated designs
+
+## LV3
+
+【LV3 折界灵】核心元素：折射、折射光、水滴、镜片、钻石。元素环境 / 伙伴：水滴加在身边浮游，小镜片伙伴竖列。
+画风：赛尔号式粗描边赛璐璐：粗黑描边 3~5px，大色块，主色 ≤ 3 色（#5ad8f8 / #ff6a8a / #f0fcff），两阶硬阴影，无渐变，高饱和，头大身小、造型夸张；Q 版精灵，不拟人；透明背景，512×512 起；脚下不画光圈 / 地圈 / 法阵；翅膀 / 光环 / 皇冠不默认添加
+禁止：拟人化、脚下光圈、脱离名称、与同类 / 跨类雷同、套模板
+
+[LV3 Grand Refraction] Core elements: refraction, refracted ray, droplets, lens, diamond. element setting / companions: droplets added at its floating beside it; little lens companions in a column.
+Style: Seer-style thick-outline cel: bold black outlines 3–5px, big flat colour blocks, at most 3 main colours (#5ad8f8 / #ff6a8a / #f0fcff), two-step hard shadows, no gradients, saturated, big head and small body, exaggerated; chibi spirit, never humanoid; transparent background, 512×512 or larger; no ground ring, floor glow or magic circle; no wings, halo or crown unless they are core elements
+Avoid: anything humanoid, ground rings, anything unrelated to the name, looking like other spirits, templated designs
+
+## LV4
+
+【LV4 天折灵】核心元素：折射、折射光、水滴、镜片、钻石。元素质变（概念质变）：概念质变·回响轮廓：镜片与折射光一起质变，钻石在身前成形。
+画风：赛尔号式粗描边赛璐璐：粗黑描边 3~5px，大色块，主色 ≤ 3 色（#5ad8f8 / #ff6a8a / #f0fcff），两阶硬阴影，无渐变，高饱和，头大身小、造型夸张；Q 版精灵，不拟人；透明背景，512×512 起；脚下不画光圈 / 地圈 / 法阵；翅膀 / 光环 / 皇冠不默认添加
+禁止：拟人化、脚下光圈、脱离名称、与同类 / 跨类雷同、套模板
+
+[LV4 Celestial Refraction] Core elements: refraction, refracted ray, droplets, lens, diamond. element transformation (Concept shift): Concept shift · echoing outlines: the lens and refracted ray transform together; the diamond takes shape on its front.
+Style: Seer-style thick-outline cel: bold black outlines 3–5px, big flat colour blocks, at most 3 main colours (#5ad8f8 / #ff6a8a / #f0fcff), two-step hard shadows, no gradients, saturated, big head and small body, exaggerated; chibi spirit, never humanoid; transparent background, 512×512 or larger; no ground ring, floor glow or magic circle; no wings, halo or crown unless they are core elements
+Avoid: anything humanoid, ground rings, anything unrelated to the name, looking like other spirits, templated designs
+
+## LV5
+
+【LV5 折神觉醒】核心元素：折射、折射光、水滴、镜片、钻石。元素升华（领域 + 法相）：折神觉醒·折之域 + 双生法相；钻石成核心徽记。
+画风：赛尔号式粗描边赛璐璐：粗黑描边 3~5px，大色块，主色 ≤ 3 色（#5ad8f8 / #ff6a8a / #f0fcff），两阶硬阴影，无渐变，高饱和，头大身小、造型夸张；Q 版精灵，不拟人；透明背景，512×512 起；脚下不画光圈 / 地圈 / 法阵；翅膀 / 光环 / 皇冠不默认添加
+禁止：拟人化、脚下光圈、脱离名称、与同类 / 跨类雷同、套模板
+
+[LV5 Awakened Refraction] Core elements: refraction, refracted ray, droplets, lens, diamond. element sublimation (realm + dharma form): Awakened Refraction · Realm of Refraction with twin ghosts; the diamond becomes the core emblem.
+Style: Seer-style thick-outline cel: bold black outlines 3–5px, big flat colour blocks, at most 3 main colours (#5ad8f8 / #ff6a8a / #f0fcff), two-step hard shadows, no gradients, saturated, big head and small body, exaggerated; chibi spirit, never humanoid; transparent background, 512×512 or larger; no ground ring, floor glow or magic circle; no wings, halo or crown unless they are core elements
+Avoid: anything humanoid, ground rings, anything unrelated to the name, looking like other spirits, templated designs
