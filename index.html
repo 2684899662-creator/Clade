@@ -3726,6 +3726,137 @@ body.art-noadj .spv .spirit-svg.art{filter:none;}
 .modal.sp-shop-modal{width:min(440px,100%);}
 .rw-icon-pick{display:flex;align-items:center;gap:8px;min-width:0;} .rw-icon-pick select{flex:1;min-width:0;}
 .rw-icon-pv{flex:0 0 34px;width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--border);border-radius:8px;background:var(--panel-alt);font-size:18px;}
+/* ===== v3.2 精灵家园：小屋界面 + 布置模式 ===== */
+.sp-h2-page{display:flex;flex-direction:column;gap:12px;min-width:0;}
+.sp-h2-top{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(160px,1fr) auto auto;gap:10px 16px;align-items:center;padding:12px 14px;border:1px solid var(--border);border-radius:16px;background:linear-gradient(120deg,color-mix(in srgb,var(--cold) 10%,var(--panel)),var(--panel) 60%);}
+.sp-h2-id{display:flex;gap:10px;align-items:center;min-width:0;} .sp-h2-id small{color:var(--text-dim);}
+.sp-h2-crest{flex:0 0 44px;width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#fff;box-shadow:0 4px 10px rgba(15,23,42,.15);background:#c9976a;}
+.sp-h2-crest.bg-courtyard{background:#9a8f6a;} .sp-h2-crest.bg-garden{background:#4f9d57;} .sp-h2-crest.bg-manor{background:#8a64b8;} .sp-h2-crest.bg-castle{background:linear-gradient(135deg,#5b6382,#b23b4a);}
+.sp-h2-nameline{display:flex;align-items:center;gap:4px;min-width:0;} .sp-h2-name{font-size:17px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sp-h2-namedit{display:flex;gap:4px;align-items:center;flex-wrap:wrap;} .sp-h2-namedit input{width:150px;}
+.sp-h2-xp{min-width:0;} .sp-h2-heat{display:flex;align-items:center;gap:4px;color:#ea580c;} .sp-h2-heat b{font-size:20px;} .sp-h2-heat small{color:var(--text-dim);}
+.sp-h2-topact{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end;}
+.sp-h2-topact .btn{position:relative;}
+.sp-h2-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#ef4444;margin-left:4px;box-shadow:0 0 0 2px var(--panel);vertical-align:top;animation:spH2Ping 1.6s ease-in-out infinite;}
+.sp-h2-badge{display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:#ef4444;color:#fff;font-size:11px;font-weight:800;margin-left:4px;}
+.sp-h2-main{display:grid;grid-template-columns:230px minmax(0,1fr) 260px;gap:12px;align-items:start;}
+.sp-h2-card{border:1px solid var(--border);border-radius:14px;background:var(--panel);padding:12px;display:flex;flex-direction:column;gap:8px;min-width:0;}
+.sp-h2-card>header{display:flex;align-items:center;gap:6px;} .sp-h2-card>header small{margin-left:auto;color:var(--text-dim);}
+.sp-h2-side{display:flex;flex-direction:column;gap:12px;min-width:0;}
+.sp-h2-tasks ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;}
+.sp-h2-tasks li{display:grid;grid-template-columns:18px minmax(0,1fr) auto auto;gap:6px;align-items:center;font-size:12.5px;padding:6px 8px;border-radius:10px;background:var(--panel-alt);}
+.sp-h2-tasks li small{color:var(--text-dim);} .sp-h2-tasks li em{font-style:normal;font-size:11px;color:#16a34a;font-weight:700;}
+.sp-h2-tasks li.done{background:color-mix(in srgb,#16a34a 10%,var(--panel));} .sp-h2-tasks li.claimed{opacity:.6;} .sp-h2-tasks li.claimed span{text-decoration:line-through;}
+.sp-h2-stage{display:flex;flex-direction:column;gap:8px;min-width:0;scroll-margin-top:84px;}
+.sp-h2-stagebar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.sp-h2-dlist{display:flex;flex-wrap:wrap;gap:6px;}
+.sp-h2-dchip{position:relative;display:inline-flex;align-items:center;gap:4px;padding:5px 9px;border-radius:999px;border:1px solid var(--border);background:var(--panel-alt);font:inherit;font-size:12px;cursor:pointer;color:var(--text-dim);}
+.sp-h2-dchip.on{border-color:var(--cold);color:var(--text);background:color-mix(in srgb,var(--cold) 10%,var(--panel));}
+.sp-h2-new{font-style:normal;font-size:10px;font-weight:800;color:#fff;background:#ef4444;border-radius:999px;padding:0 5px;}
+.sp-h2-cardact{display:flex;gap:6px;flex-wrap:wrap;}
+.sp-h2-meters{display:flex;flex-direction:column;gap:6px;} .sp-h2-meters>div{display:grid;grid-template-columns:84px minmax(0,1fr) auto;gap:6px;align-items:center;font-size:12px;} .sp-h2-meters small{color:var(--text-dim);}
+.sp-h2-ach{display:flex;gap:4px;flex-wrap:wrap;} .sp-h2-ach span{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:var(--panel-alt);color:var(--text-faint);} .sp-h2-ach span.on{background:#fef3c7;color:#b45309;}
+.sp-h2-msgs .sp-msg.new b::after{content:'';display:inline-block;width:6px;height:6px;border-radius:50%;background:#ef4444;margin-left:4px;vertical-align:middle;}
+/* 场景 */
+.sp-h2-scene{--h2-wall:#f3dfc1;--h2-floor:#c9976a;position:relative;display:flex;flex-direction:column;min-height:400px;border-radius:18px;overflow:hidden;border:1px solid var(--border);isolation:isolate;box-shadow:0 8px 24px rgba(15,23,42,.08);}
+.sp-h2-scene.bg-cottage{--h2-wall:repeating-linear-gradient(90deg,#f3dfc1 0 38px,#ecd3ae 38px 40px);--h2-floor:repeating-linear-gradient(90deg,#c9976a 0 64px,#b98657 64px 66px);}
+.sp-h2-scene.bg-courtyard{--h2-wall:linear-gradient(#f5f0e4,#e8dfca);--h2-floor:repeating-conic-gradient(#d9d3c3 0 25%,#cbc4b1 0 50%) 0 0/40px 40px;}
+.sp-h2-scene.bg-garden{--h2-wall:radial-gradient(circle at 15% 30%,#cdeccf 0 22px,transparent 23px),radial-gradient(circle at 80% 40%,#cdeccf 0 28px,transparent 29px),linear-gradient(#e9f7ea,#d4eed8);--h2-floor:radial-gradient(circle at 30% 60%,#b6e39b 0 3px,transparent 4px) 0 0/22px 22px,linear-gradient(#a6d98d,#84c46d);}
+.sp-h2-scene.bg-manor{--h2-wall:linear-gradient(#f1e8f8 0 68%,#d6c2ea 68% 71%,#e7dbf2 71%);--h2-floor:repeating-linear-gradient(45deg,#b98a5c 0 16px,#a77a4e 16px 32px);}
+.sp-h2-scene.bg-castle{--h2-wall:repeating-linear-gradient(0deg,#dadde7 0 24px,#c6cad8 24px 26px);--h2-floor:linear-gradient(90deg,#8d93a8 0 28%,#b23b4a 28% 72%,#8d93a8 72%);}
+.sp-h2-wall{position:relative;height:44%;min-height:160px;background:var(--h2-wall);border-bottom:6px solid rgba(0,0,0,.08);}
+.sp-h2-floor{position:relative;flex:1;background:var(--h2-floor);display:flex;flex-direction:column;justify-content:flex-end;padding:0 3% 12px;}
+.sp-h2-window{position:absolute;left:50%;top:16%;transform:translateX(-50%);width:132px;height:84px;border-radius:14px 14px 4px 4px;border:6px solid rgba(255,255,255,.85);box-shadow:0 2px 8px rgba(0,0,0,.12);overflow:hidden;background:linear-gradient(#8fd3ff,#dff3ff);z-index:1;}
+.tod-dusk .sp-h2-window{background:linear-gradient(#ff9f6b,#ffd9a6);} .tod-night .sp-h2-window{background:linear-gradient(#1c2754,#3a4a8c);}
+.wx-cloud .sp-h2-window,.wx-rain .sp-h2-window{background:linear-gradient(#9fb2c4,#d6e0ea);} .tod-night.wx-cloud .sp-h2-window,.tod-night.wx-rain .sp-h2-window{background:linear-gradient(#18203d,#2c375f);}
+.sp-h2-window .orb{position:absolute;right:16px;top:10px;width:24px;height:24px;border-radius:50%;background:#ffd34d;box-shadow:0 0 18px #ffd34d;}
+.tod-night .sp-h2-window .orb{background:#f8fafc;box-shadow:0 0 14px #c7d2fe;width:20px;height:20px;} .wx-cloud .sp-h2-window .orb,.wx-rain .sp-h2-window .orb{opacity:.35;}
+.sp-h2-window .cl{position:absolute;height:12px;border-radius:999px;background:rgba(255,255,255,.9);animation:spH2Cloud 18s linear infinite;} .sp-h2-window .c1{width:42px;top:30px;left:-50px;} .sp-h2-window .c2{width:30px;top:52px;left:-40px;animation-delay:-9s;}
+.sp-h2-window .drops{position:absolute;inset:0;display:none;}
+.wx-rain .sp-h2-window .drops{display:block;background:repeating-linear-gradient(105deg,transparent 0 9px,rgba(255,255,255,.55) 9px 10px);animation:spH2Rain .6s linear infinite;}
+.wx-snow .sp-h2-window .drops{display:block;background:radial-gradient(circle,#fff 0 1.5px,transparent 2px) 0 0/14px 14px;animation:spH2Snow 3s linear infinite;}
+.sp-h2-beam{position:absolute;left:50%;top:calc(16% + 84px);width:240px;height:260px;transform:translateX(-50%);background:linear-gradient(rgba(255,240,200,.45),transparent 80%);clip-path:polygon(28% 0,72% 0,100% 100%,0 100%);pointer-events:none;z-index:2;}
+.tod-night .sp-h2-beam{background:linear-gradient(rgba(170,190,255,.18),transparent 80%);} .wx-rain .sp-h2-beam,.wx-cloud .sp-h2-beam{opacity:.5;}
+.tod-dusk::after,.tod-night::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:3;}
+.tod-dusk::after{background:linear-gradient(rgba(255,150,80,.10),rgba(255,120,60,.06));} .tod-night::after{background:rgba(18,26,66,.26);}
+.sp-h2-motes{position:absolute;inset:0;pointer-events:none;z-index:4;}
+.sp-h2-motes i{position:absolute;width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.75);opacity:0;animation:spH2Mote 7s ease-in-out infinite;}
+.tod-night .sp-h2-motes i{background:#fde68a;box-shadow:0 0 8px #fde68a;width:5px;height:5px;}
+.sp-h2-motes i:nth-child(1){left:8%;top:62%;} .sp-h2-motes i:nth-child(2){left:18%;top:40%;animation-delay:-1s;} .sp-h2-motes i:nth-child(3){left:30%;top:70%;animation-delay:-2.2s;} .sp-h2-motes i:nth-child(4){left:42%;top:30%;animation-delay:-3s;} .sp-h2-motes i:nth-child(5){left:55%;top:66%;animation-delay:-4.1s;}
+.sp-h2-motes i:nth-child(6){left:64%;top:44%;animation-delay:-5s;} .sp-h2-motes i:nth-child(7){left:74%;top:72%;animation-delay:-.5s;} .sp-h2-motes i:nth-child(8){left:84%;top:36%;animation-delay:-2.7s;} .sp-h2-motes i:nth-child(9){left:92%;top:60%;animation-delay:-3.6s;} .sp-h2-motes i:nth-child(10){left:48%;top:52%;animation-delay:-6s;}
+/* 装饰 */
+.sp-h2-deco{position:absolute;z-index:2;display:grid;place-items:center;width:46px;height:46px;border-radius:14px;background:rgba(255,255,255,.7);box-shadow:0 3px 8px rgba(0,0,0,.15);}
+.sp-h2-deco.spot-wl{left:8%;top:24%;} .sp-h2-deco.spot-wr{right:8%;top:22%;} .sp-h2-deco.spot-wc{left:28%;top:18%;} .sp-h2-deco.spot-wt{right:28%;top:8%;}
+.sp-h2-deco.spot-lt{right:20%;top:44%;border-radius:50%;box-shadow:0 0 22px rgba(255,214,102,.8);} .sp-h2-deco.spot-lt2{left:19%;top:46%;border-radius:50%;box-shadow:0 0 22px rgba(255,140,90,.7);}
+.sp-h2-floor .sp-h2-deco.spot-fl{left:2%;bottom:14px;} .sp-h2-floor .sp-h2-deco.spot-fr{right:2%;bottom:14px;} .sp-h2-floor .sp-h2-deco.spot-fc2{right:12%;bottom:68px;}
+.sp-h2-floor .sp-h2-deco.spot-fc{left:50%;bottom:6px;transform:translateX(-50%);width:min(70%,360px);height:34px;border-radius:50%;background:radial-gradient(#a78bfa,#7c3aed 70%);opacity:.55;z-index:0;box-shadow:none;}
+.sp-h2-deco.spot-fc svg{display:none;}
+.dk-plant{color:#16a34a;} .dk-lamp{color:#eab308;} .dk-shelf{color:#b45309;} .dk-tank{color:#0284c7;} .dk-flag{color:#dc2626;} .dk-lantern{color:#dc2626;} .dk-fountain{color:#0ea5e9;} .dk-window{color:#f59e0b;} .dk-banner{color:#b23b4a;}
+/* 展示位 */
+.sp-h2-row{position:relative;z-index:5;display:flex;justify-content:center;gap:clamp(6px,3%,28px);}
+.sp-h2-row.back{transform:scale(.86);transform-origin:bottom center;margin-bottom:-22px;margin-top:-34px;}
+.sp-h2-slot{position:relative;display:flex;flex-direction:column;align-items:center;width:clamp(92px,26%,150px);} .sp-h2-sp svg,.sp-h2-sp img{max-width:100%;height:auto;display:block;}
+.sp-h2-sp{border:none;background:none;padding:0;cursor:pointer;border-radius:16px;transition:transform .2s;} .sp-h2-sp:hover:not(:disabled){transform:translateY(-4px);} .sp-h2-sp:disabled{cursor:default;}
+.sp-h2-sp:focus-visible,.sp-h2-plus:focus-visible{outline:3px solid var(--cold);outline-offset:3px;}
+.sp-h2-pad{width:76%;height:14px;border-radius:50%;background:radial-gradient(rgba(0,0,0,.26),transparent 70%);margin-top:-8px;}
+.sp-h2-nm{margin-top:2px;max-width:100%;font-size:11px;padding:0 8px;border-radius:999px;background:rgba(255,255,255,.82);color:#334155;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sp-h2-no{position:absolute;left:4px;top:2px;font-style:normal;font-size:10px;font-weight:800;width:18px;height:18px;border-radius:50%;display:grid;place-items:center;background:rgba(15,23,42,.55);color:#fff;}
+.sp-h2-slot.empty{min-height:96px;justify-content:flex-end;}
+.sp-h2-plus{width:62px;height:62px;border-radius:50%;border:2px dashed rgba(15,23,42,.35);background:rgba(255,255,255,.45);display:grid;place-items:center;cursor:pointer;color:rgba(15,23,42,.6);transition:transform .2s,background .2s;} .sp-h2-plus:hover{transform:scale(1.06);background:rgba(255,255,255,.75);}
+.sp-h2-scene.arranging .sp-h2-slot .sp-h2-pad{background:radial-gradient(color-mix(in srgb,var(--cold) 45%,transparent),transparent 70%);}
+.sp-h2-slot.active .sp-h2-sp,.sp-h2-slot.active .sp-h2-plus{outline:3px solid var(--cold);outline-offset:4px;animation:spH2Pulse 1.4s ease-in-out infinite;}
+.sp-h2-bounce{animation:spH2Bounce .55s ease;}
+.sp-h2-emptytip{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:6;display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px 18px;border-radius:14px;background:rgba(255,255,255,.88);box-shadow:0 6px 18px rgba(0,0,0,.12);color:#334155;}
+.sp-h2-lvfx{position:absolute;inset:0;z-index:8;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:radial-gradient(rgba(255,236,170,.85),rgba(255,255,255,.35) 60%,transparent);color:#7c2d12;animation:spH2Fx 3.2s ease forwards;text-align:center;padding:12px;}
+.sp-h2-lvfx b{font-size:24px;} .sp-h2-lvfx .burst{color:#f59e0b;animation:spH2Spin 1.6s linear infinite;}
+/* 布置面板：桌面右侧抽屉 / 手机底部面板；非弹窗、无遮罩 */
+.sp-h2-page.arr-open{padding-right:392px;}
+.sp-h2-arr{position:fixed;right:12px;top:72px;bottom:12px;width:372px;z-index:950;display:flex;flex-direction:column;gap:8px;padding:12px;border:1px solid var(--border);border-radius:16px;background:var(--panel);box-shadow:0 16px 40px rgba(15,23,42,.22);}
+.sp-h2-arr-h{display:flex;align-items:center;gap:8px;} .sp-h2-arr-h small{color:var(--text-dim);}
+.sp-h2-arr-slots{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px;}
+.sp-h2-arr-slot{position:relative;height:50px;border:1px dashed var(--border);border-radius:10px;background:var(--panel-alt);display:grid;place-items:center;cursor:pointer;padding:0;overflow:hidden;color:var(--text-dim);}
+.sp-h2-arr-slot.filled{border-style:solid;} .sp-h2-arr-slot.active{border:2px solid var(--cold);background:color-mix(in srgb,var(--cold) 12%,var(--panel));}
+.sp-h2-arr-slot i{position:absolute;left:3px;top:1px;font-style:normal;font-size:10px;font-weight:800;color:var(--text-dim);}
+.sp-h2-arr-cur{display:flex;align-items:center;gap:4px;flex-wrap:wrap;font-size:12.5px;} .sp-h2-arr-cur>span{flex:1;min-width:120px;}
+.sp-h2-arr-tabs{align-self:flex-start;}
+.sp-h2-arr-tools{display:flex;flex-direction:column;gap:6px;} .sp-h2-arr-tools input[type=search]{width:100%;}
+.sp-h2-arr-chips{display:flex;flex-wrap:wrap;gap:4px;align-items:center;} .sp-h2-sep{width:1px;height:18px;background:var(--border);margin:0 2px;}
+.sp-h2-arr-multi{display:flex;align-items:center;gap:6px;font-size:12px;} .sp-h2-arr-multi span{flex:1;color:var(--text-dim);}
+.sp-h2-arr-list{flex:1;min-height:120px;overflow:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:6px;align-content:start;padding:2px;overscroll-behavior:contain;}
+.sp-h2-card[data-home-card],.sp-h2-arr-list>.sp-h2-card{position:relative;padding:0;gap:0;border-radius:12px;}
+.sp-h2-card[hidden]{display:none;}
+.sp-h2-card-pick,.sp-h2-arr-list>button.sp-h2-card{width:100%;border:none;background:none;font:inherit;color:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 4px 6px;border-radius:12px;}
+.sp-h2-card-pick:hover,.sp-h2-arr-list>button.sp-h2-card:hover{background:var(--panel-alt);}
+.sp-h2-card-art{height:56px;display:grid;place-items:center;} .sp-h2-card-n{font-size:12px;font-weight:700;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;} .sp-h2-card-pick small,.sp-h2-arr-list>button.sp-h2-card small{font-size:10.5px;color:var(--text-dim);}
+.sp-h2-card.placed{border-color:color-mix(in srgb,var(--cold) 50%,var(--border));background:color-mix(in srgb,var(--cold) 6%,var(--panel));}
+.sp-h2-card.sel{box-shadow:0 0 0 2px var(--cold) inset;}
+.sp-h2-card-sel{position:absolute;right:4px;top:4px;z-index:1;}
+.sp-h2-arr>footer{font-size:11.5px;}
+/* 好友 / 拜访 / 导航 */
+.sp-h2-flist{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:8px;}
+.sp-h2-friend{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:8px;align-items:center;padding:8px;border:1px solid var(--border);border-radius:12px;background:var(--panel-alt);}
+.sp-h2-friend.active{border-color:var(--cold);} .sp-h2-fav{width:44px;height:44px;display:grid;place-items:center;border-radius:12px;background:var(--panel);overflow:hidden;}
+.sp-h2-fmeta{min-width:0;} .sp-h2-fmeta b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;} .sp-h2-fmeta small{color:var(--text-dim);font-size:11.5px;}
+.sp-h2-fact{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;}
+.sp-h2-visit .sp-h2-scene{min-height:300px;}
+.sp-h2-nav{position:sticky;bottom:8px;z-index:20;display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:4px;padding:6px;border:1px solid var(--border);border-radius:16px;background:color-mix(in srgb,var(--panel) 92%,transparent);backdrop-filter:blur(6px);box-shadow:0 6px 18px rgba(15,23,42,.08);}
+.sp-h2-nav button{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 2px;border:none;background:none;font:inherit;font-size:11.5px;color:var(--text-dim);border-radius:10px;cursor:pointer;min-width:0;}
+.sp-h2-nav button span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;} .sp-h2-nav button:hover{background:var(--panel-alt);color:var(--text);}
+.sp-h2-upm .sp-h2-upline{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px;}
+.sp-h2-upsrc ul{list-style:none;margin:4px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:4px;} .sp-h2-upsrc li{display:flex;justify-content:space-between;gap:6px;font-size:12px;padding:4px 8px;border-radius:8px;background:var(--panel-alt);} .sp-h2-upsrc small{color:var(--text-dim);}
+body[data-theme="dark"] .sp-h2-scene{filter:brightness(.86) saturate(.92);} body[data-theme="dark"] .sp-h2-nm{background:rgba(15,23,42,.75);color:#e2e8f0;}
+@keyframes spH2Cloud{to{transform:translateX(230px);}} @keyframes spH2Rain{to{background-position:0 20px;}} @keyframes spH2Snow{to{background-position:0 28px;}}
+@keyframes spH2Mote{0%,100%{opacity:0;transform:translateY(0);}40%{opacity:.9;}60%{opacity:.6;transform:translateY(-18px);}}
+@keyframes spH2Pulse{0%,100%{outline-color:var(--cold);}50%{outline-color:color-mix(in srgb,var(--cold) 35%,transparent);}}
+@keyframes spH2Bounce{0%{transform:translateY(0);}35%{transform:translateY(-14px) scale(1.05);}70%{transform:translateY(2px) scale(.98);}100%{transform:none;}}
+@keyframes spH2Fx{0%{opacity:0;transform:scale(.9);}12%{opacity:1;transform:scale(1);}80%{opacity:1;}100%{opacity:0;visibility:hidden;}}
+@keyframes spH2Spin{to{transform:rotate(360deg);}} @keyframes spH2Ping{0%,100%{transform:scale(1);}50%{transform:scale(1.25);}}
+@media (max-width:1180px){ .sp-h2-main{grid-template-columns:minmax(0,1fr) minmax(0,1fr);} .sp-h2-stage{grid-column:1 / -1;order:-1;} .sp-h2-top{grid-template-columns:minmax(0,1fr) auto;} .sp-h2-xp{grid-column:1 / -1;order:3;} }
+@media (max-width:1100px){ .sp-h2-page.arr-open{padding-right:0;padding-bottom:min(54vh,520px);} .sp-h2-arr{left:0;right:0;top:auto;bottom:0;width:auto;height:min(54vh,520px);border-radius:18px 18px 0 0;padding-bottom:max(12px,env(safe-area-inset-bottom));} }
+@media (max-width:767px){ .sp-h2-arr{z-index:1500;} .sp-h2-nav{bottom:calc(64px + env(safe-area-inset-bottom,0px));} }
+@media (max-width:700px){ .sp-h2-main{grid-template-columns:minmax(0,1fr);} .sp-h2-scene{min-height:300px;} .sp-h2-window{width:104px;height:68px;} .sp-h2-deco{width:38px;height:38px;}
+  .sp-h2-nav{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:minmax(64px,1fr);overflow-x:auto;} .sp-h2-heat b{font-size:17px;} .sp-h2-topact{justify-content:flex-start;grid-column:1 / -1;} }
+@media (prefers-reduced-motion:reduce){ .sp-h2-scene *,.sp-h2-dot{animation:none !important;transition:none !important;} }
 </style>
 </head>
 <body data-theme="light"><svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="spPixelF" x="0" y="0"><feFlood x="1" y="1" height="1" width="1"/><feComposite width="3" height="3"/><feTile result="a"/><feComposite in="SourceGraphic" in2="a" operator="in"/><feMorphology operator="dilate" radius="1.5"/></filter><filter id="spWcF" x="-15%" y="-15%" width="130%" height="130%"><feTurbulence type="fractalNoise" baseFrequency=".22" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.1" xChannelSelector="R" yChannelSelector="G" result="d"/><feGaussianBlur in="d" stdDeviation=".18"/></filter><filter id="spPaintF" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="turbulence" baseFrequency=".45" numOctaves="1" seed="11" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale=".38" xChannelSelector="R" yChannelSelector="B"/></filter></svg>
@@ -3755,7 +3886,7 @@ function labBootRescue(){
   document.getElementById('labBootReset').onclick = ()=>{ try{ Object.keys(localStorage).filter(k=>/^lab-scheduler-/.test(k) && !/remember|lang|device-id/.test(k)).forEach(k=>localStorage.removeItem(k)); }catch(_e){} location.reload(); };
 }
 window.addEventListener('load', ()=>setTimeout(labBootRescue, 4000));
-let APP_VERSION = '2026.10.08.12';
+let APP_VERSION = '2026.10.08.13';
 const SCHEMA_VERSION = 4;             /* v4：新增插单记录、试验优先级、扩展字段 */
 const TRANSLATIONS_CACHE_VERSION = '2026.09.28.1';
 const TAB_ID = Math.random().toString(36).slice(2,10);
@@ -15151,13 +15282,14 @@ function spSpiritWishHtml(e, st, me){
 /* ---------- 排行榜 + 今日精灵赛跑 ---------- */
 function spBoardHtml(){
   const S = spS(), b = S.board || 'xp', sid = seasonNow().id, me = spMe();
-  const boards = [['xp',['当季经验','Season XP','EXP mùa']],['sprite',['赛季精灵成长','Season sprite growth','Tăng trưởng tinh linh mùa']],['intimacy',['亲密度','Intimacy','Thân mật']],['codex',['图鉴收集','Codex collection','Sưu tầm sách tranh']],['feeds',['本季投喂','Feeds this season','Cho ăn mùa này']],['race',['今日赛跑','Today\'s race','Cuộc đua hôm nay']]];
+  const boards = [['xp',['当季经验','Season XP','EXP mùa']],['home',['家园热度','Home heat','Độ nóng nhà']],['sprite',['赛季精灵成长','Season sprite growth','Tăng trưởng tinh linh mùa']],['intimacy',['亲密度','Intimacy','Thân mật']],['codex',['图鉴收集','Codex collection','Sưu tầm sách tranh']],['feeds',['本季投喂','Feeds this season','Cho ăn mùa này']],['race',['今日赛跑','Today\'s race','Cuộc đua hôm nay']]];
   const ops = spOperators().map(a=>({a, u:spU(a.username)}));
   const val = o=>{ const s = o.u.ss[sid];
     if(b==='xp') return achvPoints(o.u);
     if(b==='sprite') return +s?.xp||0;
     if(b==='intimacy') return (+s?.intimacy||0) + Object.values(o.u.tr).reduce((a,r)=>a+(+r.intimacy||0),0);
     if(b==='codex') return Object.keys(o.u.codex).length;
+    if(b==='home') return spHomeHeat(o.u);
     if(b==='feeds') return (+s?.feeds||0) + Object.values(o.u.tr).reduce((a,r)=>a+(+r.feeds||0),0);
     return 0; };
   let body;
@@ -15218,6 +15350,8 @@ function spReviewHtml(){
       <div class="sp-review-stats">
         <div><b>${d.xp}</b><small>${escapeHtml(tx('当季经验','Season XP','EXP mùa'))}</small></div><div><b><span class="lv-pill lvb-${d.L.idx}">${escapeHtml(t(d.L.name))}</span></b><small>${escapeHtml(tx('当季等级','Season level','Cấp mùa'))}</small></div>
         <div><b>${d.rank||'—'}</b><small>${escapeHtml(tx('经验排名','XP rank','Hạng EXP'))}</small></div><div><b>${d.feeds}</b><small>${escapeHtml(tx('赛季精灵投喂','Season sprite feeds','Lượt cho tinh linh mùa ăn'))}</small></div>
+        ${sid===seasonNow().id ? (()=>{ const hs = spHomeStats(d.u), hp = spHomeOf(d.u).patBy || {}, top = Object.keys(hp).filter(k=>spHomeSpirit(d.u, k)).sort((a,b)=>hp[b]-hp[a])[0];
+          return `<div><b>Lv.${hs.lv+1}</b><small>${escapeHtml(tx('家园等级','Home level','Cấp nhà'))}</small></div><div><b>${spHomeHeat(d.u)}</b><small>${escapeHtml(tx('家园热度','Home heat','Độ nóng nhà'))}</small></div>${top?`<div><b data-i18n-ignore="1">${escapeHtml(spHomeKeyMeta(d.u, top).n)}</b><small>${escapeHtml(tx('最受欢迎的小屋精灵','Most-loved home spirit','Tinh linh được yêu thích'))}</small></div>`:''}`; })() : ''}
         <div><b>${d.unlocked}</b><small>${escapeHtml(tx('新解锁成就','New achievements','Thành tựu mới'))}</small></div><div><b>${d.skins.length}</b><small>${escapeHtml(tx('新获得皮肤','New skins','Trang phục mới'))}</small></div>
         <div><b>${+s?.intimacy||0}</b><small>${escapeHtml(tx('赛季精灵亲密度','Season sprite intimacy','Thân mật tinh linh mùa'))}</small></div><div><b>${d.cur?spPoints(d.u, sid):(+G().seasons[sid]?.points?.[d.u.user]?.earned||0)}</b><small>${escapeHtml(d.cur?tx('剩余赛季积分','Season points left','Điểm mùa còn lại'):tx('获得赛季积分','Season points earned','Điểm mùa đã nhận'))}</small></div>
       </div>
@@ -15261,9 +15395,10 @@ function spGuideDefaultsBase(){
       S('', ['审计与回滚','Audit and rollback','Kiểm toán và hoàn tác'], ['投喂、进化、皮肤、成就升级、奖励、返场配置、赛季重置、兑换和说明阅读都有记录（含设备编号）；带资源变化的记录可一键回滚，也可手动补偿。','Feeding, evolution, skins, level-ups, rewards, return settings, season resets, exchanges and guide reads are all logged (with device ID); records with resource changes can be rolled back in one click, or you can compensate manually.','Cho ăn, tiến hóa, trang phục, lên cấp, thưởng, cấu hình tái xuất, đặt lại mùa, đổi và đọc hướng dẫn đều được ghi (kèm mã thiết bị); bản ghi có thay đổi tài nguyên có thể hoàn tác một chạm hoặc bù thủ công.'])],
   };
 }
+var SP_GUIDE_VER_DEF = {home:2};   /* 内置说明改版时提高版本号：已读旧版的人会再看一次新版 */
 function spGuide(mod){
   const d = spGuideDefaults()[mod] || [], o = G().guides?.[mod] || {};
-  return {mod, ver:+o.ver||1, autoPop:o.autoPop!==false, rule:o.rule||'click', dwell:+o.dwell||5, repop:o.repop||'unread', steps:Array.isArray(o.steps) && o.steps.length ? o.steps : d, resetAt:o.resetAt||'', updatedAt:o.updatedAt||'', custom:!!o.steps};
+  return {mod, ver:+o.ver||SP_GUIDE_VER_DEF[mod]||1, autoPop:o.autoPop!==false, rule:o.rule||'click', dwell:+o.dwell||5, repop:o.repop||'unread', steps:Array.isArray(o.steps) && o.steps.length ? o.steps : d, resetAt:o.resetAt||'', updatedAt:o.updatedAt||'', custom:!!o.steps};
 }
 function spGuideRead(u, mod){ return u?.gd?.[mod] || null; }
 function spGuideNeed(mod){
@@ -15641,6 +15776,7 @@ document.addEventListener('click', e=>{
 /* 渲染后：引导自动弹出 / 高亮、甘特皮肤、性能降级、巡逻 */
 function spAfterRender(){
   if(!window.__spReady) return;
+  if(typeof spHomeAfterRender==='function') try{ spHomeAfterRender(); }catch(_e){ console.warn(_e); }
   if(typeof spUiAfterRender==='function') try{ spUiAfterRender(); }catch(_e){ console.warn(_e); }
   spApplyGanttSkins();
   /* 性能：甘特精灵超过 60 个时自动降级（关闭粒子与移动特效） */
@@ -17958,7 +18094,7 @@ function spShopDetailModalHtml(m){
     <div class="modal-body">${spShopDetailHtml(it, me)}</div>
     <div class="modal-foot"><span style="flex:1"></span><button class="btn btn-ghost btn-sm" data-act="closeModal">${escapeHtml(tx('关闭','Close','Đóng'))}</button>${me?`<button class="btn btn-primary btn-sm" data-act="spBuy" data-id="${escapeAttr(it.id)}" ${st.ok?'':'disabled'}>${escapeHtml(tx('兑换','Exchange','Đổi'))}</button>`:''}</div></div>`;
 }
-function spRenderModal5(m){ if(m.type==='spShopDetail') return spShopDetailModalHtml(m); return ''; }
+function spRenderModal5(m){ if(m.type==='spShopDetail') return spShopDetailModalHtml(m); if(m.type==='spHomeUp') return spHomeUpModalHtml(); return ''; }
 /* 悬停浮层：只在有鼠标悬停能力的设备上出现；键盘聚焦卡片同样显示；触屏用「详情」按钮 */
 var spShopPopEl = null, spShopPopId = '';
 function spShopPopHide(){ if(spShopPopEl){ spShopPopEl.classList.remove('on'); spShopPopEl.setAttribute('aria-hidden', 'true'); } spShopPopId = ''; }
@@ -21496,7 +21632,12 @@ function spGuideDefaults(){
     {sel:'.data-table', t:['流水可追溯','Every change is logged','Mọi thay đổi đều được ghi'], b:['每一次获取和消耗都会记录时间、来源和余额；页面底部可以修改资源名称、图标、来源文案、上限和重置规则。','Every gain and spend records the time, source and balance; you can change names, icons, source text, caps and reset rules at the bottom of the page.','Mỗi lần nhận và dùng đều ghi thời gian, nguồn và số dư; có thể sửa tên, biểu tượng, mô tả, giới hạn và quy tắc ở cuối trang.']}];
   d.adminsp = [{sel:'.adm-sp-head', t:['管理员精灵','Admin spirits','Tinh linh quản trị'], b:['只有超级管理员能看到这里。展开权限令牌获得管理员精灵，用权限晶核投喂、审计印记觉醒；资源怎么来，见右上「?」里的「管理员资源获取」。','Only super admins can see this. Open authority tokens to get admin spirits, feed them with authority cores and awaken them with audit seals; see "Admin resources" in the "?" for how to earn them.','Chỉ quản trị cấp cao thấy trang này. Mở lệnh bài để nhận tinh linh quản trị, cho ăn bằng lõi quyền hạn và thức tỉnh bằng ấn kiểm toán.']}];
   d.adminhub = [{sel:'.adm-hub-room', t:['管理员中枢','Admin hub','Trung khu quản trị'], b:['放置管理员精灵、用秩序碎片装饰、拜访其他管理员的中枢；中枢等级随装饰、精灵与互访提升。','Place admin spirits, decorate with order shards and visit other admins\' hubs; the hub levels up with decor, spirits and visits.','Đặt tinh linh quản trị, trang trí bằng mảnh trật tự và thăm trung khu khác; cấp trung khu tăng theo trang trí, tinh linh và lượt thăm.']}];
-  d.home = [{sel:'.sp-home-room', t:['精灵家园','Spirit home','Nhà tinh linh'], b:['把你的赛季精灵、试验精灵和收集的精灵放进家园展示，点一下就能互动；摆放兑换来的装饰，拜访同事的家园点赞、浇水、留言。家园等级与家园成就只用于展示，不影响真实进度。','Put your season, trial and collected spirits on display in your home and tap them to interact; place decorations from the shop, and visit colleagues\' homes to like, water and leave messages. Home levels and achievements are for display only and never affect real progress.','Đặt tinh linh mùa, thử nghiệm và sưu tầm vào nhà để trưng bày, chạm để tương tác; đặt đồ trang trí, thăm nhà đồng nghiệp để thích, tưới cây, để lại lời nhắn. Cấp nhà chỉ để hiển thị.']}];
+  d.home = [
+    {sel:'.sp-h2-top', t:['欢迎来到你的小屋','Welcome to your cottage','Chào mừng đến nhà của bạn'], b:['顶部是小屋名称、等级、家园经验和热度。点铅笔可以改名；经验够了「升级」按钮会亮起，一键升级解锁新背景和装饰。家园只用于展示，不影响真实进度、甘特条和业务统计。','The top bar shows your cottage name, level, home XP and heat. Tap the pencil to rename it; when you have enough XP the Level button lights up and unlocks new backdrops and decor. Home is for display only — it never affects real progress, Gantt bars or statistics.','Thanh trên cùng hiển thị tên, cấp, EXP và độ nóng. Nhà chỉ để hiển thị.']},
+    {sel:'.sp-h2-scene', t:['6 个展示位','Six display spots','6 vị trí trưng bày'], b:['小屋里有前后两排共 6 个展示位，点精灵可以互动（每天最多 30 次）；空位上的「+」可以直接放置精灵。','There are six spots in two rows. Tap a spirit to interact (up to 30 times a day); tap "+" on an empty spot to place one.','Có 6 vị trí; bấm tinh linh để tương tác, bấm "+" để đặt.']},
+    {sel:'.sp-h2-arrbtn', t:['布置模式','Arrange mode','Chế độ bày trí'], b:['打开布置模式后，面板会一直开着：先选展示位，再点精灵即可连续放置；支持搜索、筛选、多选「放入空位」、左右移动和清空。按 Esc 或「完成」退出。','Arrange mode keeps its panel open: pick a spot, then tap spirits to place them one after another. Search, filter, multi-select "Fill empty spots", move and clear are all there. Press Esc or Done to finish.','Bảng bày trí luôn mở: chọn chỗ rồi bấm tinh linh để đặt liên tục. Nhấn Esc hoặc Xong để kết thúc.']},
+    {sel:'.sp-h2-tasks', t:['今日任务','Today\'s tasks','Nhiệm vụ hôm nay'], b:['每天 5 个家园任务，完成后点「领取」获得家园经验，全部完成额外奖励；每天 0 点刷新。','Five home tasks a day; claim home XP when done, with a bonus for all five. They reset at midnight.','5 nhiệm vụ mỗi ngày, nhận EXP nhà khi hoàn thành.']},
+    {sel:'.sp-h2-friends', t:['拜访同事','Visit colleagues','Thăm đồng nghiệp'], b:['在「家园好友」里拜访同事的小屋，点赞、浇水、留言都会提高对方的热度；底部导航可以去图鉴、皮肤、成就、活动、排行榜和赛季回顾。右上角「?」可随时重看本引导。','Visit colleagues under Home friends — likes, watering and messages raise their heat. The bottom bar links to the codex, skins, achievements, events, leaderboard and season review. Tap "?" at the top right to see this guide again.','Thăm nhà đồng nghiệp; bấm "?" để xem lại hướng dẫn.']}];
   return d;
 }
 function spGuideModalHtml(){
@@ -21702,13 +21843,15 @@ var SP_HOME_ACH = [
   {k:'deco', n:['装饰达人','Decorator','Người trang trí'], t:5, f:s=>s.decos}, {k:'liked', n:['人气小屋','Popular home','Nhà được yêu thích'], t:10, f:s=>s.likes},
   {k:'water', n:['被细心照料','Well tended','Được chăm sóc'], t:10, f:s=>s.water}, {k:'visit', n:['串门达人','Good neighbour','Hàng xóm tốt'], t:5, f:s=>s.visited},
   {k:'codex', n:['收藏家的家','Collector\'s home','Nhà nhà sưu tầm'], t:20, f:s=>s.codex}, {k:'pat', n:['温柔的主人','Gentle keeper','Chủ nhà dịu dàng'], t:30, f:s=>s.pats}];
-function spHomeOf(u){ u.home = u.home || {}; u.home.slots = Array.isArray(u.home.slots) ? u.home.slots : []; u.home.deco = Array.isArray(u.home.deco) ? u.home.deco : Object.keys(u.decos||{}).slice(0, 6); u.home.pats = +u.home.pats||0; u.home.log = u.home.log||[]; return u.home; }
+function spHomeOf(u){ u.home = u.home || {}; u.home.slots = Array.isArray(u.home.slots) ? u.home.slots.filter(Boolean) : []; u.home.deco = Array.isArray(u.home.deco) ? u.home.deco : Object.keys(u.decos||{}).slice(0, 6); u.home.pats = +u.home.pats||0; u.home.log = u.home.log||[];
+  u.home.layout = spHomeLayout(u.home); u.home.slots = u.home.layout.filter(Boolean); return u.home; }   /* layout：6 个展示位（按位置）；slots 保留为兼容列表 */
 function spHomeStats(u){
   const h = spHomeOf(u), to = spVisitsTo(u.user), from = Object.values(G().visits||{}).filter(v=>v.from===u.user);
   const s = {slots:h.slots.filter(k=>spHomeSpirit(u, k)).length, decos:h.deco.filter(k=>u.decos?.[k]).length, likes:to.filter(v=>v.like).length, water:to.filter(v=>v.water).length, msgs:to.filter(v=>v.msg).length,
     visited:new Set(from.map(v=>v.to)).size, codex:Object.keys(u.spc||{}).length, pats:h.pats};
-  s.xp = s.slots*5 + s.decos*10 + s.likes*5 + s.water*3 + s.msgs*2 + s.visited*4 + s.codex*2 + Math.min(200, s.pats);
-  let i = 0; SP_HOME_LV.forEach((l,k)=>{ if(s.xp >= l.at) i = k; }); s.lv = i; s.next = SP_HOME_LV[i+1] || null; return s;
+  s.xp = s.slots*5 + s.decos*10 + s.likes*5 + s.water*3 + s.msgs*2 + s.visited*4 + s.codex*2 + Math.min(200, s.pats) + (+h.taskXp||0);
+  /* xpLv：经验已达到的等级；lv：已升级（展示）的等级，需「一键升级」确认；旧数据首次进入时按经验迁移，不降级 */
+  s.xpLv = spHomeLvXp(s.xp); s.lv = h.lv!=null ? Math.max(0, Math.min(+h.lv||0, SP_HOME_LV.length-1)) : s.xpLv; s.next = SP_HOME_LV[s.lv+1] || null; s.canUp = s.xpLv > s.lv; return s;
 }
 /* 家园可放置：赛季精灵 / 试验精灵 / 已收集的精灵 */
 function spHomeCands(u){
@@ -21724,40 +21867,330 @@ function spHomeArt(u, k, size){
   if(k.startsWith('trial:')){ const r = u.tr[k.slice(6)]; return spriteView(spRecForm('trial', r), spRecColor('trial', r), size, spDispStage(r), {cls:'act-idle', skin:spRecSkin(u, 'trial', r)}); }
   const d = spDef(k.slice(3)); return d ? spiritView(d, size, Math.max(1, spChainLv(u, d.id)||1), {cls:'act-idle'}) : '';
 }
-function spHomeRoom(u, mine){
-  const h = spHomeOf(u), slots = h.slots.filter(k=>spHomeSpirit(u, k)).slice(0, 6), decos = h.deco.filter(k=>u.decos?.[k] && SP_DECOS[k]);
-  return `<div class="sp-home-room ${mine?'mine':''}" role="group" aria-label="${escapeAttr(tx('家园','Home','Nhà'))}">
-    <div class="sp-home-wall">${decos.map(k=>`<span class="sp-home-deco" title="${escapeAttr(trT(SP_DECOS[k].n))}">${SP_DECOS[k].i}</span>`).join('')}</div>
-    <div class="sp-home-floor">${slots.map(k=>`<button type="button" class="sp-home-sp" data-act="spHomePat" data-v="${escapeAttr(k)}" data-id="${escapeAttr(u.user)}" ${mine?'':'disabled'} aria-label="${escapeAttr(tx('互动','Interact','Tương tác'))}">${spHomeArt(u, k, 84)}</button>`).join('') || `<span class="hint">${escapeHtml(mine?tx('还没有放置精灵，在下方选择要展示的精灵','No spirits placed yet — choose some below','Chưa đặt tinh linh — hãy chọn bên dưới'):tx('主人还没有布置家园','Nothing placed yet','Chưa bày trí'))}</span>`}</div></div>`;
+/* =========================================================
+   v3.2 精灵家园：布置模式（常驻布置面板，连续放置 / 多选 / 搜索 / 筛选 / 6 个展示位）+ 小屋界面
+   · 布置面板只由「布置模式」状态控制：只在「完成」/ ESC / 切换页面时关闭；状态（选中位、多选、搜索、筛选、滚动）保存在页面会话里
+   · 家园数据只写 growth.csv 的用户行（u.home），只用于展示；不影响真实进度、甘特条与业务统计；访客不可见
+========================================================= */
+/* 升级奖励专属装饰（不进兑换商店） */
+var SP_HOME_RW_DECOS = {lantern:{i:'🏮', n:['庭院灯笼','Courtyard lantern','Đèn lồng sân vườn']}, fountain:{i:'⛲', n:['花园小喷泉','Garden fountain','Đài phun nước']},
+  window:{i:'🪟', n:['庄园花窗','Manor window','Cửa sổ trang viên']}, banner:{i:'🚩', n:['城堡旗帜','Castle banner','Cờ lâu đài']}};
+var SP_HOME_DECO_IC = {plant:'leaf', lamp:'star', rug:'dot', shelf:'trophy', tank:'fish', flag:'flag', lantern:'flame', fountain:'spiral', window:'sun', banner:'crown'};
+var SP_HOME_DECO_SPOT = {plant:'fl', lamp:'lt', rug:'fc', shelf:'wr', tank:'fr', flag:'wl', lantern:'lt2', fountain:'fc2', window:'wc', banner:'wt'};
+function spHomeDecoDef(k){ return SP_DECOS[k] || SP_HOME_RW_DECOS[k] || null; }
+var SP_HOME_BG = ['cottage','courtyard','garden','manor','castle'];
+var SP_HOME_LV_RW = [null,
+  {bg:['庭院背景','Courtyard backdrop','Nền sân vườn'], deco:'lantern'},
+  {bg:['花园背景','Garden backdrop','Nền khu vườn'], deco:'fountain'},
+  {bg:['庄园背景','Manor backdrop','Nền trang viên'], deco:'window'},
+  {bg:['城堡背景','Castle backdrop','Nền lâu đài'], deco:'banner', title:['城堡主人','Castle keeper','Chủ lâu đài']}];
+var SP_HOME_XP_SRC = [['展示位上的精灵','Spirits on display','Tinh linh trưng bày','×5'],['摆放的装饰','Decorations placed','Đồ trang trí','×10'],['收到点赞','Likes received','Lượt thích','×5'],
+  ['收到浇水','Waterings received','Lượt tưới','×3'],['收到留言','Messages received','Lời nhắn','×2'],['拜访过的同事','Colleagues visited','Đồng nghiệp đã thăm','×4'],['图鉴收集','Codex entries','Sách tranh','×2'],
+  ['互动次数（最多 200）','Interactions (up to 200)','Lượt tương tác (tối đa 200)','×1'],['家园任务','Home tasks','Nhiệm vụ nhà','+5 / +10']];
+var SP_HOME_TASKS = [
+  {k:'place', i:'edit', n:['布置一次展示位','Arrange a display spot','Bày trí một vị trí'], t:1, f:(u,h,d)=>h.placeDay?.d===d ? +h.placeDay.n||0 : 0},
+  {k:'pat', i:'heart', n:['与精灵互动 10 次','Interact 10 times','Tương tác 10 lần'], t:10, f:(u,h,d)=>h.patDay?.d===d ? +h.patDay.n||0 : 0},
+  {k:'visit', i:'users', n:['拜访 1 位同事','Visit a colleague','Thăm 1 đồng nghiệp'], t:1, f:(u,h,d)=>h.visitDay?.d===d ? (h.visitDay.to||[]).length : 0},
+  {k:'care', i:'leaf', n:['点赞或浇水 1 次','Like or water once','Thích hoặc tưới 1 lần'], t:1, f:(u,h,d)=>spHomeMine(u.user, d).filter(v=>v.like||v.water).length},
+  {k:'msg', i:'bubble', n:['给同事留言 1 条','Leave a message','Để lại 1 lời nhắn'], t:1, f:(u,h,d)=>spHomeMine(u.user, d).filter(v=>v.msg).length}];
+var SP_HOME_TASK_XP = 5, SP_HOME_TASK_BONUS = 10;
+function spHomeMine(user, d){ return Object.values(G().visits||{}).filter(v=>v.from===user && v.date===d); }
+function spHomeLayout(h){
+  const L0 = Array.isArray(h.layout) && h.layout.length===6 ? h.layout.slice() : [null,null,null,null,null,null], set = new Set(h.slots);
+  const L = L0.map(k=>k && set.has(k) ? k : null);
+  h.slots.forEach(k=>{ if(!L.includes(k)){ const i = L.indexOf(null); if(i>=0) L[i] = k; } });
+  return L;
+}
+function spHomeLvXp(xp){ let i = 0; SP_HOME_LV.forEach((l,k)=>{ if(xp >= l.at) i = k; }); return i; }
+function spHomeHeat(u){
+  const h = spHomeOf(u), since = new Date(Date.now() - 7*864e5).toISOString().slice(0, 10); let x = 0;
+  spVisitsTo(u.user).filter(v=>String(v.date||'') >= since).forEach(v=>{ x += 2 + (v.like?3:0) + (v.water?2:0) + (v.msg?3:0); });
+  return x + Math.min(20, h.patDay?.d===gToday() ? +h.patDay.n||0 : 0) + h.slots.length*2 + h.deco.length;
+}
+function spHomeName(u){ const h = spHomeOf(u); return h.name || tx(`${spUserName(u.user)}的小屋`, `${spUserName(u.user)}'s cottage`, `Nhà của ${spUserName(u.user)}`); }
+function spHomeKeyMeta(u, k){
+  if(k==='season'){ const r = u.ss?.[seasonNow().id]; return {k, n:r ? spRecName('season', r) : '—', src:'season', rar:r?.rar||''}; }
+  if(String(k).startsWith('trial:')){ const r = u.tr?.[k.slice(6)]; return {k, n:r ? spRecName('trial', r) : '—', src:'trial', rar:''}; }
+  const d = spDef(String(k).slice(3)); return {k, n:d ? trT(d.name) : k, src:'collect', rar:d?.rar||''};
+}
+function spHomeTaskState(u){
+  const h = spHomeOf(u), d = gToday(); if(h.tasks?.d!==d) h.tasks = {d, claimed:{}};
+  return SP_HOME_TASKS.map(x=>{ const v = x.f(u, h, d); return {...x, v:Math.min(v, x.t), done:v >= x.t, claimed:!!h.tasks.claimed[x.k]}; });
+}
+function spHomeRedDots(u){
+  const h = spHomeOf(u), st = spHomeStats(u), ts = spHomeTaskState(u);
+  return {up:st.canUp, task:ts.some(x=>x.done && !x.claimed) || (ts.every(x=>x.claimed) && !h.tasks.bonus),
+    msg:spVisitsTo(u.user).some(v=>v.msg && String(v.at) > String(h.msgSeenAt||'')),
+    deco:Object.keys(u.decos||{}).some(k=>spHomeDecoDef(k) && !(h.decoSeen||[]).includes(k))};
+}
+function spHomeEvents(){ try{ return spEvents().filter(e=>spEvStatus(e).k==='on'); }catch(_e){ return []; } }
+function spHomeWeather(){ const m = new Date().getMonth()+1, x = spHash('wx|' + gToday()) % 10; return x < 5 ? 'sun' : x < 8 ? 'cloud' : ([12,1,2].includes(m) ? 'snow' : 'rain'); }
+function spHomeTod(){ const hr = new Date().getHours(); return hr < 6 || hr >= 19 ? 'night' : hr < 8 || hr >= 17 ? 'dusk' : 'day'; }
+function spHomeArr(){ const S = spS(); S.homeArr = S.homeArr || {open:false, slot:0, sel:[], q:'', src:'all', place:'all', rar:'', tab:'sp', scroll:0}; return S.homeArr; }
+
+/* ---------- 写入：布置 / 互动 / 任务 / 升级（只改 u.home 等展示数据） ---------- */
+var spHomeBC = null;
+try{ spHomeBC = new BroadcastChannel('lab-sp-home'); spHomeBC.onmessage = ()=>{ if(window.csvApi?.readAll) setTimeout(()=>{ if(!state.modal && !state.csvLoading && typeof loadCsvDirectoryData==='function') loadCsvDirectoryData().then(()=>render()).catch(()=>{}); }, 1500); }; }catch(_e){}
+function spHomeSetLayout(h, L){ h.layout = L.slice(0, 6); h.slots = h.layout.filter(Boolean); }
+function spHomeCommit(u){
+  const h = u.home; gTouch(u); saveGrowth(true);
+  try{ window.dispatchEvent(new CustomEvent('sp-home-change', {detail:{user:u.user, layout:h.layout.slice()}})); }catch(_e){}
+  try{ spHomeBC?.postMessage({user:u.user, at:Date.now()}); }catch(_e){}
+}
+function spHomePlace(k, pos){
+  if(!spCanPlay()) return false; const u = spU(), h = spHomeOf(u), A = spHomeArr();
+  if(!spHomeSpirit(u, k) || pos < 0 || pos > 5) return false;
+  const L = h.layout.slice(), p0 = L.indexOf(k); if(p0===pos) return false;
+  if(p0>=0) L[p0] = L[pos] && p0!==pos ? L[pos] : null;   /* 已在别的位置：与目标位互换 */
+  L[pos] = k; spHomeSetLayout(h, L);
+  h.placedEver = h.placedEver || {}; h.placedEver[k] = h.placedEver[k] || gNowIso();
+  const t = gToday(); h.placeDay = h.placeDay?.d===t ? {d:t, n:(+h.placeDay.n||0)+1} : {d:t, n:1};
+  const next = [1,2,3,4,5,6].map(d=>(pos+d) % 6).find(i=>!L[i]); A.slot = next==null ? pos : next;
+  spHomeCommit(u); return true;
+}
+function spHomeFillEmpty(keys){
+  if(!spCanPlay()) return; const u = spU(), h = spHomeOf(u), L = h.layout.slice(); let n = 0, skip = 0;
+  keys.forEach(k=>{ if(!spHomeSpirit(u, k) || L.includes(k)) return; const i = L.indexOf(null); if(i<0){ skip++; return; } L[i] = k; n++; h.placedEver = h.placedEver || {}; h.placedEver[k] = h.placedEver[k] || gNowIso(); });
+  if(!n) return toast(skip ? tx('展示位已满，请先清空一个位置','All spots are full — clear one first','Đã đầy chỗ') : tx('所选精灵都已在展示位上','Those spirits are already on display','Đã trưng bày'), 'info');
+  const t = gToday(); h.placeDay = h.placeDay?.d===t ? {d:t, n:(+h.placeDay.n||0)+n} : {d:t, n};
+  spHomeSetLayout(h, L); spHomeArr().sel = []; spHomeCommit(u);
+  toast(tx(`已放入 ${n} 只${skip?`，${skip} 只因展示位已满未放入`:''}`, `Placed ${n}${skip?`; ${skip} didn't fit`:''}`, `Đã đặt ${n}`), skip ? 'warn' : 'ok');
+}
+function spHomeSlotOp(op){
+  if(!spCanPlay()) return; const u = spU(), h = spHomeOf(u), A = spHomeArr(), L = h.layout.slice(), i = A.slot;
+  if(op==='clear'){ if(!L[i]) return; L[i] = null; }
+  else { const j = i + (op==='left' ? -1 : 1); if(j<0 || j>5) return; [L[i], L[j]] = [L[j], L[i]]; A.slot = j; }
+  spHomeSetLayout(h, L); spHomeCommit(u);
+}
+function spHomePatOne(u, k, el){
+  const h = spHomeOf(u), t = gToday(); h.patDay = h.patDay?.d===t ? h.patDay : {d:t, n:0}; if(h.patDay.n >= 30) return false;
+  h.patDay.n++; h.pats++; h.patBy = h.patBy || {}; h.patBy[k] = (+h.patBy[k]||0) + 1;
+  if(k==='season') spInteract?.('season', seasonNow().id, 'pat'); else if(String(k).startsWith('trial:')) spInteract?.('trial', k.slice(6), 'pat');
+  const b = el?.querySelector?.('.spv') || el; if(b){ b.classList.remove('sp-h2-bounce'); void b.offsetWidth; b.classList.add('sp-h2-bounce'); }
+  return true;
+}
+function spHomeClaimTasks(){
+  if(!spCanPlay()) return; const u = spU(), h = spHomeOf(u), ts = spHomeTaskState(u); let xp = 0;
+  ts.forEach(x=>{ if(x.done && !x.claimed){ h.tasks.claimed[x.k] = gNowIso(); xp += SP_HOME_TASK_XP; } });
+  if(SP_HOME_TASKS.every(x=>h.tasks.claimed[x.k]) && !h.tasks.bonus){ h.tasks.bonus = gNowIso(); xp += SP_HOME_TASK_BONUS; }
+  if(!xp) return toast(tx('暂无可领取的任务','Nothing to claim yet','Chưa có gì để nhận'), 'info');
+  h.taskXp = (+h.taskXp||0) + xp; spAudit('home-task', u.user, {xp, date:h.tasks.d}); gTouch(u); saveGrowth(true);
+  toast(tx(`家园经验 +${xp}`, `Home XP +${xp}`, `EXP nhà +${xp}`), 'ok'); render();
+}
+function spHomeLevelUp(){
+  if(!spCanPlay()) return; const u = spU(), h = spHomeOf(u), st = spHomeStats(u);
+  if(!st.canUp) return toast(tx('家园经验还不够升级','Not enough home XP yet','Chưa đủ EXP nhà'), 'info');
+  const from = st.lv, to = st.xpLv, got = [];
+  for(let i = from + 1; i <= to; i++){ const r = SP_HOME_LV_RW[i]; if(!r) continue;
+    if(r.deco){ u.decos = u.decos || {}; if(!u.decos[r.deco]){ u.decos[r.deco] = gNowIso(); got.push(trT(spHomeDecoDef(r.deco).n)); } if(!h.deco.includes(r.deco)) h.deco = [...h.deco, r.deco]; }
+    if(r.title){ u.titles = u.titles || {}; if(!u.titles[trT(r.title)]){ u.titles[trT(r.title)] = gNowIso(); got.push(trT(r.title)); } }
+    got.push(trT(r.bg)); }
+  h.lv = to; spAudit('home-levelup', u.user, {from:from+1, to:to+1}); gTouch(u); saveGrowth(true);
+  spS().homeLvFx = {from, to, at:Date.now(), got}; state.modal = null; render();
+}
+function spHomeSaveName(){
+  if(!spCanPlay()) return; const inp = document.getElementById('spHomeNameIn'), v = String(inp?.value||'').replace(/\s+/g, ' ').trim().slice(0, 12);
+  if(!v) return toast(tx('名称不能为空','The name can\'t be empty','Tên không được để trống'), 'warn');
+  const u = spU(), h = spHomeOf(u), old = h.name || ''; h.name = v; spS().homeNameEdit = false;
+  spAudit('home-rename', u.user, {from:old, to:v}); gTouch(u); saveGrowth(true); toast(tx('已保存','Saved','Đã lưu'), 'ok'); render();
+}
+
+/* ---------- 视图：小屋场景 ---------- */
+function spHomeScene(u, mine){
+  const h = spHomeOf(u), st = spHomeStats(u), A = mine && spHomeArr().open ? spHomeArr() : null, fx = mine ? spS().homeLvFx : null;
+  const showFx = fx && Date.now() - fx.at < 3200;
+  const decos = h.deco.filter(k=>u.decos?.[k] && spHomeDecoDef(k));
+  const deco = k=>{ const d = spHomeDecoDef(k); return `<span class="sp-h2-deco spot-${SP_HOME_DECO_SPOT[k]||'fl'} dk-${k}" title="${escapeAttr(trT(d.n))}">${spIcon(SP_HOME_DECO_IC[k]||'gift', 30, trT(d.n))}</span>`; };
+  const slot = (k, i)=>{ const ok = k && spHomeSpirit(u, k), act = A && A.slot===i ? 'active' : '', big = i >= 3, m = ok ? spHomeKeyMeta(u, k) : null;
+    if(ok) return `<div class="sp-h2-slot ${big?'front':'back'} ${act}" data-slot="${i}"><button type="button" class="sp-h2-sp" data-act="${A?'spHomeArrSlot':'spHomePat'}" data-v="${A?i:escapeAttr(k)}" data-id="${escapeAttr(u.user)}" ${mine?'':'disabled'} aria-label="${escapeAttr(`${i+1} · ${m.n}`)}">${spHomeArt(u, k, big?124:104)}</button><span class="sp-h2-pad" aria-hidden="true"></span><small class="sp-h2-nm" data-i18n-ignore="1">${escapeHtml(m.n)}</small><i class="sp-h2-no">${i+1}</i></div>`;
+    return `<div class="sp-h2-slot ${big?'front':'back'} empty ${act}" data-slot="${i}">${mine?`<button type="button" class="sp-h2-plus" data-act="${A?'spHomeArrSlot':'spHomeArrOpen'}" data-v="${i}" aria-label="${escapeAttr(tx(`${i+1} 号展示位：放置精灵`,`Spot ${i+1}: place a spirit`,`Chỗ ${i+1}: đặt tinh linh`))}">${spIcon('plus',22)}</button>`:''}<span class="sp-h2-pad" aria-hidden="true"></span><i class="sp-h2-no">${i+1}</i></div>`; };
+  return `<div class="sp-h2-scene bg-${SP_HOME_BG[st.lv]} tod-${spHomeTod()} wx-${spHomeWeather()} ${A?'arranging':''}" role="group" aria-label="${escapeAttr(spHomeName(u))}">
+    <div class="sp-h2-wall"><div class="sp-h2-window" aria-hidden="true"><i class="orb"></i><i class="cl c1"></i><i class="cl c2"></i><i class="drops"></i></div>${decos.filter(k=>/^w|lt/.test(SP_HOME_DECO_SPOT[k]||'')).map(deco).join('')}<span class="sp-h2-beam" aria-hidden="true"></span></div>
+    <div class="sp-h2-floor">${decos.filter(k=>!/^w|lt/.test(SP_HOME_DECO_SPOT[k]||'')).map(deco).join('')}
+      <div class="sp-h2-row back">${h.layout.slice(0, 3).map((k, i)=>slot(k, i)).join('')}</div>
+      <div class="sp-h2-row front">${h.layout.slice(3, 6).map((k, i)=>slot(k, i+3)).join('')}</div></div>
+    <div class="sp-h2-motes" aria-hidden="true">${'<i></i>'.repeat(10)}</div>
+    ${!h.slots.length && mine && !A ? `<div class="sp-h2-emptytip"><b>${escapeHtml(tx('小屋还空着','Your cottage is empty','Nhà còn trống'))}</b><button type="button" class="btn btn-primary btn-sm" data-act="spHomeArrOpen" data-v="0">${spIcon('edit',14)} ${escapeHtml(tx('进入布置模式','Start arranging','Bắt đầu bày trí'))}</button></div>`:''}
+    ${showFx ? `<div class="sp-h2-lvfx" role="status"><div class="burst">${spIcon('sparkle',48)}</div><b>${escapeHtml(tx('家园升级！','Home level up!','Nhà lên cấp!'))}</b><span>Lv.${fx.from+1} → Lv.${fx.to+1} · ${escapeHtml(trT(SP_HOME_LV[fx.to].n))}</span>${fx.got?.length?`<small>${escapeHtml(tx('获得','Unlocked','Mở khóa'))}：${escapeHtml(fx.got.join('、'))}</small>`:''}</div>` : ''}
+  </div>`;
+}
+/* ---------- 视图：布置面板（常驻，非弹窗、无遮罩） ---------- */
+function spHomeArrPanel(u){
+  const A = spHomeArr(), h = spHomeOf(u), cands = spHomeCands(u).map(c=>spHomeKeyMeta(u, c.k)), sel = new Set(A.sel);
+  const chip = (grp, v, label)=>`<button type="button" class="sp-pillbtn ${A[grp]===v?'active':''}" data-act="spHomeArrF" data-id="${grp}" data-v="${v}" aria-pressed="${A[grp]===v}">${escapeHtml(label)}</button>`;
+  const rars = [...new Set(cands.map(c=>c.rar).filter(Boolean))];
+  const cur = h.layout[A.slot], curM = cur ? spHomeKeyMeta(u, cur) : null;
+  const owned = Object.keys(u.decos||{}).filter(k=>spHomeDecoDef(k));
+  return `<aside class="sp-h2-arr" id="spHomeArr" role="region" aria-label="${escapeAttr(tx('布置模式','Arrange mode','Chế độ bày trí'))}" data-home-arr="1">
+    <header class="sp-h2-arr-h"><b>${spIcon('edit',16)} ${escapeHtml(tx('布置模式','Arrange mode','Chế độ bày trí'))}</b><small>${escapeHtml(tx('已放置','Placed','Đã đặt'))} ${h.slots.length}/6</small><span style="flex:1"></span><button type="button" class="btn btn-primary btn-sm" data-act="spHomeArrDone">${escapeHtml(tx('完成','Done','Xong'))}</button></header>
+    <div class="sp-h2-arr-slots" role="tablist" aria-label="${escapeAttr(tx('展示位','Display spots','Vị trí trưng bày'))}">${h.layout.map((k, i)=>`<button type="button" role="tab" aria-selected="${A.slot===i}" class="sp-h2-arr-slot ${A.slot===i?'active':''} ${k?'filled':''}" data-act="spHomeArrSlot" data-v="${i}"><i>${i+1}</i>${k && spHomeSpirit(u, k) ? spHomeArt(u, k, 34) : spIcon('plus',16)}</button>`).join('')}</div>
+    <div class="sp-h2-arr-cur"><span>${escapeHtml(tx(`当前：${A.slot+1} 号位`, `Selected: spot ${A.slot+1}`, `Đang chọn: chỗ ${A.slot+1}`))}${curM?` · <b data-i18n-ignore="1">${escapeHtml(curM.n)}</b>`:''}</span>
+      <button type="button" class="btn btn-ghost btn-sm" data-act="spHomeArrOp" data-v="left" ${A.slot===0?'disabled':''} aria-label="${escapeAttr(tx('左移','Move left','Sang trái'))}">‹</button><button type="button" class="btn btn-ghost btn-sm" data-act="spHomeArrOp" data-v="right" ${A.slot===5?'disabled':''} aria-label="${escapeAttr(tx('右移','Move right','Sang phải'))}">›</button><button type="button" class="btn btn-ghost btn-sm" data-act="spHomeArrOp" data-v="clear" ${cur?'':'disabled'}>${escapeHtml(tx('清空此位','Clear spot','Xóa chỗ'))}</button></div>
+    <div class="subview-toggle sp-h2-arr-tabs" role="tablist"><button type="button" role="tab" aria-selected="${A.tab!=='deco'}" class="${A.tab!=='deco'?'active':''}" data-act="spHomeArrF" data-id="tab" data-v="sp">${escapeHtml(tx('精灵','Spirits','Tinh linh'))}</button><button type="button" role="tab" aria-selected="${A.tab==='deco'}" class="${A.tab==='deco'?'active':''}" data-act="spHomeArrF" data-id="tab" data-v="deco">${escapeHtml(tx('装饰','Decor','Trang trí'))}</button></div>
+    ${A.tab==='deco' ? `<div class="sp-h2-arr-list" id="spHomeArrList">${owned.map(k=>{ const d = spHomeDecoDef(k), on = h.deco.includes(k); return `<button type="button" class="sp-h2-card ${on?'placed':''}" data-act="spHomeDecoToggle" data-v="${escapeAttr(k)}" aria-pressed="${on}"><span class="sp-h2-card-art">${spIcon(SP_HOME_DECO_IC[k]||'gift',30)}</span><span class="sp-h2-card-n">${escapeHtml(trT(d.n))}</span><small>${escapeHtml(on?tx('已摆放','Placed','Đã đặt'):tx('点击摆放','Tap to place','Bấm để đặt'))}</small></button>`; }).join('') || `<p class="hint">${escapeHtml(tx('还没有装饰，可在兑换商店获得，家园升级也会奖励装饰。','No decorations yet — get them in the exchange shop or from home level-ups.','Chưa có đồ trang trí.'))}</p>`}</div>`
+    : `<div class="sp-h2-arr-tools"><input type="search" id="spHomeArrQ" data-home-q="1" value="${escapeAttr(A.q)}" placeholder="${escapeAttr(tx('搜索精灵名称','Search spirit names','Tìm tên tinh linh'))}" aria-label="${escapeAttr(tx('搜索精灵','Search spirits','Tìm tinh linh'))}" autocomplete="off">
+        <div class="sp-h2-arr-chips">${chip('src','all',tx('全部','All','Tất cả'))}${chip('src','season',tx('赛季','Season','Mùa'))}${chip('src','trial',tx('试验','Trials','Thử nghiệm'))}${chip('src','collect',tx('收藏','Collection','Sưu tầm'))}<span class="sp-h2-sep"></span>${chip('place','all',tx('全部','All','Tất cả'))}${chip('place','off',tx('未放置','Not placed','Chưa đặt'))}${chip('place','on',tx('已放置','Placed','Đã đặt'))}
+          ${rars.length?`<select data-home-rar="1" aria-label="${escapeAttr(tx('稀有度','Rarity','Độ hiếm'))}"><option value="">${escapeHtml(tx('全部稀有度','All rarities','Mọi độ hiếm'))}</option>${rars.map(r=>`<option value="${escapeAttr(r)}" ${A.rar===r?'selected':''}>${escapeHtml(r)}</option>`).join('')}</select>`:''}</div></div>
+      <div class="sp-h2-arr-multi"><span data-home-selcount="1">${escapeHtml(tx(`已选 ${sel.size}`, `${sel.size} selected`, `Đã chọn ${sel.size}`))}</span><button type="button" class="btn btn-ghost btn-sm" data-act="spHomeArrFill">${escapeHtml(tx('放入空位','Fill empty spots','Đặt vào chỗ trống'))}</button><button type="button" class="btn btn-ghost btn-sm" data-act="spHomeArrSelClear">${escapeHtml(tx('清除选择','Clear selection','Bỏ chọn'))}</button></div>
+      <div class="sp-h2-arr-list" id="spHomeArrList">${cands.map(c=>{ const pos = h.layout.indexOf(c.k);
+        return `<div class="sp-h2-card ${pos>=0?'placed':''} ${sel.has(c.k)?'sel':''}" data-home-card="1" data-name="${escapeAttr(c.n.toLowerCase())}" data-src="${c.src}" data-rar="${escapeAttr(c.rar)}" data-placed="${pos>=0?'on':'off'}">
+          <label class="sp-h2-card-sel" title="${escapeAttr(tx('多选','Multi-select','Chọn nhiều'))}"><input type="checkbox" data-home-sel="${escapeAttr(c.k)}" ${sel.has(c.k)?'checked':''} aria-label="${escapeAttr(tx(`选择 ${c.n}`,`Select ${c.n}`,`Chọn ${c.n}`))}"></label>
+          <button type="button" class="sp-h2-card-pick" data-act="spHomeArrPick" data-v="${escapeAttr(c.k)}" aria-label="${escapeAttr(tx(`放入 ${A.slot+1} 号位：${c.n}`,`Place in spot ${A.slot+1}: ${c.n}`,`Đặt vào chỗ ${A.slot+1}: ${c.n}`))}"><span class="sp-h2-card-art">${spHomeArt(u, c.k, 52)}</span><span class="sp-h2-card-n" data-i18n-ignore="1">${escapeHtml(c.n)}</span>
+            <small>${escapeHtml(trT({season:['赛季','Season','Mùa'], trial:['试验','Trial','Thử nghiệm'], collect:['收藏','Collection','Sưu tầm']}[c.src]))}${c.rar?` · ${escapeHtml(c.rar)}`:''}${pos>=0?` · <b>#${pos+1}</b>`:''}</small></button></div>`; }).join('') || `<p class="hint">${escapeHtml(tx('还没有可放置的精灵：赛季精灵、试验精灵和收藏的精灵都可以放进小屋。','No spirits to place yet: season, trial and collected spirits can all go in your cottage.','Chưa có tinh linh để đặt.'))}</p>`}
+        <p class="hint sp-h2-arr-none" hidden>${escapeHtml(tx('没有符合条件的精灵','No spirits match','Không có tinh linh phù hợp'))}</p></div>`}
+    <footer class="hint">${escapeHtml(tx('先点上方展示位，再点精灵即可放入，可连续放置；勾选多只后点「放入空位」。按 Esc 或「完成」退出。','Pick a spot above, then tap spirits to place them — keep going as long as you like. Tick several and use "Fill empty spots". Press Esc or Done to finish.','Chọn chỗ rồi bấm tinh linh để đặt liên tục. Nhấn Esc hoặc Xong để kết thúc.'))}</footer>
+  </aside>`;
+}
+function spHomeArrFilterDom(){
+  const A = spHomeArr(), list = document.getElementById('spHomeArrList'); if(!list) return;
+  const q = String(A.q||'').trim().toLowerCase(); let shown = 0;
+  list.querySelectorAll('[data-home-card]').forEach(c=>{ const ok = (!q || c.dataset.name.includes(q)) && (A.src==='all' || c.dataset.src===A.src) && (A.place==='all' || c.dataset.placed===A.place) && (!A.rar || c.dataset.rar===A.rar); c.hidden = !ok; if(ok) shown++; });
+  const none = list.querySelector('.sp-h2-arr-none'); if(none) none.hidden = shown > 0 || !list.querySelector('[data-home-card]');
+}
+/* 渲染后：恢复面板滚动位置与筛选；离开家园页时关闭布置模式；清理升级动画 */
+function spHomeAfterRender(){
+  const S = spS(), A = S.homeArr;
+  if(A?.open && (state.view!=='spirit' || S.page!=='home' || !spCanPlay())) A.open = false;
+  if(S.homeLvFx && Date.now() - S.homeLvFx.at > 3200) S.homeLvFx = null;
+  if(!A?.open) return;
+  spHomeArrFilterDom();
+  const list = document.getElementById('spHomeArrList'); if(list) list.scrollTop = +A.scroll||0;
+  /* 平板 / 手机：布置面板在底部，打开时把小屋场景滚到可见区域，放置结果一眼可见 */
+  if(A.justOpened){ A.justOpened = false; if(innerWidth <= 1100) document.querySelector('.sp-h2-stage')?.scrollIntoView({block:'start', behavior:'smooth'}); }
+}
+document.addEventListener('scroll', e=>{ if(e.target?.id==='spHomeArrList') spHomeArr().scroll = e.target.scrollTop; }, true);
+document.addEventListener('input', e=>{ const el = e.target; if(!el?.dataset?.homeQ) return; spHomeArr().q = el.value; spHomeArrFilterDom(); });
+document.addEventListener('change', e=>{
+  const el = e.target; if(!el?.dataset || !window.__spReady) return;
+  if(el.dataset.homeRar!=null && el.dataset.homeRar!==''){ spHomeArr().rar = el.value; spHomeArrFilterDom(); return; }
+  if(el.dataset.homeSel){ const A = spHomeArr(), s = new Set(A.sel); el.checked ? s.add(el.dataset.homeSel) : s.delete(el.dataset.homeSel); A.sel = [...s];
+    el.closest('.sp-h2-card')?.classList.toggle('sel', el.checked); const c = document.querySelector('[data-home-selcount]'); if(c) c.textContent = tx(`已选 ${s.size}`, `${s.size} selected`, `Đã chọn ${s.size}`); }
+});
+/* 只有 ESC / 完成 / 切换页面关闭布置模式；面板内点击不冒泡到外层 */
+document.addEventListener('keydown', e=>{ if(e.key!=='Escape' || state.modal) return; const A = spS().homeArr; if(!A?.open || state.view!=='spirit' || spS().page!=='home') return; A.open = false; e.stopPropagation(); render(); }, true);
+
+/* ---------- 视图：页面 ---------- */
+function spHomeFriendsHtml(me, visit){
+  const ops = spOperators().filter(a=>!me || a.username!==me.user), today = gToday();
+  return `<section class="sp-h2-card sp-h2-friends"><header><b>${spIcon('users',18)} ${escapeHtml(tx('家园好友','Home friends','Bạn bè'))}</b><small class="hint">${escapeHtml(tx('每天可为每位同事点赞、浇水各 1 次，并可留言。','Like and water each colleague\'s home once a day, and leave messages.','Mỗi ngày thích và tưới 1 lần.'))}</small></header>
+    <div class="sp-h2-flist">${ops.map(a=>{ const f = spU(a.username), st = spHomeStats(f), rec = me ? G().visits[`${me.user}>${a.username}@${today}`] : null;
+      return `<div class="sp-h2-friend ${visit===a.username?'active':''}"><div class="sp-h2-fav">${f.home?.layout?.find(k=>k && spHomeSpirit(f, k)) ? spHomeArt(f, f.home.layout.find(k=>k && spHomeSpirit(f, k)), 40) : spIcon('home',22)}</div>
+        <div class="sp-h2-fmeta"><b data-i18n-ignore="1">${escapeHtml(spHomeName(f))}</b><small data-i18n-ignore="1">${escapeHtml(spUserName(a.username))} · Lv.${st.lv+1} ${escapeHtml(trT(SP_HOME_LV[st.lv].n))} · ${spIcon('flame',12)} ${spHomeHeat(f)}</small></div>
+        <div class="sp-h2-fact"><button type="button" class="btn btn-ghost btn-sm" data-act="spHomeVisit" data-v="${escapeAttr(a.username)}">${escapeHtml(visit===a.username?tx('收起','Close','Đóng'):tx('拜访','Visit','Thăm'))}</button>
+          ${spCanPlay()?`<button type="button" class="btn btn-ghost btn-sm" data-act="spLike" data-id="${escapeAttr(a.username)}" ${rec?.like?'disabled':''} aria-label="${escapeAttr(tx('点赞','Like','Thích'))}">${spIcon('heart',14)}</button><button type="button" class="btn btn-ghost btn-sm" data-act="spHomeWater" data-v="${escapeAttr(a.username)}" ${rec?.water?'disabled':''} aria-label="${escapeAttr(tx('浇水','Water','Tưới'))}">${spIcon('leaf',14)}</button>`:''}
+          ${spIsAdmin() && f.home?.name ? `<button type="button" class="btn btn-ghost btn-sm" data-act="spHomeNameReset" data-id="${escapeAttr(a.username)}">${escapeHtml(tx('重置名称','Reset name','Đặt lại tên'))}</button>`:''}</div></div>`; }).join('') || spStateHtml('empty', tx('还没有其他操作员','No other operators yet','Chưa có vận hành viên khác'))}</div></section>`;
+}
+function spHomeVisitHtml(visit){
+  if(!visit) return ''; const f = spU(visit), msgs = spVisitsTo(visit).filter(m=>m.msg).slice(0, 8), st = spHomeStats(f);
+  return `<section class="sp-h2-card sp-h2-visit"><header><b data-i18n-ignore="1">${spIcon('home',18)} ${escapeHtml(spHomeName(f))}</b><small class="hint">Lv.${st.lv+1} ${escapeHtml(trT(SP_HOME_LV[st.lv].n))} · ${spIcon('flame',12)} ${spHomeHeat(f)}</small><span style="flex:1"></span><button type="button" class="btn btn-ghost btn-sm" data-act="spHomeVisit" data-v="${escapeAttr(visit)}">${escapeHtml(tx('离开','Leave','Rời đi'))}</button></header>
+    ${spHomeScene(f, false)}
+    <div class="sp-msgs">${msgs.map(m=>`<div class="sp-msg"><b data-i18n-ignore="1">${escapeHtml(spUserName(m.from))}</b><span data-i18n-ignore="1">${escapeHtml(m.msg)}</span><small>${escapeHtml(localDT(m.at))}</small></div>`).join('') || `<div class="hint">${escapeHtml(tx('还没有留言','No messages yet','Chưa có lời nhắn'))}</div>`}</div>
+    ${spCanPlay()?`<div class="sp-msg-form"><input id="spMsgInput" maxlength="40" placeholder="${escapeAttr(tx('写一句留言（最多 40 字）','Write a message (up to 40 characters)','Viết lời nhắn (tối đa 40 ký tự)'))}" aria-label="${escapeAttr(tx('留言','Message','Lời nhắn'))}"><button type="button" class="btn btn-primary btn-sm" data-act="spMsg" data-id="${escapeAttr(visit)}">${escapeHtml(tx('留言','Send','Gửi'))}</button></div>`:''}</section>`;
+}
+function spHomeNavHtml(){
+  const it = [['mine','paw',['精灵总览','Overview','Tổng quan']],['codex','book',['图鉴','Codex','Sách tranh']],['skins','skin',['皮肤','Skins','Trang phục']],['achv','trophy',['成就','Achievements','Thành tựu']],
+    ['events','event',['活动中心','Events','Sự kiện']],['board','chart',['排行榜','Leaderboard','Bảng xếp hạng']],['review','scroll',['赛季回顾','Season review','Tổng kết mùa']],['collab','party',['联名精灵','Collab spirits','Tinh linh hợp tác']]];
+  return `<nav class="sp-h2-nav" aria-label="${escapeAttr(tx('家园联动','Home links','Liên kết'))}">${it.map(([k,i,n])=>`<button type="button" data-act="spHomeGo" data-v="${k}">${spIcon(i,18)}<span>${escapeHtml(trT(n))}</span></button>`).join('')}</nav>`;
 }
 function spHomePageHtml(u){
   if(!spCanSee()) return '';
   const S = spS(), visit = S.homeVisit || null, me = u;
-  const ops = spOperators().filter(a=>!me || a.username!==me.user), today = gToday();
-  const friends = `<div class="sp-sec-h"><h3>${spIcon('users',18)} ${escapeHtml(tx('拜访同事的家园','Visit colleagues\' homes','Thăm nhà đồng nghiệp'))}</h3><span class="hint">${escapeHtml(tx('每天可为每位同事点赞、浇水各 1 次，并可留言。','Like and water each colleague\'s home once a day, and leave messages.','Mỗi ngày thích và tưới cây 1 lần cho mỗi người, có thể để lại lời nhắn.'))}</span></div>
-    <div class="sp-friends">${ops.map(a=>{ const f = spU(a.username), st = spHomeStats(f), rec = me ? G().visits[`${me.user}>${a.username}@${today}`] : null;
-      return `<div class="sp-friend ${visit===a.username?'active':''}"><div><b data-i18n-ignore="1">${escapeHtml(spUserName(a.username))}</b><small>${escapeHtml(trT(SP_HOME_LV[st.lv].n))} · Lv.${st.lv+1}</small></div>
-        <div class="sp-friend-act"><button type="button" class="btn btn-ghost btn-sm" data-act="spHomeVisit" data-v="${escapeAttr(a.username)}">${escapeHtml(visit===a.username?tx('收起','Close','Đóng'):tx('拜访','Visit','Thăm'))}</button>
-          ${spCanPlay()?`<button type="button" class="btn btn-ghost btn-sm" data-act="spLike" data-id="${escapeAttr(a.username)}" ${rec?.like?'disabled':''}>${spIcon('heart',14)} ${escapeHtml(tx('点赞','Like','Thích'))}</button><button type="button" class="btn btn-ghost btn-sm" data-act="spHomeWater" data-v="${escapeAttr(a.username)}" ${rec?.water?'disabled':''}>${spIcon('leaf',14)} ${escapeHtml(tx('浇水','Water','Tưới'))}</button>`:''}</div></div>`; }).join('') || spStateHtml('empty', tx('暂无其他操作员','No other operators yet','Chưa có vận hành viên khác'))}</div>
-    ${visit ? (()=>{ const f = spU(visit), msgs = spVisitsTo(visit).filter(m=>m.msg).slice(0, 8);
-      return `<div class="sp-home"><div class="sp-home-h"><b data-i18n-ignore="1">${escapeHtml(spUserName(visit))}</b> ${escapeHtml(tx('的家园','\'s home','— nhà'))} · ${escapeHtml(trT(SP_HOME_LV[spHomeStats(f).lv].n))}</div>${spHomeRoom(f, false)}
-        <div class="sp-msgs">${msgs.map(m=>`<div class="sp-msg"><b data-i18n-ignore="1">${escapeHtml(spUserName(m.from))}</b><span data-i18n-ignore="1">${escapeHtml(m.msg)}</span><small>${escapeHtml(localDT(m.at))}</small></div>`).join('') || `<div class="hint">${escapeHtml(tx('还没有留言','No messages yet','Chưa có lời nhắn'))}</div>`}</div>
-        ${spCanPlay()?`<div class="sp-msg-form"><input id="spMsgInput" maxlength="40" placeholder="${escapeAttr(tx('写一句留言（最多 40 字）','Write a message (up to 40 characters)','Viết lời nhắn (tối đa 40 ký tự)'))}" aria-label="${escapeAttr(tx('留言','Message','Lời nhắn'))}"><button type="button" class="btn btn-primary btn-sm" data-act="spMsg" data-id="${escapeAttr(visit)}">${escapeHtml(tx('留言','Send','Gửi'))}</button></div>`:''}</div>`; })() : ''}`;
-  if(!me) return `<div class="sp-home-page"><div class="hint">${escapeHtml(tx('超级管理员可浏览所有操作员的家园（只读）。','Super admins can browse every operator\'s home (read-only).','Quản trị có thể xem nhà của mọi vận hành viên (chỉ đọc).'))}</div>${friends}</div>`;
-  const h = spHomeOf(me), st = spHomeStats(me), cands = spHomeCands(me), pct = st.next ? Math.min(100, (st.xp - SP_HOME_LV[st.lv].at) / (st.next.at - SP_HOME_LV[st.lv].at) * 100) : 100;
-  const owned = Object.keys(me.decos||{}).filter(k=>SP_DECOS[k]);
-  return `<div class="sp-home-page">
-    <div class="sp-home-top"><div><b class="sp-home-lv">${spIcon('home',20)} ${escapeHtml(trT(SP_HOME_LV[st.lv].n))} · Lv.${st.lv+1}</b><div class="sp-ms-bar"><i style="width:${pct.toFixed(0)}%"></i></div><small class="hint">${escapeHtml(tx('家园经验','Home XP','EXP nhà'))} ${st.xp}${st.next?` / ${st.next.at}`:` · ${escapeHtml(tx('已满级','Max level','Cấp tối đa'))}`}</small></div>
-      <div class="sp-home-links"><button type="button" class="sp-chip" data-act="spGo" data-v="codex">${spIcon('book',16)} <b>${st.codex}</b><small>${escapeHtml(tx('图鉴','Codex','Sách tranh'))}</small></button><button type="button" class="sp-chip" data-act="spGo" data-v="achv">${spIcon('trophy',16)} <b>${escapeHtml(t(achvLevel(achvPoints(me)).name))}</b><small>${escapeHtml(tx('成就','Achievements','Thành tựu'))}</small></button><button type="button" class="sp-chip" data-act="spGo" data-v="review">${spIcon('calendar',16)} <small>${escapeHtml(tx('赛季回顾','Season review','Tổng kết mùa'))}</small></button></div></div>
-    ${spHomeRoom(me, true)}
-    <div class="sp-home-ach">${SP_HOME_ACH.map(x=>{ const v = x.f(st), on = v >= x.t; return `<span class="sp-home-a ${on?'on':''}" title="${escapeAttr(`${trT(x.n)} ${Math.min(v, x.t)}/${x.t}`)}">${spIcon(on?'medal':'lock',16)} ${escapeHtml(trT(x.n))} <small>${Math.min(v, x.t)}/${x.t}</small></span>`; }).join('')}</div>
-    <details class="sp-adv-fold" ${h.slots.length?'':'open'}><summary>${spIcon('edit',16)} ${escapeHtml(tx('布置家园（最多 6 只精灵）','Arrange your home (up to 6 spirits)','Bày trí nhà (tối đa 6 tinh linh)'))}</summary>
-      <div class="sp-skin-pick">${cands.map(c=>`<label class="checkline"><input type="checkbox" data-home-slot="${escapeAttr(c.k)}" ${h.slots.includes(c.k)?'checked':''} ${!h.slots.includes(c.k) && h.slots.length>=6?'disabled':''}> ${escapeHtml(c.n)}</label>`).join('') || '—'}</div>
-      <b class="hint">${escapeHtml(tx('家园装饰（在兑换商店获得）','Decorations (from the exchange shop)','Đồ trang trí (từ cửa hàng)'))}</b>
-      <div class="sp-skin-pick">${owned.map(k=>`<label class="checkline"><input type="checkbox" data-home-deco="${escapeAttr(k)}" ${h.deco.includes(k)?'checked':''}> ${SP_DECOS[k].i} ${escapeHtml(trT(SP_DECOS[k].n))}</label>`).join('') || `<span class="hint">${escapeHtml(tx('还没有装饰','No decorations yet','Chưa có đồ trang trí'))}</span>`}</div>
-      <button type="button" class="btn btn-ghost btn-sm" data-act="spShopCat" data-v="title">${spIcon('cart',16)} ${escapeHtml(tx('去兑换装饰','Get decorations','Đổi đồ trang trí'))}</button></details>
-    ${friends}</div>`;
+  if(!me) return `<div class="sp-h2-page"><div class="sp-note">${escapeHtml(tx('超级管理员可浏览所有操作员的家园（只读）。','Super admins can browse every operator\'s home (read-only).','Quản trị có thể xem nhà của mọi vận hành viên (chỉ đọc).'))}</div>${spHomeVisitHtml(visit)}${spHomeFriendsHtml(null, visit)}${spHomeNavHtml()}</div>`;
+  const h = spHomeOf(me); if(h.lv==null){ h.lv = spHomeStats(me).xpLv; gTouch(me); setTimeout(()=>saveGrowth(), 0); }   /* 首次进入：按当前经验确定等级，不降级 */
+  const st = spHomeStats(me), A = spHomeArr(), dots = spHomeRedDots(me), ts = spHomeTaskState(me), evs = spHomeEvents(), heat = spHomeHeat(me);
+  const pct = st.next ? Math.min(100, Math.max(0, (st.xp - SP_HOME_LV[st.lv].at) / (st.next.at - SP_HOME_LV[st.lv].at) * 100)) : 100;
+  const dot = on=>on ? '<i class="sp-h2-dot" aria-hidden="true"></i>' : '';
+  const claimable = ts.filter(x=>x.done && !x.claimed).length, allDone = ts.every(x=>x.done || x.claimed);
+  const owned = Object.keys(me.decos||{}).filter(k=>spHomeDecoDef(k)), seen = h.decoSeen || [];
+  const allDecos = Object.keys(SP_DECOS).length + Object.keys(SP_HOME_RW_DECOS).length, cands = spHomeCands(me), ever = Object.keys(h.placedEver||{}).length + h.slots.filter(k=>!(h.placedEver||{})[k]).length;
+  const achDone = SP_HOME_ACH.filter(x=>x.f(st) >= x.t).length, newMsgs = spVisitsTo(me.user).filter(v=>v.msg).slice(0, 4);
+  const nameBox = S.homeNameEdit ? `<span class="sp-h2-namedit"><input id="spHomeNameIn" maxlength="12" value="${escapeAttr(h.name||'')}" placeholder="${escapeAttr(spHomeName(me))}" aria-label="${escapeAttr(tx('家园名称','Home name','Tên nhà'))}"><button type="button" class="btn btn-primary btn-sm" data-act="spHomeNameSave">${escapeHtml(tx('保存','Save','Lưu'))}</button><button type="button" class="btn btn-ghost btn-sm" data-act="spHomeNameEdit" data-v="0">${escapeHtml(tx('取消','Cancel','Hủy'))}</button></span>`
+    : `<b class="sp-h2-name" data-i18n-ignore="1">${escapeHtml(spHomeName(me))}</b><button type="button" class="icon-btn sp-h2-ren" data-act="spHomeNameEdit" data-v="1" aria-label="${escapeAttr(tx('修改家园名称','Rename your home','Đổi tên nhà'))}">${spIcon('edit',14)}</button>`;
+  return `<div class="sp-h2-page ${A.open?'arr-open':''}">
+    <div class="sp-h2-top">
+      <div class="sp-h2-id"><span class="sp-h2-crest bg-${SP_HOME_BG[st.lv]}">${spIcon('home',24)}</span><div><div class="sp-h2-nameline">${nameBox}</div><small>Lv.${st.lv+1} · ${escapeHtml(trT(SP_HOME_LV[st.lv].n))}</small></div></div>
+      <div class="sp-h2-xp"><div class="sp-ms-bar"><i style="width:${pct.toFixed(0)}%"></i></div><small class="hint">${escapeHtml(tx('家园经验','Home XP','EXP nhà'))} ${st.xp}${st.next?` / ${st.next.at}`:` · ${escapeHtml(tx('已满级','Max level','Cấp tối đa'))}`}</small></div>
+      <div class="sp-h2-heat" title="${escapeAttr(tx('近 7 天收到的拜访、点赞、浇水、留言，加上今日互动与布置','Visits, likes, waterings and messages in the last 7 days, plus today\'s interactions and layout','Lượt thăm, thích, tưới, nhắn 7 ngày qua'))}">${spIcon('flame',20)}<b>${heat}</b><small>${escapeHtml(tx('热度','Heat','Độ nóng'))}</small></div>
+      <div class="sp-h2-topact">
+        <button type="button" class="btn ${st.canUp?'btn-primary':'btn-ghost'} btn-sm sp-h2-upbtn" data-act="spHomeUpOpen">${spIcon('arrowUp',14)} ${escapeHtml(st.canUp?tx('可升级','Level up','Lên cấp'):tx('升级','Level','Cấp'))}${dot(dots.up)}</button>
+        <button type="button" class="btn btn-ghost btn-sm sp-h2-evbtn" data-act="spHomeGo" data-v="events">${spIcon('event',14)} ${escapeHtml(tx('活动','Events','Sự kiện'))}${evs.length?`<span class="sp-h2-badge">${evs.length}</span>`:''}</button>
+        <button type="button" class="icon-btn" data-act="spGuide" data-v="home" aria-label="${escapeAttr(tx('新手引导','Guide','Hướng dẫn'))}">?</button></div>
+    </div>
+    <div class="sp-h2-main">
+      <section class="sp-h2-card sp-h2-tasks"><header><b>${spIcon('clipboard',18)} ${escapeHtml(tx('今日任务','Today\'s tasks','Nhiệm vụ hôm nay'))}</b><small>${ts.filter(x=>x.done).length}/${ts.length}</small>${dot(dots.task)}</header>
+        <ul>${ts.map(x=>`<li class="${x.done?'done':''} ${x.claimed?'claimed':''}">${spIcon(x.claimed?'checkCircle':x.i,16)}<span>${escapeHtml(trT(x.n))}</span><small>${x.v}/${x.t}</small><em>+${SP_HOME_TASK_XP}</em></li>`).join('')}</ul>
+        <button type="button" class="btn ${claimable || (allDone && !h.tasks.bonus)?'btn-primary':'btn-ghost'} btn-sm" data-act="spHomeTaskClaim" ${claimable || (allDone && !h.tasks.bonus && ts.every(x=>x.claimed))?'':'disabled'}>${escapeHtml(tx('领取家园经验','Claim home XP','Nhận EXP nhà'))}</button>
+        <small class="hint">${escapeHtml(tx(`全部完成额外 +${SP_HOME_TASK_BONUS} · 每天 0 点刷新`, `+${SP_HOME_TASK_BONUS} bonus for all five · resets at midnight`, `Thưởng +${SP_HOME_TASK_BONUS} khi xong cả 5`))}</small></section>
+      <section class="sp-h2-stage">
+        ${spHomeScene(me, true)}
+        <div class="sp-h2-stagebar"><button type="button" class="btn ${A.open?'btn-primary':'btn-ghost'} btn-sm sp-h2-arrbtn" data-act="${A.open?'spHomeArrDone':'spHomeArrOpen'}" data-v="${A.slot}">${spIcon('edit',14)} ${escapeHtml(A.open?tx('完成布置','Finish arranging','Xong bày trí'):tx('布置模式','Arrange mode','Chế độ bày trí'))}</button>
+          <button type="button" class="btn btn-ghost btn-sm" data-act="spHomePatAll" ${h.slots.length?'':'disabled'}>${spIcon('heart',14)} ${escapeHtml(tx('互动全部','Interact with all','Tương tác tất cả'))}</button>
+          <span class="hint">${escapeHtml(tx(`今日互动 ${h.patDay?.d===gToday() ? +h.patDay.n||0 : 0}/30`, `Interactions today ${h.patDay?.d===gToday() ? +h.patDay.n||0 : 0}/30`, `Tương tác hôm nay ${h.patDay?.d===gToday() ? +h.patDay.n||0 : 0}/30`))}</span></div>
+      </section>
+      <div class="sp-h2-side">
+        <section class="sp-h2-card sp-h2-decos"><header><b>${spIcon('palette',18)} ${escapeHtml(tx('家园装饰','Decorations','Trang trí'))}</b><small>${h.deco.filter(k=>me.decos?.[k]).length}/${owned.length}</small>${dot(dots.deco)}</header>
+          <div class="sp-h2-dlist">${owned.map(k=>{ const d = spHomeDecoDef(k), on = h.deco.includes(k); return `<button type="button" class="sp-h2-dchip ${on?'on':''}" data-act="spHomeDecoToggle" data-v="${escapeAttr(k)}" aria-pressed="${on}" title="${escapeAttr(trT(d.n))}">${spIcon(SP_HOME_DECO_IC[k]||'gift',18)}<span>${escapeHtml(trT(d.n))}</span>${seen.includes(k)?'':`<i class="sp-h2-new">${escapeHtml(tx('新','New','Mới'))}</i>`}</button>`; }).join('') || `<p class="hint">${escapeHtml(tx('还没有装饰','No decorations yet','Chưa có đồ trang trí'))}</p>`}</div>
+          <div class="sp-h2-cardact"><button type="button" class="btn btn-ghost btn-sm" data-act="spShopCat" data-v="title">${spIcon('cart',14)} ${escapeHtml(tx('去兑换','Get more','Đổi thêm'))}</button>${dots.deco?`<button type="button" class="btn btn-ghost btn-sm" data-act="spHomeDecoSeen">${escapeHtml(tx('标记已读','Mark as seen','Đã xem'))}</button>`:''}</div></section>
+        <section class="sp-h2-card sp-h2-codex"><header><b>${spIcon('book',18)} ${escapeHtml(tx('家园图鉴','Home codex','Sách tranh nhà'))}</b></header>
+          <div class="sp-h2-meters"><div><small>${escapeHtml(tx('装饰收集','Decor collected','Trang trí'))}</small><div class="sp-ms-bar"><i style="width:${Math.round(owned.length/allDecos*100)}%"></i></div><b>${owned.length}/${allDecos}</b></div>
+            <div><small>${escapeHtml(tx('放过的精灵','Spirits displayed','Tinh linh đã trưng bày'))}</small><div class="sp-ms-bar"><i style="width:${cands.length?Math.round(Math.min(ever, cands.length)/cands.length*100):0}%"></i></div><b>${Math.min(ever, cands.length)}/${cands.length}</b></div>
+            <div><small>${escapeHtml(tx('家园成就','Home achievements','Thành tựu nhà'))}</small><div class="sp-ms-bar"><i style="width:${Math.round(achDone/SP_HOME_ACH.length*100)}%"></i></div><b>${achDone}/${SP_HOME_ACH.length}</b></div></div>
+          <div class="sp-h2-ach">${SP_HOME_ACH.map(x=>{ const v = x.f(st), on = v >= x.t; return `<span class="${on?'on':''}" title="${escapeAttr(`${trT(x.n)} ${Math.min(v, x.t)}/${x.t}`)}">${spIcon(on?'medal':'lock',14)}</span>`; }).join('')}</div>
+          <div class="sp-h2-cardact"><button type="button" class="btn btn-ghost btn-sm" data-act="spHomeGo" data-v="codex">${escapeHtml(tx('精灵图鉴','Spirit codex','Sách tranh'))}</button><button type="button" class="btn btn-ghost btn-sm" data-act="spHomeGo" data-v="achv">${escapeHtml(tx('成就','Achievements','Thành tựu'))}</button></div></section>
+        <section class="sp-h2-card sp-h2-msgs"><header><b>${spIcon('bubble',18)} ${escapeHtml(tx('留言板','Message board','Bảng lời nhắn'))}</b>${dot(dots.msg)}</header>
+          ${newMsgs.map(m=>`<div class="sp-msg ${String(m.at) > String(h.msgSeenAt||'') ? 'new' : ''}"><b data-i18n-ignore="1">${escapeHtml(spUserName(m.from))}</b><span data-i18n-ignore="1">${escapeHtml(m.msg)}</span></div>`).join('') || `<p class="hint">${escapeHtml(tx('还没有人留言，去拜访同事吧','No messages yet — go visit a colleague','Chưa có lời nhắn'))}</p>`}
+          ${dots.msg?`<div class="sp-h2-cardact"><button type="button" class="btn btn-ghost btn-sm" data-act="spHomeMsgSeen">${escapeHtml(tx('标记已读','Mark as read','Đã đọc'))}</button></div>`:''}</section>
+      </div>
+    </div>
+    ${A.open ? spHomeArrPanel(me) : ''}
+    ${spHomeVisitHtml(visit)}
+    ${spHomeFriendsHtml(me, visit)}
+    ${spHomeNavHtml()}
+  </div>`;
 }
+/* ---------- 升级引导弹窗 ---------- */
+function spHomeUpModalHtml(){
+  if(!spCanPlay()) return ''; const u = spU(), st = spHomeStats(u), nx = st.lv < SP_HOME_LV.length-1 ? st.lv+1 : null, rw = nx!=null ? SP_HOME_LV_RW[nx] : null;
+  const need = nx!=null ? SP_HOME_LV[nx].at : null, pct = need ? Math.min(100, st.xp / need * 100) : 100;
+  const unlock = rw ? [trT(rw.bg), rw.deco ? `${tx('装饰','Decoration','Trang trí')}「${trT(spHomeDecoDef(rw.deco).n)}」` : '', rw.title ? `${tx('称号','Title','Danh hiệu')}「${trT(rw.title)}」` : ''].filter(Boolean) : [];
+  return `<div class="modal sp-h2-upm" role="dialog" aria-modal="true" aria-labelledby="spHomeUpT"><div class="modal-head"><h2 id="spHomeUpT">${spIcon('arrowUp',18)} ${escapeHtml(tx('家园升级','Home level-up','Nâng cấp nhà'))}</h2><button class="modal-close" data-act="closeModal" aria-label="${escapeAttr(tx('关闭','Close','Đóng'))}">${svgIcon('x',15)}</button></div>
+    <div class="modal-body">
+      <div class="sp-h2-upline"><span class="sp-h2-crest bg-${SP_HOME_BG[st.lv]}">${spIcon('home',22)}</span><b>Lv.${st.lv+1} ${escapeHtml(trT(SP_HOME_LV[st.lv].n))}</b>${nx!=null?`<span aria-hidden="true">→</span><span class="sp-h2-crest bg-${SP_HOME_BG[nx]}">${spIcon('home',22)}</span><b>Lv.${nx+1} ${escapeHtml(trT(SP_HOME_LV[nx].n))}</b>`:`<span class="sp-badge">${escapeHtml(tx('已满级','Max level','Cấp tối đa'))}</span>`}</div>
+      ${nx!=null?`<dl class="sp-shop-dl"><dt>${escapeHtml(tx('升级条件','Requirement','Điều kiện'))}</dt><dd>${escapeHtml(tx(`家园经验达到 ${need}`, `Home XP ${need}`, `EXP nhà đạt ${need}`))}</dd>
+        <dt>${escapeHtml(tx('当前进度','Progress','Tiến độ'))}</dt><dd><div class="sp-ms-bar"><i style="width:${pct.toFixed(0)}%"></i></div>${st.xp} / ${need}</dd>
+        <dt>${escapeHtml(tx('下一级解锁','Unlocks','Mở khóa'))}</dt><dd>${escapeHtml(unlock.join(' · '))}</dd>
+        <dt>${escapeHtml(tx('升级奖励','Rewards','Phần thưởng'))}</dt><dd>${escapeHtml(tx('以上外观奖励（不发放精灵资源）','The cosmetic unlocks above (no spirit resources)','Phần thưởng ngoại hình ở trên'))}</dd></dl>`:''}
+      <div class="sp-h2-upsrc"><b>${escapeHtml(tx('家园经验来源','Where home XP comes from','Nguồn EXP nhà'))}</b><ul>${SP_HOME_XP_SRC.map(x=>`<li><span>${escapeHtml(tx(x[0], x[1], x[2]))}</span><small>${x[3]}</small></li>`).join('')}</ul></div>
+      <p class="hint">${escapeHtml(tx('家园等级只用于展示，不影响真实进度、甘特条和业务统计。','Home level is for display only; it never affects real progress, Gantt bars or business statistics.','Cấp nhà chỉ để hiển thị.'))}</p></div>
+    <div class="modal-foot"><span style="flex:1"></span><button class="btn btn-ghost btn-sm" data-act="closeModal">${escapeHtml(tx('关闭','Close','Đóng'))}</button><button class="btn btn-primary btn-sm" data-act="spHomeLevelUp" ${st.canUp?'':'disabled'}>${escapeHtml(st.canUp ? tx(`一键升级到 Lv.${st.xpLv+1}`, `Level up to Lv.${st.xpLv+1}`, `Lên Lv.${st.xpLv+1}`) : tx('经验不足','Not enough XP','Chưa đủ EXP'))}</button></div></div>`;
+}
+/* ---------- 动作 ---------- */
+function spHomeAction(act, el, id){
+  const S = spS(), v = el?.dataset?.v, A = spHomeArr();
+  switch(act){
+    case 'spHomeArrOpen': if(!spCanPlay()) return false; A.justOpened = !A.open; A.open = true; A.tab = 'sp'; if(v!=null && v!=='') A.slot = Math.max(0, Math.min(5, +v||0)); return true;
+    case 'spHomeArrDone': A.open = false; return true;
+    case 'spHomeArrSlot': if(!spCanPlay()) return false; A.open = true; A.slot = Math.max(0, Math.min(5, +v||0)); return true;
+    case 'spHomeArrPick': spHomePlace(v, A.slot); return true;
+    case 'spHomeArrOp': spHomeSlotOp(v); return true;
+    case 'spHomeArrF': { const k = el?.dataset?.id; if(!['src','place','tab'].includes(k)) return false; A[k] = v; if(k==='tab') A.scroll = 0; return true; }
+    case 'spHomeArrFill': spHomeFillEmpty(A.sel.slice()); return true;
+    case 'spHomeArrSelClear': A.sel = []; return true;
+    case 'spHomeDecoToggle': { if(!spCanPlay()) return false; const u = spU(), h = spHomeOf(u); if(!u.decos?.[v]) return false; h.deco = h.deco.includes(v) ? h.deco.filter(x=>x!==v) : [...h.deco, v]; h.decoSeen = [...new Set([...(h.decoSeen||[]), v])]; spHomeCommit(u); return true; }
+    case 'spHomeDecoSeen': { if(!spCanPlay()) return false; const u = spU(), h = spHomeOf(u); h.decoSeen = Object.keys(u.decos||{}); gTouch(u); saveGrowth(true); return true; }
+    case 'spHomeMsgSeen': { if(!spCanPlay()) return false; const u = spU(), h = spHomeOf(u); h.msgSeenAt = gNowIso(); gTouch(u); saveGrowth(true); return true; }
+    case 'spHomePatAll': { if(!spCanPlay()) return false; const u = spU(), h = spHomeOf(u); let n = 0; h.slots.forEach(k=>{ const b = document.querySelector(`.sp-h2-slot [data-v="${CSS.escape(k)}"]`); if(spHomePatOne(u, k, b)) n++; }); if(!n) toast(tx('今天已经互动很多次了','Plenty of interaction today already','Hôm nay đã tương tác nhiều'), 'info'); gTouch(u); saveGrowth(); return false; }
+    case 'spHomeTaskClaim': spHomeClaimTasks(); return false;
+    case 'spHomeUpOpen': if(!spCanPlay()) return false; state.modal = {type:'spHomeUp'}; return true;
+    case 'spHomeLevelUp': spHomeLevelUp(); return false;
+    case 'spHomeNameEdit': if(!spCanPlay()) return false; S.homeNameEdit = v==='1'; if(S.homeNameEdit) state.focusTarget = {id:'spHomeNameIn'}; return true;
+    case 'spHomeNameSave': spHomeSaveName(); return false;
+    case 'spHomeNameReset': { if(!spIsAdmin()) return false; const f = spU(id), h = spHomeOf(f); const old = h.name; h.name = ''; spAudit('home-rename', f.user, {from:old, to:'', by:spMe()}); gTouch(f); saveGrowth(true); toast(tx('已重置','Reset','Đã đặt lại'), 'ok'); return true; }
+    case 'spHomeGo': { state.modal = null; if(v==='board'){ S.board = 'home'; S.page = 'board'; } else if(v==='collab'){ S.page = 'codex'; if(S.codexTab==='trial') S.codexTab = 'perm'; S.cat = 'collab'; } else S.page = v; window.scrollTo?.(0, 0); return true; }
+  }
+  return null;
+}
+
 function spHomeWater(to){
   if(!spCanPlay()) return; const me = spMe(), today = gToday(), id = `${me}>${to}@${today}`, g = G();
   const prev = g.visits[id] || {id, from:me, to, date:today, like:false, msg:''}; if(prev.water) return toast(tx('今天已经浇过水了','You already watered today','Hôm nay đã tưới rồi'), 'info');
@@ -21872,20 +22305,20 @@ function spUxSave(){
 }
 function spAction11(act, el, id){
   const v = el?.dataset?.v, S = spS();
+  { const r = spHomeAction(act, el, id); if(r!==null) return r; }
   switch(act){
-    case 'spHomeVisit': S.homeVisit = S.homeVisit===v ? null : v; return true;
+    case 'spHomeVisit': { const open = S.homeVisit!==v; S.homeVisit = open ? v : null;
+      if(open && spCanPlay() && v!==spMe()){ const u = spU(), h = spHomeOf(u), t = gToday(); h.visitDay = h.visitDay?.d===t ? h.visitDay : {d:t, to:[]}; if(!h.visitDay.to.includes(v)){ h.visitDay.to.push(v); gTouch(u); saveGrowth(); } }
+      return true; }
     case 'spHomeWater': spHomeWater(v); return false;
-    case 'spHomePat': { if(!spCanPlay() || id!==spMe()) return false; const u = spU(), h = spHomeOf(u); const t = gToday(); h.patDay = h.patDay?.d===t ? h.patDay : {d:t, n:0}; if(h.patDay.n >= 30) return false; h.patDay.n++; h.pats++;
-      if(v==='season') spInteract?.('season', seasonNow().id, 'pat'); else if(v.startsWith('trial:')) spInteract?.('trial', v.slice(6), 'pat');
-      const b = el.closest('.sp-home-sp')?.querySelector('.spv'); if(b){ b.classList.remove('act-spin'); void b.offsetWidth; b.classList.add('act-spin'); } gTouch(u); saveGrowth(); return false; }
+    case 'spHomePat': { if(!spCanPlay() || id!==spMe()) return false; const u = spU(); if(!spHomePatOne(u, v, el.closest('.sp-h2-sp'))) return toast(tx('今天已经互动很多次了','Plenty of interaction today already','Hôm nay đã tương tác nhiều'), 'info'), false; gTouch(u); saveGrowth(); return false; }
     case 'spUxSave': spUxSave(); return false;
   }
   return typeof spAction12==='function' ? spAction12(act, el, id) : null;
 }
 document.addEventListener('change', e=>{
   const el = e.target; if(!el?.dataset || !window.__spReady || !spCanPlay()) return;
-  if(el.dataset.homeSlot){ const u = spU(), h = spHomeOf(u), k = el.dataset.homeSlot; h.slots = el.checked ? [...new Set([...h.slots, k])].slice(0, 6) : h.slots.filter(x=>x!==k); gTouch(u); saveGrowth(true); render(); }
-  else if(el.dataset.homeDeco){ const u = spU(), h = spHomeOf(u), k = el.dataset.homeDeco; h.deco = el.checked ? [...new Set([...h.deco, k])] : h.deco.filter(x=>x!==k); gTouch(u); saveGrowth(true); render(); }
+  if(el.dataset.homeDeco){ const u = spU(), h = spHomeOf(u), k = el.dataset.homeDeco; h.deco = el.checked ? [...new Set([...h.deco, k])] : h.deco.filter(x=>x!==k); gTouch(u); saveGrowth(true); render(); }
 });
 /* =========================================================
    v2.3 ③：试验精灵形态方向与变种体系（trial_types / trial_variants / trial_variant_pool / trial_generation_logs）
