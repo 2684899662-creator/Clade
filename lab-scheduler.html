@@ -19452,7 +19452,7 @@ function spDesign(def){
   const st = o.status || (def.orig || def.pub?.status==='published' ? 'approved' : 'draft');
   return {...auto, ...o, lv4:spValidD4(o.lv4) ? o.lv4 : auto.lv4, lv5:spValidD5(o.lv5) ? o.lv5 : auto.lv5, status:st, log:o.log || (def.orig ? [{at:'', by:'system', act:'approve', note:'既有精灵迁移，按自动设计审核通过'}] : [])};
 }
-function spDesignComplete(d){ return spValidD4(d.lv4) && spValidD5(d.lv5) && !d.lv4.some(k=>d.lv5.includes(k)) && [d.silhouette, d.anim, d.skill].every(t=>Array.isArray(t) && t.every(s=>String(s||'').trim().length>=4)) && d.switchable!=null; }
+function spDesignComplete(d){ return spValidD4(d.lv4) && spValidD5(d.lv5) && !d.lv4.some(k=>d.lv5.includes(k)) && [d.silhouette, d.anim, d.skill].every(t=>Array.isArray(t) && String(t[0]||'').trim().length>=4) && d.switchable!=null; }
 function spDesignOk(def){ const d = spDesign(def); return d.status==='approved' && spDesignComplete(d); }
 function spDesignSave(id, patch, act, note){
   if(!spIsAdmin()) return;
@@ -19849,7 +19849,7 @@ function spEvoDesignHtml(m){
         <label class="checkline" style="flex-direction:row;align-items:center"><input type="checkbox" name="sw" ${dr.switchable!==false?'checked':''}> ${escapeHtml(tx('觉醒后可切换回 LV4 外观','Can switch back to the LV4 look after awakening','Có thể đổi lại ngoại hình LV4 sau khi thức tỉnh'))}</label></div>
         <div class="sp-evd-grid" style="margin-top:8px">${txt('sil', dr.silhouette, tx('剪影差异说明','Silhouette change','Khác biệt hình bóng'))}${txt('anim', dr.anim, tx('动作 / 特效 / 出场','Moves / effects / entrance','Động tác / hiệu ứng / xuất hiện'))}${txt('skl', dr.skill, tx('技能演出','Skill showcase','Trình diễn kỹ năng'))}</div>
         <label style="margin-top:8px;display:flex;flex-direction:column;gap:3px;font-size:12px">${escapeHtml(tx('审核意见 / 备注','Review note','Ý kiến duyệt'))}<input name="note" maxlength="120" value="${escapeAttr(m.note||'')}"></label></form>
-      ${ok?'':`<div class="hint" style="color:var(--danger,#b91c1c)">${spIcon('warn',16)} ${escapeHtml(tx('设计不完整：需要两个不同的 LV4 方向、一个 LV5 材质 + 一个 LV5 结构方向，以及三语说明。','Incomplete: needs two different LV4 directions, one LV5 material + one LV5 structure, and texts in all three languages.','Chưa đủ: cần hai hướng LV4 khác nhau, một chất liệu + một cấu trúc LV5 và mô tả ba ngôn ngữ.'))}</div>`}
+      ${ok?'':`<div class="hint" style="color:var(--danger,#b91c1c)">${spIcon('warn',16)} ${escapeHtml(tx('设计不完整：需要两个不同的 LV4 方向、一个 LV5 材质 + 一个 LV5 结构方向，以及完整的中文说明。','Incomplete: needs two different LV4 directions, one LV5 material + one LV5 structure, and complete Chinese descriptions.','Chưa đủ: cần hai hướng LV4 khác nhau, một chất liệu + một cấu trúc LV5 và mô tả tiếng Trung đầy đủ.'))}</div>`}
       <div class="sp-form-act"><button class="btn btn-ghost btn-sm" data-act="spEvdAuto">${spIcon('dice',16)} ${escapeHtml(tx('按方向重写说明','Rewrite texts from directions','Viết lại mô tả theo hướng'))}</button><span style="flex:1"></span>
         <button class="btn btn-ghost btn-sm" data-act="spEvdSave">${escapeHtml(tx('保存草稿','Save draft','Lưu nháp'))}</button><button class="btn btn-ghost btn-sm" data-act="spEvdSubmit">${escapeHtml(tx('提交审核','Submit for review','Gửi duyệt'))}</button>
         ${spIsSuper()?`<button class="btn btn-ghost btn-sm" data-act="spEvdReject">${escapeHtml(tx('驳回','Reject','Từ chối'))}</button><button class="btn btn-primary btn-sm" data-act="spEvdApprove" ${ok?'':'disabled'}>${escapeHtml(tx('审核通过','Approve','Duyệt'))}</button>`:''}</div>
@@ -19916,7 +19916,7 @@ function spWizDesignSumHtml(d){
 }
 function spWizDesignFinal(d, how){
   const w = spS().wiz, v = spWizDesignView(d), ds = spDesign(v);
-  if(!spDesignComplete(ds)) return {err:tx('进化设计不完整：需要两个不同的 LV4 方向、LV5 材质与结构方向及三语说明','The evolution design is incomplete','Thiết kế tiến hóa chưa đủ')};
+  if(!spDesignComplete(ds)) return {err:tx('进化设计不完整：需要两个不同的 LV4 方向、LV5 材质与结构方向及完整的中文说明','The evolution design is incomplete: add complete Chinese descriptions','Thiết kế tiến hóa chưa đủ: hãy thêm mô tả tiếng Trung đầy đủ')};
   const chk = document.querySelector('#spWizForm [name=dApprove]'), approve = !!chk?.checked && spIsSuper();
   const prev = w?.editId && spDef(w.editId) ? spDesign(spDef(w.editId)) : null;
   const same = prev && ['lv4','lv5','silhouette','anim','skill'].every(k=>JSON.stringify(prev[k])===JSON.stringify(ds[k])) && prev.fly===ds.fly;
