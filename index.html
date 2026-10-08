@@ -21523,7 +21523,7 @@ function spPagesAdm(list){
 Object.assign(SP_EMOJI_ICON, {'🏡':'home', '🏛':'bank', '🛡':'shield'});
 
 /* ---------- 精灵家园 ---------- */
-var SP_HOME_LV = [{at:0, n:['小屋','Cottage','Nhà nhỏ']}, {at:60, n:['庭院','Courtyard','Sân vườn']}, {at:160, n:['花园','Garden','Khu vườn']}, {at:320, n:['庄园','Manor','Trang viên']}, {at:600, n:['城堡','Castle','Lâu đài']}, {at:1000, n:['星之堡','Star keep','Pháo đài sao']}];
+var SP_HOME_LV = [{at:0, n:['小屋','Cottage','Nhà nhỏ']}, {at:60, n:['庭院','Courtyard','Sân vườn']}, {at:160, n:['花园','Garden','Khu vườn']}, {at:320, n:['庄园','Manor','Trang viên']}, {at:600, n:['城堡','Castle','Lâu đài']}];   /* 5 级：原 Lv.6 星之堡（≥1000）并入 Lv.5，已解锁内容全部保留 */
 var SP_HOME_ACH = [
   {k:'place', n:['第一次布置','First arrangement','Lần đầu bày trí'], t:1, f:s=>s.slots}, {k:'full', n:['满屋欢聚','Full house','Nhà đông vui'], t:6, f:s=>s.slots},
   {k:'deco', n:['装饰达人','Decorator','Người trang trí'], t:5, f:s=>s.decos}, {k:'liked', n:['人气小屋','Popular home','Nhà được yêu thích'], t:10, f:s=>s.likes},
@@ -21574,7 +21574,7 @@ function spHomePageHtml(u){
   const h = spHomeOf(me), st = spHomeStats(me), cands = spHomeCands(me), pct = st.next ? Math.min(100, (st.xp - SP_HOME_LV[st.lv].at) / (st.next.at - SP_HOME_LV[st.lv].at) * 100) : 100;
   const owned = Object.keys(me.decos||{}).filter(k=>SP_DECOS[k]);
   return `<div class="sp-home-page">
-    <div class="sp-home-top"><div><b class="sp-home-lv">${spIcon('home',20)} ${escapeHtml(trT(SP_HOME_LV[st.lv].n))} · Lv.${st.lv+1}</b><div class="sp-ms-bar"><i style="width:${pct.toFixed(0)}%"></i></div><small class="hint">${escapeHtml(tx('家园经验','Home XP','EXP nhà'))} ${st.xp}${st.next?` / ${st.next.at}`:''}</small></div>
+    <div class="sp-home-top"><div><b class="sp-home-lv">${spIcon('home',20)} ${escapeHtml(trT(SP_HOME_LV[st.lv].n))} · Lv.${st.lv+1}</b><div class="sp-ms-bar"><i style="width:${pct.toFixed(0)}%"></i></div><small class="hint">${escapeHtml(tx('家园经验','Home XP','EXP nhà'))} ${st.xp}${st.next?` / ${st.next.at}`:` · ${escapeHtml(tx('已满级','Max level','Cấp tối đa'))}`}</small></div>
       <div class="sp-home-links"><button type="button" class="sp-chip" data-act="spGo" data-v="codex">${spIcon('book',16)} <b>${st.codex}</b><small>${escapeHtml(tx('图鉴','Codex','Sách tranh'))}</small></button><button type="button" class="sp-chip" data-act="spGo" data-v="achv">${spIcon('trophy',16)} <b>${escapeHtml(t(achvLevel(achvPoints(me)).name))}</b><small>${escapeHtml(tx('成就','Achievements','Thành tựu'))}</small></button><button type="button" class="sp-chip" data-act="spGo" data-v="review">${spIcon('calendar',16)} <small>${escapeHtml(tx('赛季回顾','Season review','Tổng kết mùa'))}</small></button></div></div>
     ${spHomeRoom(me, true)}
     <div class="sp-home-ach">${SP_HOME_ACH.map(x=>{ const v = x.f(st), on = v >= x.t; return `<span class="sp-home-a ${on?'on':''}" title="${escapeAttr(`${trT(x.n)} ${Math.min(v, x.t)}/${x.t}`)}">${spIcon(on?'medal':'lock',16)} ${escapeHtml(trT(x.n))} <small>${Math.min(v, x.t)}/${x.t}</small></span>`; }).join('')}</div>
