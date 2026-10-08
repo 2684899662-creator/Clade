@@ -3895,6 +3895,25 @@ button.sp-h2-deco{cursor:grab;} .sp-h2-deco.sel{outline:3px solid var(--cold);ou
 body[data-theme="dark"] .sp-h2-scene{filter:brightness(.86) saturate(.92);} body[data-theme="dark"] .sp-h2-nm{background:rgba(15,23,42,.78);color:#e2e8f0;} body[data-theme="dark"] .sp-h2-deco{background:rgba(30,41,59,.7);}
 @media (prefers-reduced-motion:reduce){ .sp-h2-scene *,.sp-h2-dot{animation:none !important;transition:none !important;} }
 @media (forced-colors:active){ .sp-h2-sp,.sp-h2-deco,.sp-h2-plus{forced-color-adjust:auto;border:1px solid CanvasText;} }
+/* ===== v3.4 立绘框：阶段缩放 · 统一锚点 · 溢出保护 · 法相独立层 · 响应式 =====
+   立绘框（.spv）= 最大包围盒（1:1 固定比例），内部按阶段缩放（LV1~3 1 / LV4 .9 / LV5 .85）× 实测自动缩放（--fit）× 响应式（--rsz），
+   以统一锚点为原点（默认底部居中，可在主题配置改为中心）；框体 overflow:clip，立绘、皮肤、法相都不会溢出 */
+.spv.spirit{--stg:1;--rsz:1;--sp-ao:50% 97%;overflow:clip;}
+body[data-sp-anchor="center"] .spv.spirit{--sp-ao:50% 50%;}
+.spv.spirit.st-4{--stg:.9;} .spv.spirit.st-5{--stg:.85;}
+.spv.spirit>.spv-body,.spv.spirit>.sp-asset{scale:calc(var(--stg) * var(--fit,1) * var(--rsz));translate:0 calc(var(--fy,0) * 100%);transform-origin:var(--sp-ao);}
+.spv.spirit>.spv-body{max-width:100%;max-height:100%;} .spv.spirit .spirit-svg,.spv.spirit .sp-res-img{max-width:100%;max-height:100%;}
+.spv.spirit>.sp-asset,.spv.spirit .sp-res-img{object-fit:contain;}
+.spv.spirit.fx-off .hu-faxiang{display:none;}
+.spv.sp-measuring,.spv.sp-measuring *{animation:none !important;transition:none !important;}
+.sp-page .spv-aw5svg,.sp-h2-page .spv-aw5svg{width:var(--sz);height:var(--sz);}
+/* 容器同样裁切（卡片立绘区、图鉴格、预览框、展示位） */
+.c4-art,.sp-skin-prev,.sp-pv2,.sp-chain-i,.sp-shop-art,.sp-shop-dt-art,.sp-h2-card-art,.sp-review-hero,.sp-h2-fav{overflow:clip;}
+.sp-fxtoggle{margin-left:10px;} .sp-cxs-acts{display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap;}
+/* 响应式：手机 .76、平板 .88、桌面 1（家园舞台本身已按宽度等比缩放，不再叠加） */
+@media (max-width:767px){ .sp-page .spv.spirit,.overlay .spv.spirit{--rsz:.76;} }
+@media (min-width:768px) and (max-width:1023px){ .sp-page .spv.spirit,.overlay .spv.spirit{--rsz:.88;} }
+.sp-h2-box .spv.spirit{--rsz:1 !important;}
 </style>
 </head>
 <body data-theme="light"><svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="spPixelF" x="0" y="0"><feFlood x="1" y="1" height="1" width="1"/><feComposite width="3" height="3"/><feTile result="a"/><feComposite in="SourceGraphic" in2="a" operator="in"/><feMorphology operator="dilate" radius="1.5"/></filter><filter id="spWcF" x="-15%" y="-15%" width="130%" height="130%"><feTurbulence type="fractalNoise" baseFrequency=".22" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.1" xChannelSelector="R" yChannelSelector="G" result="d"/><feGaussianBlur in="d" stdDeviation=".18"/></filter><filter id="spPaintF" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="turbulence" baseFrequency=".45" numOctaves="1" seed="11" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale=".38" xChannelSelector="R" yChannelSelector="B"/></filter></svg>
@@ -3924,7 +3943,7 @@ function labBootRescue(){
   document.getElementById('labBootReset').onclick = ()=>{ try{ Object.keys(localStorage).filter(k=>/^lab-scheduler-/.test(k) && !/remember|lang|device-id/.test(k)).forEach(k=>localStorage.removeItem(k)); }catch(_e){} location.reload(); };
 }
 window.addEventListener('load', ()=>setTimeout(labBootRescue, 4000));
-let APP_VERSION = '2026.10.08.14';
+let APP_VERSION = '2026.10.08.15';
 const SCHEMA_VERSION = 4;             /* v4：新增插单记录、试验优先级、扩展字段 */
 const TRANSLATIONS_CACHE_VERSION = '2026.09.28.1';
 const TAB_ID = Math.random().toString(36).slice(2,10);
@@ -15815,6 +15834,8 @@ document.addEventListener('click', e=>{
 function spAfterRender(){
   if(!window.__spReady) return;
   if(typeof spHomeAfterRender==='function') try{ spHomeAfterRender(); }catch(_e){ console.warn(_e); }
+  document.body.setAttribute('data-sp-anchor', spSpriteAnchor());
+  try{ spSpriteFitScan(); }catch(_e){ console.warn(_e); }
   if(typeof spUiAfterRender==='function') try{ spUiAfterRender(); }catch(_e){ console.warn(_e); }
   spApplyGanttSkins();
   /* 性能：甘特精灵超过 60 个时自动降级（关闭粒子与移动特效） */
@@ -18035,7 +18056,7 @@ function spSpiritDetailHtml(def, on, me){
     <div class="modal-head"><h2>${lockAll && def.rar!=='HD'?`🔒 ${escapeHtml(tx('待解锁','To unlock','Chờ mở khóa'))}`:hidden?'？？？':escapeHtml(trT(def.name))} <small class="hint" data-i18n-ignore="1">${escapeHtml(def.no||'')}</small></h2><button class="modal-close" data-act="closeModal" aria-label="${escapeAttr(tx('关闭','Close','Đóng'))}">${svgIcon('x',15)}</button></div>
     <div class="modal-body">
       <div class="sp-cx-tags">${sprPill(def.rar)} <span class="sp-badge">${escapeHtml(trT(SP_CATS[def.cat]||['','','']))}</span>${lockAll?'':` <span class="sp-badge">🎨 ${escapeHtml(trT(SP_STYLES[def.style]||SP_STYLES.q))}</span>`}${def.cat==='collab'?` <span class="sp-badge">${escapeHtml(tx('联动','Collab','Hợp tác'))}</span>`:''}${def.cat==='event'?` <span class="sp-badge">${escapeHtml(tx('活动专属','Event exclusive','Độc quyền sự kiện'))}</span>`:''}${def.rar==='EX'?` <span class="sp-badge lim">${escapeHtml(tx('绝版','Retired','Tuyệt bản'))}</span>`:''}${def.rar==='FD'?` <span class="sp-badge fest">${escapeHtml(tx('节日限定','Festival','Lễ hội'))}</span>`:''}${def.returnable?` <span class="sp-badge">${escapeHtml(tx('可返场','Can return','Có thể tái xuất'))}</span>`:''}${def.pub?.status==='retired'?` <span class="sp-badge lim">${escapeHtml(tx('已下架','Unlisted','Đã gỡ'))}</span>`:''}</div>
-      <div class="sp-cxs-head"><h3>${escapeHtml(tx('进化链','Evolution chain','Chuỗi tiến hóa'))} <small class="hint">${lv}/5 · ${escapeHtml(tx('必须逐级解锁，稀有度不影响顺序','Unlocks stage by stage; rarity doesn\'t change the order','Mở khóa từng bậc; độ hiếm không ảnh hưởng thứ tự'))}</small></h3><button type="button" class="btn btn-ghost btn-sm" data-act="spCxExpand">${escapeHtml(expand?tx('只看已解锁','Unlocked only','Chỉ xem đã mở'):tx('一键展开全部阶段','Expand all stages','Mở mọi giai đoạn'))}</button></div>
+      <div class="sp-cxs-head"><h3>${escapeHtml(tx('进化链','Evolution chain','Chuỗi tiến hóa'))} <small class="hint">${lv}/5 · ${escapeHtml(tx('必须逐级解锁，稀有度不影响顺序','Unlocks stage by stage; rarity doesn\'t change the order','Mở khóa từng bậc; độ hiếm không ảnh hưởng thứ tự'))}</small></h3><span class="sp-cxs-acts">${spFaxiangToggleHtml()}<button type="button" class="btn btn-ghost btn-sm" data-act="spCxExpand">${escapeHtml(expand?tx('只看已解锁','Unlocked only','Chỉ xem đã mở'):tx('一键展开全部阶段','Expand all stages','Mở mọi giai đoạn'))}</button></span></div>
       <div class="sp-cxs-list">${[1,2,3,4,5].filter(n=>expand || n<=Math.max(1,lv)).map(stageRow).join('')}</div>
       <dl class="sp-dl">
         ${hidden?'':`<dt>${escapeHtml(tx('简介','About','Giới thiệu'))}</dt><dd>${escapeHtml(trT(def.desc))}</dd>`}
@@ -19263,6 +19284,44 @@ function spiritSvg(def, stage, opts={}){
 }
 /* 统一展示：动作升级（按 LV4 方向）+ 隐藏非关键配饰（查看者偏好） */
 function spViewerHideAcc(){ try{ return spCanPlay() && !!spU().skinHideAcc; }catch(_e){ return false; } }
+/* 觉醒体法相（LV5 身后的半透明法相层）：查看者可收起；操作员记在账号上，超级管理员记在本次会话 */
+function spViewerFaxiangOff(){ try{ return spCanPlay() ? !!spU().faxiangOff : !!spS().faxiangOff; }catch(_e){ return false; } }
+function spFaxiangToggleHtml(){ const off = spViewerFaxiangOff(); return `<label class="sp-hideacc sp-fxtoggle"><input type="checkbox" data-sp-faxiang="1" ${off?'':'checked'}> ${escapeHtml(tx('显示觉醒体法相','Show LV5 dharma forms','Hiện pháp tướng LV5'))}</label>`; }
+/* 立绘自适应：按阶段缩放（LV4 0.9 / LV5 0.85）+ 实测溢出后自动缩小（--fit，按「精灵 | 阶段 | 皮肤 | 法相」缓存）；立绘框 overflow:clip 兜底 */
+var SP_FIT = new Map(), spFitQ = [], spFitBusy = false;
+function spFitApply(el, v){ el.style.setProperty('--fit', v.f); el.style.setProperty('--fy', v.y); }
+var SP_FIT_PAD = 0.03, SP_FIT_LEAF = 'path,rect,circle,ellipse,polygon,polyline,line,use,image';
+function spSpriteAnchor(){ try{ return spUxCfg().spAnchor==='center' ? 'center' : 'bottom'; }catch(_e){ return 'bottom'; } }
+/* 实测：立绘可见部分（叶子图形 + PNG）相对立绘框的范围；按锚点求还需缩小的倍数 g，换算成「1 倍响应式缩放」下的 --fit 并缓存 */
+function spMeasureFit(el){
+  if(!el.isConnected) return; const R = el.getBoundingClientRect(); if(R.width < 24 || R.height < 24) return;
+  const cs = getComputedStyle(el), stg = +cs.getPropertyValue('--stg') || 1, rsz = +cs.getPropertyValue('--rsz') || 1, f0 = +cs.getPropertyValue('--fit') || 1;
+  let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+  el.classList.add('sp-measuring'); void el.offsetWidth;   /* 测量时暂停动画，按静止姿态计算，避免入场 / 呼吸动画放大时被误判 */
+  el.querySelectorAll('.spv-body svg ' + SP_FIT_LEAF.split(',').join(',.spv-body svg ') + ',.spv-body img,.sp-asset').forEach(e=>{
+    if(e.closest('defs,clipPath,mask,pattern,filter,linearGradient,radialGradient,symbol,[clip-path],[mask]')) return; const q = e.getBoundingClientRect(); if(!q.width && !q.height) return;   /* 被 clip-path / mask 裁切的图形不计入（只显示裁切区内的部分） */
+    x0 = Math.min(x0, q.left); y0 = Math.min(y0, q.top); x1 = Math.max(x1, q.right); y1 = Math.max(y1, q.bottom); });
+  el.classList.remove('sp-measuring');
+  if(x1 < x0) return;
+  const bx0 = (x0 - R.left) / R.width, bx1 = (x1 - R.left) / R.width, by0 = (y0 - R.top) / R.height, by1 = (y1 - R.top) / R.height;
+  /* 以锚点为原点：横向按左右两侧可用距离、纵向按总高度求最大缩放 Smax；底部 / 顶部仍越界时整体平移（--fy），不过度缩小 */
+  const P = SP_FIT_PAD, ax = 0.5, ay = spSpriteAnchor()==='center' ? 0.5 : 1 - P, fy0 = +cs.getPropertyValue('--fy') || 0, Sc = stg * f0 * rsz;
+  const l = (ax - bx0) / Sc, r = (bx1 - ax) / Sc, u0 = (ay - (by0 - fy0)) / Sc, u1 = ((by1 - fy0) - ay) / Sc;
+  const Smax = Math.min(Math.max(l, 0) > 0 ? (ax - P) / l : 9, Math.max(r, 0) > 0 ? (1 - P - ax) / r : 9, (u0 + u1) > 0 ? (1 - 2*P) / (u0 + u1) : 9);
+  const S = Math.min(stg, Smax), fit = Math.max(0.5, Math.min(1, +(S / stg).toFixed(3)));
+  const top = ay - S * u0, bot = ay + S * u1, fy = +(bot > 1 - P ? (1 - P) - bot : top < P ? P - top : 0).toFixed(3);
+  const v = {f:fit, y:fy}; SP_FIT.set(el.dataset.spk, v);
+  document.querySelectorAll(`.spv[data-spk="${CSS.escape(el.dataset.spk)}"]`).forEach(x=>spFitApply(x, v));
+}
+function spIdle(f){ return window.requestIdleCallback ? window.requestIdleCallback(f, {timeout:300}) : setTimeout(f, 30); }
+function spSpriteFitScan(){
+  document.querySelectorAll('.sp-page .spv.spirit[data-spk], .sp-h2-page .spv.spirit[data-spk], .modal .spv.spirit[data-spk], .overlay .spv.spirit[data-spk]').forEach(el=>{
+    const k = el.dataset.spk; if(SP_FIT.has(k)){ spFitApply(el, SP_FIT.get(k)); return; } if(!el.dataset.fitQ){ el.dataset.fitQ = '1'; spFitQ.push(el); } });
+  if(spFitBusy || !spFitQ.length) return; spFitBusy = true;
+  const run = ()=>{ const t0 = performance.now(); while(spFitQ.length && performance.now() - t0 < 12){ const el = spFitQ.shift(); if(el.isConnected && !SP_FIT.has(el.dataset.spk)) try{ spMeasureFit(el); }catch(_e){} }
+    if(spFitQ.length) spIdle(run); else spFitBusy = false; };
+  spIdle(run);
+}
 function spiritView(def, size, stage, opts={}){
   if(!def) return '';
   const st = Math.max(1, Math.min(5, stage||1));
@@ -19272,7 +19331,8 @@ function spiritView(def, size, stage, opts={}){
   const glow = L.glow ? ` drop-shadow(0 0 ${Math.max(1, size/48).toFixed(1)}px ${L.glow})` : '';
   const style = sk ? (structural ? (glow ? `filter:${glow.trim()};` : '') : `filter:hue-rotate(${+L.hue||0}deg) saturate(${L.sat??1}) brightness(${L.bright??1})${glow};`) : '';
   const res = sil ? '' : (L.img ? `<img class="sp-res-img" src="${escapeAttr(L.img)}" width="${size}" height="${size}" alt="">` : spResHtml(def, st, size));
-  const art = res || spiritSvg(def, st, {size, mood:opts.mood, hue:opts.hue, look:structural && !sil ? L : null, hideAcc, hideKeys, noSafe:opts.noSafe, rar, skinTier:opts.skinTierForce || (sk && structural ? (sk.admin || /^ad_|^as_/.test(sk.id) ? 'admin' : sk.collabAd ? 'collab' : sk.rarity) : null), skinAd:sk?.collabAd, school:opts.school, school2:opts.school2, ex:opts.ex, noArt:opts.noArt, sk:opts.sk, sk2:opts.sk2, geo:opts.geo});
+  const fxOff = opts.noFaxiang ?? spViewerFaxiangOff();
+  const art = res || spiritSvg(def, st, {size, mood:opts.mood, hue:opts.hue, look:structural && !sil ? L : null, hideAcc, hideKeys, noSafe:opts.noSafe, noFaxiang:fxOff, rar, skinTier:opts.skinTierForce || (sk && structural ? (sk.admin || /^ad_|^as_/.test(sk.id) ? 'admin' : sk.collabAd ? 'collab' : sk.rarity) : null), skinAd:sk?.collabAd, school:opts.school, school2:opts.school2, ex:opts.ex, noArt:opts.noArt, sk:opts.sk, sk2:opts.sk2, geo:opts.geo});
   /* v2.4 资源热更新：登记了 PNG 资源就叠加显示（按版本号刷新缓存，1x / 2x / 3x），加载失败自动回退矢量 */
   const asset = !sil && !res && typeof spAssetFor==='function' ? spAssetFor(def, st, sk && structural ? sk.id : null) : null;
   const assetImg = asset ? `<img class="sp-asset" src="${escapeAttr(asset.src)}" ${asset.set?`srcset="${escapeAttr(asset.set)}"`:''} width="${size}" height="${size}" alt="" loading="lazy" onload="var s=this.closest('.spv');if(s)s.classList.add('asset-ok')" onerror="this.remove()">` : '';
@@ -19286,7 +19346,8 @@ function spiritView(def, size, stage, opts={}){
   const MDv = !sil && typeof spModelOf==='function' ? spModelOf(def, st, {noArt:opts.noArt, sk:opts.sk, sk2:opts.sk2, geo:opts.geo}) : null;
   const anc = MDv ? `an an-${MDv.anim[MDv.anim.length-1]} an1-${MDv.anim[0]} ${MDv.rig.map(r=>'rg-'+r).join(' ')} sk-${MDv.sk}` : '';
   const ent = opts.entrance && st>=5 ? 'ent-'+spGene(def).d5[0]+' ent-s-'+spGene(def).d5[1] : '';
-  return `<span class="spv spirit st-${st} sr-${sil?'none':rar} sty-${def.style||'q'} ${st>=5?'aw5':''} ${mv} ${anc} ${opts.dir==='l'?'dir-l':''} ${opts.entrance && st<5?'ent-token':''} ${ent} ${sk?`sk-${sk.rarity} ${L.anim?'sk-anim-'+L.anim:''} ${L.act?'sk-act-'+L.act:''}`:''} ${opts.cls||''} ${sil?'sil':''}" style="--sz:${size}px;--rc:${sprColor(rar)};${sk && L.glow?`--skg:${L.glow};`:''}" data-spirit="${escapeAttr(def.id)}">
+  const spk = `${def.id}|${st}|${sk && structural ? sk.id : ''}|${fxOff && st>=5 ? 0 : 1}|${sil ? 's' : ''}|${hideAcc ? 'h' : ''}`;
+  return `<span class="spv spirit st-${st} sr-${sil?'none':rar} sty-${def.style||'q'} ${st>=5?'aw5':''} ${mv} ${anc} ${opts.dir==='l'?'dir-l':''} ${opts.entrance && st<5?'ent-token':''} ${ent} ${sk?`sk-${sk.rarity} ${L.anim?'sk-anim-'+L.anim:''} ${L.act?'sk-act-'+L.act:''}`:''} ${opts.cls||''} ${sil?'sil':''} ${fxOff && st>=5 ? 'fx-off' : ''}" style="--sz:${size}px;--rc:${sprColor(rar)};${sk && L.glow?`--skg:${L.glow};`:''}${SP_FIT.has(spk)?`--fit:${SP_FIT.get(spk).f};--fy:${SP_FIT.get(spk).y};`:''}" data-spirit="${escapeAttr(def.id)}" data-spk="${escapeAttr(spk)}">
     ${!sil?'<i class="spr-aura" aria-hidden="true"></i>':''}<span class="spv-body" style="${sil?'':style}">${art}</span>${assetImg}${fx}${sil?'':acc}${opts.fxLv && !sil?`<i class="spv-tal t${opts.fxLv}" aria-hidden="true"></i>`:''}${resTag}</span>`;
 }
 
@@ -19587,7 +19648,7 @@ function spSkinLayers(sk){
   return {back, front, hide:sk.layers?.hide || SP_SKIN_HIDE_DEF, structural:true};
 }
 function spHideAccBar(me){
-  return `<div class="sp-hideacc-bar"><label class="sp-hideacc"><input type="checkbox" data-sp-hideacc="1" ${me.skinHideAcc?'checked':''}> ${escapeHtml(tx('隐藏非关键配饰','Hide non-essential accessories','Ẩn phụ kiện không quan trọng'))}</label>
+  return `<div class="sp-hideacc-bar"><label class="sp-hideacc"><input type="checkbox" data-sp-hideacc="1" ${me.skinHideAcc?'checked':''}> ${escapeHtml(tx('隐藏非关键配饰','Hide non-essential accessories','Ẩn phụ kiện không quan trọng'))}</label>${spFaxiangToggleHtml()}
     <span class="hint">${escapeHtml(tx('默认显示安全版本：皮肤配饰永远不会遮挡精灵的面部、眼睛和胸前核心。','The safe version is shown by default: skin accessories never cover the face, eyes or chest core.','Mặc định hiển thị bản an toàn: phụ kiện không bao giờ che mặt, mắt hay lõi ngực.'))}</span></div>`;
 }
 
@@ -19856,6 +19917,7 @@ function spAction5(act, el, id){
 document.addEventListener('change', e=>{
   const el = e.target; if(!el?.dataset) return;
   if(el.dataset.spHideacc && spCanPlay()){ const u = spU(); u.skinHideAcc = !!el.checked; gTouch(u); saveGrowth(true); render(); return; }
+  if(el.dataset.spFaxiang && spCanSee()){ if(spCanPlay()){ const u = spU(); u.faxiangOff = !el.checked; gTouch(u); saveGrowth(true); } else spS().faxiangOff = !el.checked; render(); return; }
   if(el.dataset.spPvhide && state.modal?.type==='spSkinPv'){ state.modal.hide = !!el.checked; render(); return; }
   if(el.dataset.evd && state.modal?.type==='spEvoDesign'){ spEvdCollect(); render(); }
 });
@@ -21535,7 +21597,7 @@ if(typeof SP_REV_SRC!=='undefined') Object.assign(SP_REV_SRC, {admin:['管理员
    · 管理员资源只记在 growth.csv 的 admu:* 行（与操作员 user:* 行独立），不进入兑换商店、不参与通胀模型
    · 初始 30+ 只精灵直接上线；其余默认不发布，只能跟随活动 / 策划 / 返场 / 联名 / 联动 / 活动专属发放上线；发布 / 修改 / 下架 / 回收全部写入 prec:* 发布记录
 ========================================================= */
-var SP_UX_DEF = {adminResGuide:true, publishDefault:false, initialOnline:true, codexLockedHidden:true, codexAdminUnrestricted:true,
+var SP_UX_DEF = {spAnchor:'bottom', adminResGuide:true, publishDefault:false, initialOnline:true, codexLockedHidden:true, codexAdminUnrestricted:true,
   top:{enabled:true, threshold:300, pos:'right', icon:'arrowUp', anim:'smooth', off:[]}, sticky:{enabled:true, blur:true}, homeEntry:true, adminHubEntry:true, bnav:true};
 function spUxCfg(){ let c = {}; try{ c = (typeof G==='function' && G()?.config?.spUx) || {}; }catch(_e){}
   return {...SP_UX_DEF, ...c, top:{...SP_UX_DEF.top, ...(c.top||{})}, sticky:{...SP_UX_DEF.sticky, ...(c.sticky||{})}}; }
@@ -22293,7 +22355,7 @@ function spHomePageHtml(u){
         ${spHomeScene(me, true)}
         <div class="sp-h2-stagebar"><button type="button" class="btn ${A.open?'btn-primary':'btn-ghost'} btn-sm sp-h2-arrbtn" data-act="${A.open?'spHomeArrDone':'spHomeArrOpen'}" data-v="${A.slot}">${spIcon('edit',14)} ${escapeHtml(A.open?tx('完成布置','Finish arranging','Xong bày trí'):tx('布置模式','Arrange mode','Chế độ bày trí'))}</button>
           <button type="button" class="btn btn-ghost btn-sm" data-act="spHomePatAll" ${h.slots.length?'':'disabled'}>${spIcon('heart',14)} ${escapeHtml(tx('互动全部','Interact with all','Tương tác tất cả'))}</button>
-          <span class="hint">${escapeHtml(tx(`今日互动 ${h.patDay?.d===gToday() ? +h.patDay.n||0 : 0}/30`, `Interactions today ${h.patDay?.d===gToday() ? +h.patDay.n||0 : 0}/30`, `Tương tác hôm nay ${h.patDay?.d===gToday() ? +h.patDay.n||0 : 0}/30`))}</span></div>
+          ${spFaxiangToggleHtml()}<span class="hint">${escapeHtml(tx(`今日互动 ${h.patDay?.d===gToday() ? +h.patDay.n||0 : 0}/30`, `Interactions today ${h.patDay?.d===gToday() ? +h.patDay.n||0 : 0}/30`, `Tương tác hôm nay ${h.patDay?.d===gToday() ? +h.patDay.n||0 : 0}/30`))}</span></div>
       </section>
       <div class="sp-h2-side">
         <section class="sp-h2-card sp-h2-decos"><header><b>${spIcon('palette',18)} ${escapeHtml(tx('家园装饰','Decorations','Trang trí'))}</b><small>${h.deco.filter(k=>me.decos?.[k]).length}/${owned.length}</small>${dot(dots.deco)}</header>
@@ -22461,6 +22523,7 @@ function spUiAfter2(on){
 function spAdmUxHtml(){
   const c = spUxCfg(), pages = spPages().map(p=>p.k);
   return `<form id="spUxForm" class="sp-form" onsubmit="return false"><h3 class="sp-spd-h">${spIcon('gear',18)} ${escapeHtml(tx('界面与入口','UI and entries','Giao diện và lối vào'))}</h3>
+    <div class="sp-form-row"><label>${escapeHtml(tx('立绘锚点（所有阶段、皮肤、法相共用）','Sprite anchor (shared by all stages, skins and dharma forms)','Điểm neo hình (dùng chung)'))}<select name="spAnchor"><option value="bottom" ${spUxCfg().spAnchor!=='center'?'selected':''}>${escapeHtml(tx('底部居中','Bottom centre','Giữa đáy'))}</option><option value="center" ${spUxCfg().spAnchor==='center'?'selected':''}>${escapeHtml(tx('中心','Centre','Tâm'))}</option></select></label></div>
     <div class="sp-form-row">${[['homeEntry',tx('显示「精灵家园」入口','Show the Spirit home entry','Hiện lối vào Nhà tinh linh')],['adminHubEntry',tx('显示「管理员中枢」入口','Show the Admin hub entry','Hiện lối vào Trung khu')],['adminResGuide',tx('启用管理员资源指引','Enable the admin resource guide','Bật hướng dẫn tài nguyên quản trị')],['bnav',tx('手机底部快捷导航','Phone bottom navigation','Thanh điều hướng dưới (điện thoại)')],['codexLockedHidden',tx('操作员未解锁图鉴只显示剪影 + 待解锁 + 条件','Locked codex entries show only a silhouette + "To unlock" + conditions','Mục chưa mở chỉ hiện bóng + điều kiện')]].map(([k,l])=>`<label class="checkline"><input type="checkbox" name="${k}" ${c[k]?'checked':''}> ${escapeHtml(l)}</label>`).join('')}</div>
     <fieldset class="sp-step"><legend>${escapeHtml(tx('一键置顶按钮','Back-to-top button','Nút lên đầu trang'))}</legend><div class="sp-form-row">
       <label class="checkline"><input type="checkbox" name="topEnabled" ${c.top.enabled?'checked':''}> ${escapeHtml(tx('启用','Enabled','Bật'))}</label>
@@ -22476,7 +22539,7 @@ function spAdmTheme(){ return spAdmThemeCore() + spAdmUxHtml() + (typeof spEvwCf
 function spUxSave(){
   const f = document.getElementById('spUxForm'); if(!f || !spIsAdmin()) return; const fd = new FormData(f), on = k=>fd.get(k)==='on';
   const allPages = spPages().map(p=>p.k), onP = fd.getAll('topOn').map(String);
-  const spUx = {...(gCfg().spUx||{}), homeEntry:on('homeEntry'), adminHubEntry:on('adminHubEntry'), adminResGuide:on('adminResGuide'), bnav:on('bnav'), codexLockedHidden:on('codexLockedHidden'),
+  const spUx = {...(gCfg().spUx||{}), spAnchor:fd.get('spAnchor')==='center' ? 'center' : 'bottom', homeEntry:on('homeEntry'), adminHubEntry:on('adminHubEntry'), adminResGuide:on('adminResGuide'), bnav:on('bnav'), codexLockedHidden:on('codexLockedHidden'),
     top:{enabled:on('topEnabled'), threshold:Math.max(50, Math.min(3000, +fd.get('topTh')||300)), pos:String(fd.get('topPos')||'right'), icon:String(fd.get('topIcon')||'arrowUp'), anim:String(fd.get('topAnim')||'smooth'), off:allPages.filter(k=>!onP.includes(k))},
     sticky:{enabled:on('stEnabled'), blur:on('stBlur')}};
   G().config = {...gCfg(), spUx, updatedAt:gNowIso(), updatedBy:spMe()}; spAuditCore('ux-config', '', {top:spUx.top.enabled, sticky:spUx.sticky.enabled}); saveGrowth(true); toast(tx('已保存','Saved','Đã lưu'), 'ok'); render();
