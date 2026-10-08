@@ -17100,17 +17100,16 @@ function spResAdd(u, id, n){
   u[id] = (+u[id]||0) + n; return {[id]:n};
 }
 
-/* ---------- 资源确认窗口：所有消耗资源 / 道具的操作先确认；「本次不再提示」只在本次打开页面期间有效 ---------- */
-var spConfirmFn = null, spSkipConfirm = {};
-var SP_CONFIRM_TYPES = {feed:['投喂精灵','Feeding sprites','Cho tinh linh ăn'], boost:['甘特精灵投喂加速','Gantt sprite feed boost','Tăng tốc cho tinh linh Gantt ăn'], ticket:['兑换投喂券','Exchanging feed tickets','Đổi vé cho ăn'], draw:['皮肤补给','Skin supply draws','Rút tiếp tế trang phục'], shardEx:['碎片兑换皮肤','Shard exchange for skins','Đổi mảnh lấy trang phục'], workshop:['皮肤工坊','Skin workshop','Xưởng trang phục'], redeem:['返场兑换','Return redemptions','Đổi tái xuất'], wish:['精灵祈愿','Spirit wishes','Cầu nguyện tinh linh'], synth:['碎片合成精灵','Spirit synthesis','Ghép tinh linh'], spTicket:['使用精灵兑换券','Using spirit tickets','Dùng vé đổi tinh linh'], breakRar:['稀有度突破','Rarity breakthrough','Đột phá độ hiếm'], awaken:['觉醒（LV5）','Awakening (LV5)','Thức tỉnh (LV5)'], shop:['兑换商店','Exchange shop','Cửa hàng đổi'], gift:['赠送碎片','Gifting shards','Tặng mảnh'], item:['使用道具','Using items','Dùng vật phẩm'], event:['活动消耗','Event costs','Chi phí sự kiện']};
-function spConfirmCfg(){ const c = gCfg().confirm || {}; return {types:{...(c.types||{})}, allowSkip:c.allowSkip!==false, threshold:+c.threshold>0 ? +c.threshold : 500}; }
+/* ---------- 高风险二次确认：普通消耗直接执行（不再弹资源确认窗口）；批量操作或单次消耗 ≥ 阈值时弹二次确认。全部写审计 ---------- */
+var spConfirmFn = null;
+function spConfirmCfg(){ const c = gCfg().confirm || {}; return {threshold:+c.threshold>0 ? +c.threshold : 500}; }
 function spConfirm(o, fn){
   const cfg = spConfirmCfg();
   const costs = (o.costs||[]).filter(x=>+x.n>0).map(x=>({...x, n:+x.n * Math.max(1, +o.batch||1)}));
-  const big = costs.some(x=>x.n >= cfg.threshold);
-  if(cfg.types[o.type]===false || (spSkipConfirm[o.type] && !big)){ spAudit('res-confirm', spMe(), {type:o.type, costs, auto:cfg.types[o.type]===false ? 'off' : 'session-skip'}); fn(); return; }
+  const big = costs.some(x=>x.n >= cfg.threshold), batch = Math.max(1, +o.batch||1) > 1;
+  if(!big && !batch){ spAudit('res-confirm', spMe(), {type:o.type, title:o.title, costs, auto:'direct'}); fn(); return; }
   spConfirmFn = fn;
-  state.modal = {type:'spConfirm', o:{...o, costs, big}, step:1};
+  state.modal = {type:'spConfirm', o:{...o, costs, big, isBatch:batch}, step:2};
   render();
   setTimeout(()=>document.querySelector('.sp-confirm [data-act="spConfirmOk"]')?.focus(), 30);
 }
@@ -17118,9 +17117,7 @@ function spConfirmOk(){
   const m = state.modal; if(!m || m.type!=='spConfirm') return;
   const o = m.o, u = spCanPlay() ? spU() : null;
   if(u && o.costs.some(x=>spResBal(u, x.res) < x.n)) return toast(tx('资源不足，无法确认','Not enough resources to confirm','Không đủ tài nguyên để xác nhận'), 'warn');
-  if(o.big && m.step===1){ m.step = 2; render(); return; }
-  if(document.getElementById('spConfirmSkip')?.checked && spConfirmCfg().allowSkip) spSkipConfirm[o.type] = true;
-  spAudit('res-confirm', spMe(), {type:o.type, title:o.title, costs:o.costs, batch:+o.batch||1, second:!!o.big});
+  spAudit('res-confirm', spMe(), {type:o.type, title:o.title, costs:o.costs, batch:+o.batch||1, second:true, big:!!o.big});
   const fn = spConfirmFn; spConfirmFn = null; state.modal = null;
   try{ fn && fn(); }finally{ if(state.modal==null) render(); }
 }
@@ -17446,7 +17443,7 @@ function spGuideDefaults22(){
   d.res = [
     {sel:'', t:['资源指引','Resource guide','Hướng dẫn tài nguyên'], b:['这里汇总了精灵赛季的全部资源：用途、获取方式、每日 / 每周上限、是否赛季清零，以及一键跳转到获取页面。每个模块右上角的「?」里也有「资源获取」标签页。','Every Sprite Season resource in one place: what it\'s for, how to get it, daily / weekly caps, whether it resets each season, and a jump link to where you get it. The "?" in each module also has a "Getting resources" tab.','Tổng hợp mọi tài nguyên Mùa tinh linh: công dụng, cách nhận, giới hạn ngày / tuần, có đặt lại theo mùa không, và nút chuyển nhanh đến nơi nhận. Nút "?" ở mỗi mô-đun cũng có thẻ "Cách nhận tài nguyên".']},
     {sel:'.sp-resg-grid', t:['赛季清零与永久保留','Season reset vs permanent','Đặt lại theo mùa và vĩnh viễn'], b:['赛季积分在赛季结束时清零，请在本季使用；能量饲料、投喂券、各类碎片、图鉴点、成就点、返场券、觉醒材料都永久保留。','Season points reset at season end, so use them this season; energy feed, feed tickets, all shards, codex points, achievement points, return tickets and awakening materials are kept permanently.','Điểm mùa đặt lại cuối mùa, hãy dùng trong mùa; thức ăn năng lượng, vé cho ăn, các loại mảnh, điểm sách tranh, điểm thành tựu, vé tái xuất và nguyên liệu thức tỉnh được giữ vĩnh viễn.']},
-    {sel:'', t:['消耗前都会确认','Every spend is confirmed','Mọi lần chi tiêu đều được xác nhận'], b:['投喂、兑换、觉醒、合成、购买、使用道具、批量操作和活动消耗都会先弹出确认窗口，显示消耗数量、当前剩余和使用后的效果。勾选「本次不再提示」只在本次打开页面期间有效。','Feeding, exchanges, awakening, synthesis, purchases, using items, batch actions and event costs all show a confirmation first, with the cost, what you have now and the result. "Don\'t ask again this time" only lasts until you reload the page.','Cho ăn, đổi, thức tỉnh, ghép, mua, dùng vật phẩm, thao tác hàng loạt và chi phí sự kiện đều hiện cửa sổ xác nhận trước, ghi rõ số lượng, số dư hiện tại và kết quả. "Lần này không hỏi lại" chỉ có hiệu lực đến khi tải lại trang.']},
+    {sel:'', t:['高风险操作二次确认','High-risk actions are confirmed twice','Thao tác rủi ro cao xác nhận hai lần'], b:['普通消耗直接执行，不再弹出确认窗口；批量操作或单次消耗达到阈值时会弹出二次确认，显示消耗数量、当前剩余和使用后的效果。','Ordinary spends go straight through with no confirmation window; batch actions and large single spends ask for a second confirmation showing the cost, what you have now and the result.','Chi tiêu thường thực hiện ngay; thao tác hàng loạt hoặc chi tiêu lớn sẽ cần xác nhận lần hai, ghi rõ số lượng, số dư hiện tại và kết quả.']},
   ];
   return d;
 }
@@ -17820,7 +17817,7 @@ function spShopHtml(){
   const bal = me ? `<div class="sp-shop-bal">${SP_CURS.map(k=>`<span class="sp-chip" title="${escapeAttr(trT(spRes(k).use))}">${spResIcon(k)} <b>${spResBal(me, k)}</b><small>${escapeHtml(spResName(k))}</small></span>`).join('')}</div>` : '';
   const hist = me ? (me.shop||[]).slice().reverse().slice(0, 20) : [];
   return `<div class="sp-shop">
-    <div class="sp-note">⭐ ${escapeHtml(tx('赛季积分 = 当季经验 ×','Season points = season XP ×','Điểm mùa = EXP mùa ×'))} ${gCfg().pointRate}% · ${escapeHtml(tx('赛季结束时清零；图鉴点、成就点、碎片与返场券永久保留。每次兑换前都会确认。','They reset at season end; codex points, achievement points, shards and return tickets are permanent. Every exchange is confirmed first.','Điểm mùa đặt lại cuối mùa; điểm sách tranh, điểm thành tựu, mảnh và vé tái xuất được giữ vĩnh viễn. Mỗi lần đổi đều được xác nhận.'))}</div>
+    <div class="sp-note">⭐ ${escapeHtml(tx('赛季积分 = 当季经验 ×','Season points = season XP ×','Điểm mùa = EXP mùa ×'))} ${gCfg().pointRate}% · ${escapeHtml(tx('赛季结束时清零；图鉴点、成就点、碎片与返场券永久保留。批量或大额兑换会再次确认。','They reset at season end; codex points, achievement points, shards and return tickets are permanent. Batch or large exchanges ask you to confirm again.','Điểm mùa đặt lại cuối mùa; điểm sách tranh, điểm thành tựu, mảnh và vé tái xuất được giữ vĩnh viễn. Đổi hàng loạt hoặc số lớn sẽ cần xác nhận lần nữa.'))}</div>
     ${bal}
     <div class="sp-evf__chips" role="tablist">${Object.entries(SP_SHOP_CATS).map(([k,n])=>`<button type="button" role="tab" aria-selected="${cat===k}" class="sp-pillbtn ${cat===k?'active':''}" data-act="spShopCat" data-v="${k}">${escapeHtml(trT(n))} <small>${cnt(k)}</small></button>`).join('')}</div>
     <div class="sp-shop-grid">${items.map(it=>{ const st = me ? spShopState(me, it, 1) : null, gv = it.give||{};
@@ -17854,15 +17851,15 @@ function spConfirmHtml(){
   const rows = o.costs.map(x=>{ const have = u ? spResBal(u, x.res) : 0, after = have - x.n, short = after < 0;
     return `<tr class="${short?'short':''}"><td>${spResIcon(x.res)} ${escapeHtml(spResName(x.res))}</td><td><b>−${x.n}</b>${batch>1?` <small class="hint">(${x.n/batch} × ${batch})</small>`:''}</td><td>${have}</td><td><b>${short?escapeHtml(tx('不足','Short','Thiếu')):after}</b></td></tr>`; }).join('');
   const short = u && o.costs.some(x=>spResBal(u, x.res) < x.n);
-  const second = m.step===2;
+  const second = true;
   return `<div class="modal sp-confirm ${second?'second':''}" role="alertdialog" aria-modal="true" aria-labelledby="spConfirmTitle" aria-describedby="spConfirmDesc">
     <div class="modal-head"><h2 id="spConfirmTitle">${escapeHtml(o.icon||'❔')} ${escapeHtml(second?tx('再次确认','Confirm again','Xác nhận lần nữa'):tx('确认使用资源','Confirm resource use','Xác nhận dùng tài nguyên'))}</h2><button class="modal-close" data-act="spConfirmCancel" aria-label="${escapeAttr(tx('取消','Cancel','Hủy'))}">${svgIcon('x',15)}</button></div>
     <div class="modal-body"><div class="sp-cf-title" data-i18n-ignore="1"><b>${escapeHtml(o.title||'')}</b>${batch>1?` <span class="sp-badge">${escapeHtml(tx('批量','Batch','Hàng loạt'))} ×${batch}</span>`:''}</div>
       <table class="data-table sp-cf-table"><thead><tr><th>${escapeHtml(tx('资源','Resource','Tài nguyên'))}</th><th>${escapeHtml(tx('消耗','Cost','Tốn'))}</th><th>${escapeHtml(tx('当前剩余','You have','Hiện có'))}</th><th>${escapeHtml(tx('使用后','After','Sau khi dùng'))}</th></tr></thead><tbody>${rows || `<tr><td colspan="4" class="hint">${escapeHtml(tx('不消耗资源','No resources used','Không tốn tài nguyên'))}</td></tr>`}</tbody></table>
       <p id="spConfirmDesc" class="sp-cf-effect">✨ ${escapeHtml(o.effect||'')}</p>
-      ${second?`<div class="sp-cf-warn" role="alert">⚠️ ${escapeHtml(tx(`本次消耗达到 ${cfg.threshold} 以上，请再次确认。`, `This spends ${cfg.threshold} or more; please confirm again.`, `Lần này tốn từ ${cfg.threshold} trở lên; vui lòng xác nhận lần nữa.`))}</div>`:''}
+      <div class="sp-cf-warn" role="alert">⚠️ ${o.big ? escapeHtml(tx(`本次消耗达到 ${cfg.threshold} 以上，属于大额消耗，请再次确认。`, `This spends ${cfg.threshold} or more (a large spend); please confirm again.`, `Lần này tốn từ ${cfg.threshold} trở lên; vui lòng xác nhận lần nữa.`)) : escapeHtml(tx(`批量操作 ×${batch}，请再次确认。`, `Batch action ×${batch}; please confirm again.`, `Thao tác hàng loạt ×${batch}; vui lòng xác nhận lần nữa.`))}</div>
       ${short?`<div class="sp-cf-warn" role="alert">${escapeHtml(tx('资源不足，无法执行','Not enough resources to do this','Không đủ tài nguyên để thực hiện'))}</div>`:''}</div>
-    <div class="modal-foot">${cfg.allowSkip && !o.big?`<label class="checkline"><input type="checkbox" id="spConfirmSkip"> ${escapeHtml(tx('本次不再提示','Don\'t ask again this time','Lần này không hỏi lại'))}</label>`:''}<span style="flex:1"></span>
+    <div class="modal-foot"><span style="flex:1"></span>
       <button class="btn btn-ghost btn-sm" data-act="spConfirmCancel">${escapeHtml(tx('取消','Cancel','Hủy'))}</button><button class="btn ${second?'btn-danger':'btn-primary'} btn-sm" data-act="spConfirmOk" ${short?'disabled':''}>${escapeHtml(second?tx('确认消耗','Yes, spend it','Đồng ý chi tiêu'):tx('确认','Confirm','Xác nhận'))}</button></div></div>`;
 }
 
@@ -17874,8 +17871,8 @@ function spConfirmHtml(){
 ========================================================= */
 var SP_ADM_PRIMARY = ['home','library','wizard','events','shop','link','reqs'];
 var SP_ADM_TABS = {home:['首页','Home','Trang chủ'], library:['精灵库 · 储备池','Library · reserve','Kho · dự trữ'], wizard:['新增精灵','New spirit','Thêm tinh linh'], events:['活动与返场','Events and returns','Sự kiện và tái xuất'], shop:['兑换商店','Exchange shop','Cửa hàng đổi'], link:['联动','Partnerships','Hợp tác'], reqs:['审核与异常','Reviews and flags','Duyệt và cờ'],
-  users:['全员数据','All users','Tất cả người dùng'], pool:['赛季精灵池','Season sprite pool','Kho tinh linh mùa'], rarity:['稀有度与突破','Rarity and breakthrough','Độ hiếm và đột phá'], draws:['抽取与保底记录','Draw and pity log','Nhật ký rút và bảo hiểm'], skins:['皮肤','Skins','Trang phục'], res:['资源指引配置','Resource guide settings','Cấu hình hướng dẫn tài nguyên'], confirm:['资源确认窗口','Resource confirmations','Xác nhận tài nguyên'], guides:['操作说明','Guides','Hướng dẫn'], audit:['审计与补偿','Audit and compensation','Kiểm toán và bù'], cfg:['赛季与数值配置','Season and numeric settings','Cấu hình mùa và số liệu']};
-var SP_QUICK = {wizard:{i:'🪄', n:['新增精灵','New spirit','Thêm tinh linh'], d:['5 步向导创建并发布','Create and publish in 5 steps','Tạo và phát hành trong 5 bước'], go:['wizard']}, event:{i:'🎪', n:['发布活动','Publish an event','Phát hành sự kiện'], d:['新建限时 / 双倍 / 祈愿活动','New limited / double / wish events','Tạo sự kiện giới hạn / nhân đôi / cầu nguyện'], go:['events','new']}, grant:{i:'🎁', n:['发放奖励','Grant rewards','Cấp thưởng'], d:['给操作员发放资源或精灵','Give resources or spirits to operators','Cấp tài nguyên hoặc tinh linh cho vận hành viên'], go:['audit']}, reserve:{i:'📦', n:['储备精灵池','Reserve pool','Bể dự trữ'], d:['发布 / 下架 / 批量设置','Publish / unlist / batch settings','Phát hành / gỡ / thiết lập hàng loạt'], go:['library','reserve']}, res:{i:'🧭', n:['资源指引配置','Resource guide settings','Cấu hình hướng dẫn tài nguyên'], d:['名称、图标、来源、上限','Names, icons, sources, caps','Tên, biểu tượng, nguồn, giới hạn'], go:['res']}, season:{i:'🗓️', n:['赛季配置','Season settings','Cấu hình mùa'], d:['经验曲线、上限、概率','XP curve, caps, rates','Đường EXP, giới hạn, tỉ lệ'], go:['cfg']}, link:{i:'🤝', n:['联动配置','Partnership settings','Cấu hình hợp tác'], d:['委托 S10 / 外部试验室','S10 commission / external labs','Ủy thác S10 / phòng thí nghiệm ngoài'], go:['link']}, confirm:{i:'✅', n:['确认窗口','Confirmations','Xác nhận'], d:['哪些操作需要确认','Which actions need confirming','Thao tác nào cần xác nhận'], go:['confirm']}, shop:{i:'🛒', n:['商店上新','Add shop items','Thêm hàng'], d:['新增 / 编辑商品','Add / edit items','Thêm / sửa mặt hàng'], go:['shop','new']}};
+  users:['全员数据','All users','Tất cả người dùng'], pool:['赛季精灵池','Season sprite pool','Kho tinh linh mùa'], rarity:['稀有度与突破','Rarity and breakthrough','Độ hiếm và đột phá'], draws:['抽取与保底记录','Draw and pity log','Nhật ký rút và bảo hiểm'], skins:['皮肤','Skins','Trang phục'], res:['资源指引配置','Resource guide settings','Cấu hình hướng dẫn tài nguyên'], confirm:['高风险二次确认','High-risk confirmation','Xác nhận rủi ro cao'], guides:['操作说明','Guides','Hướng dẫn'], audit:['审计与补偿','Audit and compensation','Kiểm toán và bù'], cfg:['赛季与数值配置','Season and numeric settings','Cấu hình mùa và số liệu']};
+var SP_QUICK = {wizard:{i:'🪄', n:['新增精灵','New spirit','Thêm tinh linh'], d:['5 步向导创建并发布','Create and publish in 5 steps','Tạo và phát hành trong 5 bước'], go:['wizard']}, event:{i:'🎪', n:['发布活动','Publish an event','Phát hành sự kiện'], d:['新建限时 / 双倍 / 祈愿活动','New limited / double / wish events','Tạo sự kiện giới hạn / nhân đôi / cầu nguyện'], go:['events','new']}, grant:{i:'🎁', n:['发放奖励','Grant rewards','Cấp thưởng'], d:['给操作员发放资源或精灵','Give resources or spirits to operators','Cấp tài nguyên hoặc tinh linh cho vận hành viên'], go:['audit']}, reserve:{i:'📦', n:['储备精灵池','Reserve pool','Bể dự trữ'], d:['发布 / 下架 / 批量设置','Publish / unlist / batch settings','Phát hành / gỡ / thiết lập hàng loạt'], go:['library','reserve']}, res:{i:'🧭', n:['资源指引配置','Resource guide settings','Cấu hình hướng dẫn tài nguyên'], d:['名称、图标、来源、上限','Names, icons, sources, caps','Tên, biểu tượng, nguồn, giới hạn'], go:['res']}, season:{i:'🗓️', n:['赛季配置','Season settings','Cấu hình mùa'], d:['经验曲线、上限、概率','XP curve, caps, rates','Đường EXP, giới hạn, tỉ lệ'], go:['cfg']}, link:{i:'🤝', n:['联动配置','Partnership settings','Cấu hình hợp tác'], d:['委托 S10 / 外部试验室','S10 commission / external labs','Ủy thác S10 / phòng thí nghiệm ngoài'], go:['link']}, confirm:{i:'✅', n:['二次确认','Second confirmation','Xác nhận lần hai'], d:['高风险操作的确认阈值','Threshold for high-risk actions','Ngưỡng cho thao tác rủi ro cao'], go:['confirm']}, shop:{i:'🛒', n:['商店上新','Add shop items','Thêm hàng'], d:['新增 / 编辑商品','Add / edit items','Thêm / sửa mặt hàng'], go:['shop','new']}};
 function spAdmUi(){ const c = gCfg().admUi || {}; return {tiles:Array.isArray(c.tiles) && c.tiles.length ? c.tiles : ['wizard','event','grant','reserve','res','season'], layout:c.layout||'grid', tpl:{cat:'elem', rar:'N', body:'blob', style:'q', eyes:'dot', mouth:'smile', fx:'none', pools:['season'], col:['#60a5fa','#1e3a8a','#dbeafe'], ...(c.tpl||{})}}; }
 function spAdminHtml(){
   if(!spIsAdmin()) return '';
@@ -18197,16 +18194,14 @@ function spResSave(){
 /* ---------- 资源确认窗口配置 ---------- */
 function spAdmConfirm(){
   const c = spConfirmCfg();
-  return `<form id="spConfirmForm" class="sp-form" onsubmit="return false"><div class="sp-note">${escapeHtml(tx('勾选的操作在消耗资源前弹出确认窗口（显示名称、图标、消耗、当前剩余、使用后效果）。所有确认与消耗写入审计。','Checked actions show a confirmation (name, icon, cost, current balance, result) before spending. Every confirmation and spend is audited.','Các thao tác được chọn sẽ hiện xác nhận (tên, biểu tượng, chi phí, số dư, kết quả) trước khi chi tiêu. Mọi xác nhận và chi tiêu đều được ghi kiểm toán.'))}</div>
-    <div class="sp-skin-pick">${Object.entries(SP_CONFIRM_TYPES).map(([k,n])=>`<label class="checkline"><input type="checkbox" name="t_${k}" ${c.types[k]!==false?'checked':''}> ${escapeHtml(trT(n))}</label>`).join('')}</div>
-    <div class="sp-form-row"><label class="checkline"><input type="checkbox" name="allowSkip" ${c.allowSkip?'checked':''}> ${escapeHtml(tx('允许「本次不再提示」（只在本次打开页面期间有效）','Allow "Don\'t ask again this time" (lasts until the page is reloaded)','Cho phép "Lần này không hỏi lại" (đến khi tải lại trang)'))}</label><label>${escapeHtml(tx('二次确认阈值（单次消耗 ≥）','Second confirmation threshold (single spend ≥)','Ngưỡng xác nhận lần hai (chi tiêu một lần ≥)'))}<input type="number" name="threshold" min="1" value="${c.threshold}"></label></div>
+  return `<form id="spConfirmForm" class="sp-form" onsubmit="return false"><div class="sp-note">${escapeHtml(tx('资源确认窗口已取消：普通消耗直接执行。批量操作（数量 > 1）或单次消耗达到阈值的高风险操作，仍会弹出二次确认。所有消耗写入审计。','The resource confirmation window is gone: ordinary spends go straight through. Batch actions (quantity > 1) and single spends at or above the threshold still ask for a second confirmation. Every spend is audited.','Đã bỏ cửa sổ xác nhận tài nguyên: chi tiêu thường thực hiện ngay. Thao tác hàng loạt hoặc chi tiêu một lần từ ngưỡng trở lên vẫn cần xác nhận lần hai. Mọi chi tiêu đều được ghi kiểm toán.'))}</div>
+    <div class="sp-form-row"><label>${escapeHtml(tx('二次确认阈值（单次消耗 ≥）','Second confirmation threshold (single spend ≥)','Ngưỡng xác nhận lần hai (chi tiêu một lần ≥)'))}<input type="number" name="threshold" min="1" value="${c.threshold}"></label></div>
     <div class="sp-form-act"><button class="btn btn-primary btn-sm" data-act="spConfirmCfgSave">${escapeHtml(tx('保存','Save','Lưu'))}</button></div></form>`;
 }
 function spConfirmCfgSave(){
-  const f = document.getElementById('spConfirmForm'); if(!f || !spIsAdmin()) return; const fd = new FormData(f), types = {};
-  Object.keys(SP_CONFIRM_TYPES).forEach(k=>types[k] = fd.get('t_'+k)==='on');
-  G().config = {...gCfg(), confirm:{types, allowSkip:fd.get('allowSkip')==='on', threshold:Math.max(1, +fd.get('threshold')||500)}, updatedAt:gNowIso(), updatedBy:spMe()};
-  spAudit('confirm-config', '', {types}); saveGrowth(true); toast(tx('已保存','Saved','Đã lưu'), 'ok'); render();
+  const f = document.getElementById('spConfirmForm'); if(!f || !spIsAdmin()) return; const fd = new FormData(f), threshold = Math.max(1, +fd.get('threshold')||500);
+  G().config = {...gCfg(), confirm:{...(gCfg().confirm||{}), threshold}, updatedAt:gNowIso(), updatedBy:spMe()};
+  spAudit('confirm-config', '', {threshold}); saveGrowth(true); toast(tx('已保存','Saved','Đã lưu'), 'ok'); render();
 }
 /* ---------- 联动（委托 S10 / 外部第三方试验室） ---------- */
 var spLinkSrv = null;
