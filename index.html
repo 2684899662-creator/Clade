@@ -3682,6 +3682,8 @@ body.art-noadj .spv .spirit-svg.art{filter:none;}
 .sp-shop-dl{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:4px 12px;margin:0;} .sp-shop-dl dt{color:var(--text-dim);white-space:nowrap;} .sp-shop-dl dd{margin:0;overflow-wrap:anywhere;}
 .sp-shop-fx{display:flex;flex-direction:column;gap:2px;padding:8px 10px;border-radius:10px;background:color-mix(in srgb,var(--cold) 8%,var(--panel));border:1px solid color-mix(in srgb,var(--cold) 25%,var(--border));}
 .modal.sp-shop-modal{width:min(440px,100%);}
+.rw-icon-pick{display:flex;align-items:center;gap:8px;min-width:0;} .rw-icon-pick select{flex:1;min-width:0;}
+.rw-icon-pv{flex:0 0 34px;width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--border);border-radius:8px;background:var(--panel-alt);font-size:18px;}
 </style>
 </head>
 <body data-theme="light"><svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="spPixelF" x="0" y="0"><feFlood x="1" y="1" height="1" width="1"/><feComposite width="3" height="3"/><feTile result="a"/><feComposite in="SourceGraphic" in2="a" operator="in"/><feMorphology operator="dilate" radius="1.5"/></filter><filter id="spWcF" x="-15%" y="-15%" width="130%" height="130%"><feTurbulence type="fractalNoise" baseFrequency=".22" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.1" xChannelSelector="R" yChannelSelector="G" result="d"/><feGaussianBlur in="d" stdDeviation=".18"/></filter><filter id="spPaintF" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="turbulence" baseFrequency=".45" numOctaves="1" seed="11" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale=".38" xChannelSelector="R" yChannelSelector="B"/></filter></svg>
@@ -13933,6 +13935,41 @@ function rewardTypes(){ return {title:'称号', crystal:'能量饲料', extraFee
 /* 近 7 天有异常标记的操作员：领取奖励一律转为审核 */
 function spFlaggedRecently(u){ const d = new Date(spNowMs() - 7*86400000), k = feedDateKey(d); return (u?.flags||[]).some(f=>f.date >= k && f.metric!=='xpCap'); }
 function rewardIcons(){ return ['🎁','🏅','🏆','💎','⭐','🎖','👑','🍀','🎫','☕','🧸','📜']; }
+/* 奖励图标库：value = emoji（存储格式不变），选项文字用名称（全局 emoji → SVG 处理会清空 <option> 里的 emoji，导致下拉空白）；旁边实时预览 SVG 图标 */
+var REWARD_ICON_LIB = [
+  {e:'🎁', k:'gift', n:['礼物','Gift','Quà']}, {e:'🏅', k:'medal', n:['奖牌','Medal','Huy chương']}, {e:'🏆', k:'trophy', n:['奖杯','Trophy','Cúp']},
+  {e:'💎', k:'gem', n:['宝石','Gem','Đá quý']}, {e:'⭐', k:'star', n:['星星','Star','Ngôi sao']}, {e:'🎖', k:'medal', n:['勋章','Badge','Huân chương']},
+  {e:'👑', k:'crown', n:['皇冠','Crown','Vương miện']}, {e:'🍀', k:'leaf', n:['幸运草','Clover','Cỏ may mắn']}, {e:'🎫', k:'ticket', n:['票券','Ticket','Vé']},
+  {e:'☕', k:'cup', n:['咖啡','Coffee','Cà phê']}, {e:'🧸', k:'toy', n:['玩偶','Plush toy','Gấu bông']}, {e:'📜', k:'scroll', n:['卷轴 / 证书','Scroll / certificate','Cuộn giấy / chứng nhận']},
+  {e:'🥣', k:'feed', n:['能量饲料','Energy feed','Thức ăn năng lượng']}, {e:'🎨', k:'palette', n:['皮肤','Skin','Trang phục']}, {e:'🔷', k:'gem', n:['碎片','Shards','Mảnh']},
+  {e:'🏷', k:'tag', n:['称号','Title','Danh hiệu']}, {e:'🔑', k:'key', n:['权限','Permission','Quyền']}, {e:'📦', k:'box', n:['实物','Physical item','Hiện vật']}];
+var rewardIconLibCache = null;
+function rewardIconLib(){
+  if(rewardIconLibCache) return rewardIconLibCache;
+  let lib = [];
+  try{ lib = REWARD_ICON_LIB.filter(x=>x && x.e && Array.isArray(x.n)).map(x=>({...x, k:(typeof SP_ICONS!=='undefined' && SP_ICONS[x.k]) ? x.k : ((typeof spEmojiIcon==='function' && spEmojiIcon(x.e)) || '')})); }catch(_e){ lib = []; }
+  if(!lib.length) lib = rewardIcons().map(e=>({e, k:'', n:[e, e, e]}));   /* 图标库加载失败：退回内置 emoji 列表 */
+  return (rewardIconLibCache = lib);
+}
+function rewardIconPreview(e){
+  const x = rewardIconLib().find(i=>i.e===e);
+  try{ if(x?.k && typeof spIcon==='function') return spIcon(x.k, 20, typeof trT==='function' ? trT(x.n) : x.n[0]); }catch(_e){}
+  return `<span aria-hidden="true">${escapeHtml(e||'🎁')}</span>`;
+}
+function rewardIconField(cur){
+  cur = cur || '🎁';
+  try{
+    const lib = rewardIconLib(), known = lib.some(x=>x.e===cur), nm = x=>typeof trT==='function' ? trT(x.n) : x.n[0];
+    const opts = (known ? '' : `<option value="${escapeAttr(cur)}" selected>${escapeHtml(tx('当前图标（自定义）','Current icon (custom)','Biểu tượng hiện tại (tùy chỉnh)'))}</option>`)
+      + lib.map((x, i)=>`<option value="${escapeAttr(x.e)}" ${x.e===cur?'selected':''}>${escapeHtml(nm(x))}</option>`).join('');
+    if(!opts) throw new Error('empty icon library');
+    return `<div class="rw-icon-pick"><span class="rw-icon-pv" data-rw-icon-pv="1">${rewardIconPreview(cur)}</span><select name="icon" data-rw-icon="1" aria-label="${escapeAttr(tx('图标','Icon','Biểu tượng'))}">${opts}</select></div>`;
+  }catch(err){
+    console.warn('[reward icons] fallback', err);
+    return `<input name="icon" maxlength="4" value="${escapeAttr(cur)}" aria-label="${escapeAttr(tx('图标','Icon','Biểu tượng'))}"><small class="hint">${escapeHtml(tx('图标库加载失败，可直接输入一个 emoji','The icon library failed to load; type an emoji instead','Không tải được thư viện biểu tượng; hãy nhập emoji'))}</small>`;
+  }
+}
+document.addEventListener('change', e=>{ const el = e.target; if(!el?.dataset?.rwIcon) return; const pv = el.closest('.rw-icon-pick')?.querySelector('[data-rw-icon-pv]'); if(pv) pv.innerHTML = rewardIconPreview(el.value); });
 function rewardStatusForCore(r, user){
   const now = gToday();
   const sid = seasonNow().id;
@@ -14133,7 +14170,7 @@ function rewardAdminHtml(){
   const form = e ? `<form id="rewardForm" class="form-grid rw-form" onsubmit="return false">
       <input type="hidden" name="id" value="${escapeAttr(r?.id||'')}">
       <div class="form-field"><label>奖励名称<span class="req">*</span></label><input name="name" maxlength="40" value="${escapeAttr(r?.name||'')}"></div>
-      <div class="form-field"><label>图标</label><select name="icon">${rewardIcons().map(i=>`<option ${r?.icon===i?'selected':''}>${i}</option>`).join('')}</select></div>
+      <div class="form-field"><label>图标</label>${rewardIconField(r?.icon)}</div>
       <div class="form-field"><label>类型</label><select name="type">${Object.entries(types).map(([k,v])=>`<option value="${k}" ${r?.type===k?'selected':''}>${v}</option>`).join('')}</select></div>
       <div class="form-field"><label>内容 / 数量<span class="hint">（称号文字、能量饲料数、额外投喂次数等）</span></label><input name="value" maxlength="40" value="${escapeAttr(r?.value||'')}"></div>
       <div class="form-field"><label>所需等级</label><select name="minLevel">${lv.map((l,i)=>`<option value="${i}" ${(+r?.minLevel||0)===i?'selected':''}>${l.name}</option>`).join('')}</select></div>
