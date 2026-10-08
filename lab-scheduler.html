@@ -905,6 +905,7 @@ table.data-table tr:hover td{background:var(--panel-alt);}
 @container (max-width:56px){ .rider{display:none;} }
 .fly-sprite{position:fixed;left:0;top:0;width:16px;height:16px;z-index:9000;pointer-events:none;filter:drop-shadow(0 2px 3px rgba(15,23,42,.3));}
 .fx-paused .rider .sprite,.dragging .rider .sprite,.modal-open .rider .sprite{animation-play-state:paused !important;}
+body.sprite-content-hidden .sprite,body.sprite-content-hidden .rider,body.sprite-content-hidden .mate-sprite,body.sprite-content-hidden .fly-sprite,body.sprite-content-hidden .nest-av,body.sprite-content-hidden .nest-stack,body.sprite-content-hidden .nest-ico,body.sprite-content-hidden .spv,body.sprite-content-hidden .dh-sprite,body.sprite-content-hidden .dh-stages,body.sprite-content-hidden .fc-avs,body.sprite-content-hidden .fc-av,body.sprite-content-hidden #spriteZoom{display:none !important;}
 @media (prefers-reduced-motion:reduce){ .rider .sprite{animation:none !important;} }
 /* 巢：胶囊内精灵头像叠放（最多 3 个 + 余数） */
 .nest-stack{display:flex;align-items:center;padding-left:2px;}
@@ -5704,6 +5705,7 @@ function applyCsvRows(equipmentRows, scheduleRows, accountRows, sampleRows){
       role:ACCOUNT_ROLES[cell(row,'角色').trim()] ? cell(row,'角色').trim() : 'guest',
       enabled:!['否','no','false','0'].includes(cell(row,'启用').trim().toLowerCase()),
       mustChangePassword:truthy(cell(row,'首次登录需改密')),
+      canViewSprite:truthy(cell(row,'允许查看精灵')),
     })).filter(account=>account.username);
     if(accounts.length) state.accounts = accounts;
   }
@@ -5889,9 +5891,9 @@ const DEFAULT_FAVICON = PHOTO_LOGO_URL;
 
 function loadAccounts(){
   const defaults = [
-    {id:'u_admin', username:'admin', displayName:demoText(['超级管理员','Super admin','Quản trị viên cấp cao']), password:'admin123', role:'admin', enabled:true},
-    {id:'u_operator', username:'operator', displayName:demoText(['实验室操作员','Lab operator','Vận hành viên']), password:'operator123', role:'operator', enabled:true},
-    {id:'u_guest', username:'guest', displayName:demoText(['只读访客','Read-only guest','Khách chỉ xem']), password:'guest123', role:'guest', enabled:true},
+    {id:'u_admin', username:'admin', displayName:demoText(['超级管理员','Super admin','Quản trị viên cấp cao']), password:'admin123', role:'admin', enabled:true, canViewSprite:false},
+    {id:'u_operator', username:'operator', displayName:demoText(['实验室操作员','Lab operator','Vận hành viên']), password:'operator123', role:'operator', enabled:true, canViewSprite:false},
+    {id:'u_guest', username:'guest', displayName:demoText(['只读访客','Read-only guest','Khách chỉ xem']), password:'guest123', role:'guest', enabled:true, canViewSprite:false},
   ];
   const saved = parseStoredJson(STORAGE_KEYS.accounts, null);
   if(Array.isArray(saved) && saved.length){
@@ -5899,7 +5901,7 @@ function loadAccounts(){
       id: account.id || `user_${index}`, username: String(account.username || ''),
       displayName: (account.username==='admin' && ['系统管理员','Admin','Quản trị','管理员'].includes(String(account.displayName||''))) ? demoText(['超级管理员','Super admin','Quản trị viên cấp cao']) : String(account.displayName || account.username || '未命名用户'),
       password: String(account.password || ''), role: ACCOUNT_ROLES[account.role] ? account.role : 'guest',
-      enabled: account.enabled !== false, mustChangePassword: !!account.mustChangePassword,
+      enabled: account.enabled !== false, mustChangePassword: !!account.mustChangePassword, canViewSprite: account.canViewSprite===true,
     }));
   }
   return defaults;
@@ -5914,6 +5916,10 @@ function saveAccounts(){
   return ok;
 }
 function currentUser(){ return state.accounts.find(account=>account.id===state.currentUserId && account.enabled) || null; }
+function canViewSpriteContent(){
+  const user = currentUser();
+  return !!user && (user.role==='admin' || user.canViewSprite===true);
+}
 function canExport(){ return state.role === 'admin'; }   /* 仅超级管理员可导出 / 下载 CSV */
 /* 密码规则：6 位，可含大小写英文字母、数字和特殊符号（不含空格及中文） */
 const PASSWORD_RULE = {length:6, pattern:/^[\x21-\x7E]+$/};
@@ -8375,6 +8381,7 @@ function render(){
   state.focusTarget = null;
   document.documentElement.lang = LANG_META[state.lang].html;
   document.body.setAttribute('data-theme', state.theme);
+  document.body.classList.toggle('sprite-content-hidden', !canViewSpriteContent());
   document.body.classList.toggle('presentation', !!state.presentation);
   document.body.classList.toggle('modal-open', !!state.modal);
   document.documentElement.style.setProperty('--row-h', ROW_FIXED_H+'px');
@@ -9675,7 +9682,7 @@ function progressHtml(b, p, widthPx=0){
   const riderMain = `<span class="rider rf-${e.form} ${riderFx?'fx':''} ${shortMode?'short':''} ${bookingMood(b)==='risk'?'risk':''} lv-${lv} ${fN?`fused collapse cl-${CL.tier}`:''}${moveCls}" ${fN?`data-stab="${CL.stab}" data-n="${fN+1}"`:''} data-evo="${b.id}:${lv}" data-form="${e.form}" data-color="${e.color}" data-mood="${bookingMood(b)}" data-size="${size}" style="--ec:${e.color};animation-delay:${ph}" data-tip="${escapeAttr(`${e.code} · ${e.name} · Lv.${lv} ${t(EVO_STAGES[lv].name)} · ${t('进度')} ${pct}%${boostPct ? ` · ${t('展示进度')} ${pct+boostPct}%（${t('投喂加速')} +${boostPct}%）` : ''}${shortMode ? '' : ` · ${t('技能')}: ${t(elementSkill(e.form).name)} · ${t(TRAIL_STAGES[lv].name)}`}${mates.length ? ` · ${t('并行合体')} ${collapseLabel(mates.length+1)}: ${mates.map(m=>m.b.project||m.b.id).join('、')} · ${t('合体状态')}：${CL.label} · ${t('稳定度')} ${CL.stab}% · ${t('设备负载')} ${fmtLoadPct(DLd.rate)}%（${DLd.cur.total}/${DLd.cap} ${t('模组位')}）` : ''}`)}">${emit}${mvFx}${lv>=4&&fx?'<span class="evo-aura"></span>':''}${fN?'<i class="fz-leader"></i>':''}${armor}<span class="token" ${fN?`style="--fz-ring:${fRing}"`:''}>${spriteSvg(e.form, e.color, size, fN && CL.tier>=3 ? 'risk' : bookingMood(b), lv)}<b class="evo-lv">${lv}</b></span>${matesHtml}</span>`;
   /* 并行试验（已合体）自己的精灵：独立设计——六边形“契约”框 + 自己类型 / 进化等级的精灵 + 暗紫契约纹章，
      表示它已被主线吸纳（能量输送给主线、不再单独释放技能）；位于本条真实进度前沿 */
-  const rider = monthView ? '' : isMate ? `<span class="mate-sprite" style="--ec:${e.color}" data-tip="${escapeAttr(`${e.code} · ${e.name} · Lv.${lv} ${t(EVO_STAGES[lv].name)} · ${pct}% · ${t('已合体至主线')}：${fz.main.project||fz.main.id}`)}"><span class="ms-hex">${spriteSvg(e.form, e.color, 15, 'run', lv)}</span><b class="ms-lv">${lv}</b><i class="ms-seal"><svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.6"><circle cx="4.2" cy="6" r="2.8"/><circle cx="7.8" cy="6" r="2.8"/></svg></i><i class="ms-flow"></i></span>` : riderMain;
+  const rider = !canViewSpriteContent() || monthView ? '' : isMate ? `<span class="mate-sprite" style="--ec:${e.color}" data-tip="${escapeAttr(`${e.code} · ${e.name} · Lv.${lv} ${t(EVO_STAGES[lv].name)} · ${pct}% · ${t('已合体至主线')}：${fz.main.project||fz.main.id}`)}"><span class="ms-hex">${spriteSvg(e.form, e.color, 15, 'run', lv)}</span><b class="ms-lv">${lv}</b><i class="ms-seal"><svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.6"><circle cx="4.2" cy="6" r="2.8"/><circle cx="7.8" cy="6" r="2.8"/></svg></i><i class="ms-flow"></i></span>` : riderMain;
   /* 预测段「释放技能」：元素由试验类型决定（火 / 冰 / 雷 / 水…），进化阶段决定威力（Lv.1 单发 / Lv.2 强化带尾迹 / Lv.3 双发 / Lv.4 巨型冲击），
      速度与密度随阶段提升；全部限制在跑道线 ±5px 内、位于文字之后，不遮挡排期文字 */
   const ghostPx = widthPx ? widthPx*(1-p) : 0;
@@ -9792,6 +9799,7 @@ function renderEvoLegendModal(){
 /* 精灵放大预览：悬停显示、移出隐藏；点击固定 / 再次点击或点空白关闭（触屏） */
 var zoomPinned = null;
 function spriteZoomShow(el){
+  if(!canViewSpriteContent()) return;
   const [form, color, lv] = String(el.dataset.zoomSprite||'').split('|');
   let z = document.getElementById('spriteZoom');
   if(!z){ z = document.createElement('div'); z.id = 'spriteZoom'; document.body.appendChild(z); }
@@ -9819,7 +9827,7 @@ function renderTrialNest(){
   const active = st.list.filter(r=>r.running || r.pending).sort((a,b)=>b.running-a.running || b.pending-a.pending);
   const idle = st.list.filter(r=>!r.running && !r.pending);
   const row = r=>`<button type="button" class="nest-row ${state.nestFocus===r.key?'focus':''} ${r.running||r.pending?'':'idle'}" data-act="nestFocus" data-k="${r.key}" style="--ec:${r.color}" aria-pressed="${state.nestFocus===r.key}">
-      <span class="nest-ico">${spriteSvg(r.form, r.color, 22, r.running ? (r.risk ? 'risk' : 'run') : 'sleep', r.running ? r.lv : 1)}</span>
+      <span class="nest-ico">${canViewSpriteContent()?spriteSvg(r.form, r.color, 22, r.running ? (r.risk ? 'risk' : 'run') : 'sleep', r.running ? r.lv : 1):''}</span>
       <span class="nest-name"><b data-i18n-ignore="1">${escapeHtml(r.code)}</b><small>${escapeHtml(r.name)}</small></span>
       <span class="nest-cnt"><b>${r.running}</b><small> / ${r.running+r.pending}</small></span>
       <span class="nest-prog"><span class="nest-bar"><i style="width:${(r.progress*100).toFixed(0)}%"></i></span><em>${r.running?`${Math.round(r.progress*100)}%`:'—'}</em></span>
@@ -9829,9 +9837,9 @@ function renderTrialNest(){
   const summary = st.running ? `<b>${st.running}</b><span class="nest-lbl">${t('运行中')}</span><span class="nest-sep"></span><span class="nest-pct">${Math.round(st.progress*100)}%</span>` : `<span class="nest-lbl">${t('暂无运行')}</span>`;
   return `<div class="trial-nest ${fx?'fx':''} ${state.nestOpen?'open':''} ${st.running?'':'empty'}" data-nest="1">
     <button type="button" class="nest-pill ${focus?'has-focus':''}" data-act="nestToggle" aria-haspopup="dialog" aria-expanded="${!!state.nestOpen}" title="${escapeAttr(t('试验巢'))}">
-      <span class="nest-stack">${(()=>{ const run = st.list.filter(r=>r.running).sort((a,b)=>b.running-a.running);
+      <span class="nest-stack">${canViewSpriteContent()?(()=>{ const run = st.list.filter(r=>r.running).sort((a,b)=>b.running-a.running);
         if(!run.length) return `<span class="nest-av">${spriteSvg('orb', '#8b95a1', 20, 'sleep')}</span>`;
-        return run.slice(0,3).map((r,i)=>`<span class="nest-av" style="--ec:${r.color};z-index:${3-i}">${spriteSvg(r.form, r.color, 20, r.risk?'risk':'run', r.lv||1)}</span>`).join('') + (run.length>3?`<span class="nest-av more">+${run.length-3}</span>`:''); })()}</span>
+        return run.slice(0,3).map((r,i)=>`<span class="nest-av" style="--ec:${r.color};z-index:${3-i}">${spriteSvg(r.form, r.color, 20, r.risk?'risk':'run', r.lv||1)}</span>`).join('') + (run.length>3?`<span class="nest-av more">+${run.length-3}</span>`:''); })():''}</span>
       <span class="nest-title">${t('试验巢')}</span>${summary}
       ${focus?`<span class="nest-focus-tag" style="--ec:${focus.color}" data-i18n-ignore="1">${escapeHtml(focus.code)}</span>`:''}
     </button>
@@ -9847,7 +9855,7 @@ function renderTrialNest(){
         <span title="${escapeAttr(t('各类型负荷率之和 = 设备负荷率（全部环境设备容量口径）'))}">${t('设备负荷率')} <b>${fmtLoadPct(st.cap.rate)}%</b> <small>${st.cap.used}/${st.cap.cap} ${t('模组位')}</small></span>
         <button type="button" class="nest-fx ${fx?'on':''}" data-act="nestFx" role="switch" aria-checked="${fx}">${t('动态提示')}<i></i></button>
       </div>
-      <div class="nest-legend"><span class="lg-real"></span>${t('实线 = 真实进度')}<span class="lg-ghost"></span>${t('虚线 = 按计划预测')}<span class="lg-token">${spriteSvg('orb','#8b95a1',12,'run')}</span>${t('精灵 = 当前进度位置（动态示意）')}</div>
+      <div class="nest-legend"><span class="lg-real"></span>${t('实线 = 真实进度')}<span class="lg-ghost"></span>${t('虚线 = 按计划预测')}${canViewSpriteContent()?`<span class="lg-token">${spriteSvg('orb','#8b95a1',12,'run')}</span>${t('精灵 = 当前进度位置（动态示意）')}`:''}</div>
     </div>
   </div>`;
 }
@@ -11184,7 +11192,7 @@ function renderRelationsBox(b){
 }
 /* 详情页精灵：放大版（96px）+ 当前阶段 / 进度 / 下一次进化，并列出 Lv.1～Lv.4 成长线；点击精灵播放欢呼 */
 function detailSpriteHero(b){
-  if(!b || !b.id || isPendingApproval(b)) return '';
+  if(!canViewSpriteContent() || !b || !b.id || isPendingApproval(b)) return '';
   const status = bookingDisplayStatus(b);
   if(status==='已完成') return '';
   const e = energyOf(b), p = progressOf(b), started = !!b.started && p>0;
@@ -11528,6 +11536,7 @@ function renderAccountsModal(){
           <input type="text" data-account-username="${account.id}" value="${escapeAttr(account.username)}" style="width:110px;${inputStyle}">
           <select class="role-select" data-account-role="${account.id}">${Object.entries(ACCOUNT_ROLES).map(([key,meta])=>`<option value="${key}" ${account.role===key?'selected':''}>${meta.label}</option>`).join('')}</select>
           <label class="checkline" style="font-size:11px;"><input type="checkbox" data-account-enabled="${account.id}" ${account.enabled?'checked':''}> 启用</label>
+          ${account.role==='admin'?'':`<label class="checkline" style="font-size:11px;" title="未开启时不显示精灵内容及动画"><input type="checkbox" data-account-sprite="${account.id}" ${account.canViewSprite===true?'checked':''}> 允许查看精灵</label>`}
           <input type="password" data-account-password="${account.id}" placeholder="指定新密码(6位)" maxlength="6" autocomplete="new-password" style="width:120px;${inputStyle}">
           <button type="button" class="btn btn-ghost btn-sm" data-act="saveAccountRole" data-id="${account.id}">保存</button>
           ${account.id!==state.currentUserId?`<button type="button" class="btn btn-ghost btn-sm" data-act="resetAccountPassword" data-id="${account.id}" title="重置为默认密码 ${DEFAULT_NEW_PASSWORD}">${svgIcon('refresh',13)} 重置密码</button>`:''}
@@ -11790,7 +11799,8 @@ async function onAction(e){
   const id = el.dataset.id;
   switch(act){
     case 'view':
-      if(['stats','insertions','archive','spirit'].includes(el.dataset.v) && state.role==='guest') return toast('访客无权查看','error');
+      if(['stats','insertions','archive'].includes(el.dataset.v) && state.role==='guest') return toast('访客无权查看','error');
+      if(el.dataset.v==='spirit' && !canViewSpriteContent()) return toast('无权查看精灵内容','error');
       state.view = el.dataset.v; break;
     case 'subview': state.subview = el.dataset.v; break;
     case 'nestToggle': state.nestOpen = !state.nestOpen; break;
@@ -11805,6 +11815,7 @@ async function onAction(e){
     case 'rewardSave': return rewardSave();
     case 'rewardDelete': return rewardDelete(id);
     case 'growthCfgSave': return growthCfgSave();
+    case 'resetOperatorSprites': return resetOperatorSprites();
     case 'seasonRecheck': return seasonRecheck(id);
     case 'evoLegend': state.nestOpen = false; state.modal = {type:'evoLegend'}; break;
     case 'nestFx': state.energyFx = !energyFxOn(); writeLocalStorage('lab-scheduler-energy-fx', state.energyFx ? '1' : '0'); break;
@@ -12495,7 +12506,7 @@ function addAccountFromForm(){
   if(!username || !displayName) return toast('请填写登录账号和显示名称','error');
   const err = passwordError(password); if(err) return toast(err,'error');
   if(state.accounts.some(a=>a.username===username)) return toast('该登录账号已存在','error');
-  state.accounts.push({id:uid('user_'), username, displayName, password, role:String(fd.get('role')||'guest'), enabled:true, mustChangePassword:true});
+  state.accounts.push({id:uid('user_'), username, displayName, password, role:String(fd.get('role')||'guest'), enabled:true, mustChangePassword:true, canViewSprite:false});
   saveAccounts();
   toast(`账号已创建，初始密码 ${password}，首次登录需修改密码`,'ok');
   render();
@@ -12514,6 +12525,7 @@ function saveAccountRole(id){
   if(account.id===state.currentUserId && role!==account.role) return toast('不能修改当前登录账号的角色','error');
   if(password){ const err = passwordError(password); if(err) return toast(err,'error'); }
   Object.assign(account, {username, displayName, role, enabled:q('data-account-enabled').checked});
+  if(role!=='admin') account.canViewSprite = !!q('data-account-sprite')?.checked;
   if(password && account.id!==state.currentUserId){ account.password = password; account.mustChangePassword = true; addAudit('password-reset', {project:account.username}); }
   else if(password) account.password = password;
   if(!saveAccounts()) return;
@@ -12605,8 +12617,8 @@ function csvText({headers, rows}){
 function localDT(d){ d = new Date(d); return Number.isNaN(d.getTime()) ? '' : `${dateInputValue(d)} ${fmtHM(d)}`; }
 function csvExportData(view){
   const deviceMap = new Map(state.devices.map(d=>[d.id,d]));
-  if(view==='accounts') return {filename:CSV_FILES.accounts, headers:['账号ID','登录账号','显示名称','密码','角色','启用','首次登录需改密'],
-    rows:state.accounts.map(a=>[a.id,a.username,a.displayName,a.password,a.role,a.enabled?'是':'否',a.mustChangePassword?'是':'否'])};
+  if(view==='accounts') return {filename:CSV_FILES.accounts, headers:['账号ID','登录账号','显示名称','密码','角色','启用','首次登录需改密','允许查看精灵'],
+    rows:state.accounts.map(a=>[a.id,a.username,a.displayName,a.password,a.role,a.enabled?'是':'否',a.mustChangePassword?'是':'否',a.canViewSprite?'是':'否'])};
   if(view==='equipment') return {filename:CSV_FILES.equipment, headers:['设备编号','设备名称','容量','测试范围','当前状态','默认允许开炉','校准周期(天)','末次校准','下次校准','备注','设备类型','图片文件','容量(模组位)'],
     rows:sortDevicesByCode(state.devices).map(d=>[d.code,d.name,d.capacity,d.tempRange,STATUS_META[d.status]?.label || d.status,d.midOpenDefault?'是':'否',d.calCycleDays,d.lastCalibration,d.nextCalibration,d.note||'',d.deviceType||'',d.photo||'',d.slotCap||''])};
   if(view==='samples') return {filename:CSV_FILES.samples, headers:['样品编号','数量','样品负责人','关联试验','设备编号','开始时间','预计结束','状态','样品状态','异常描述'],
@@ -13413,6 +13425,7 @@ function renderFeedTopButton(){
   return `<button class="icon-btn feed-top ${cls}" data-act="feedLog" title="${escapeAttr(title)}" aria-label="${escapeAttr(t('定时投喂'))}">${feedBowlSvg(18)}${act||mk?'<span class="feed-dot"></span>':''}</button>`;
 }
 function feedCardSprites(){
+  if(!canViewSpriteContent()) return '';
   try{
     const run = nestStats().list.filter(r=>r.running).sort((a,b)=>b.running-a.running).slice(0,3);
     if(run.length) return run.map((r,i)=>`<span class="fc-av" style="--ec:${r.color};z-index:${3-i}">${spriteSvg(r.form, r.color, 26, 'run', r.lv||1)}</span>`).join('');
@@ -14301,6 +14314,20 @@ function growthCfgSave(){
   spAudit('cfg', '', {by:currentUser()?.username});
   saveGrowth(true); seasonSettle(); spApplyGanttSkins(); toast(t('成就设置已保存'), 'ok'); render();
 }
+function resetOperatorSprites(){
+  if(state.role!=='admin') return toast(tx('仅超级管理员可以重置操作员精灵','Only super admins can reset operator sprites','Chỉ quản trị viên cấp cao mới có thể đặt lại tinh linh vận hành viên'), 'error');
+  const operators = (state.accounts||[]).filter(a=>a.role==='operator');
+  if(!operators.length) return toast(tx('没有可重置的操作员','There are no operators to reset','Không có vận hành viên để đặt lại'), 'info');
+  if(!confirm(tx('确定重置所有操作员的精灵进度、养成数据与甘特投喂加速？排期、账号及精灵设置不会改变。','Reset all operators’ sprite progress, growth data, and Gantt feed boosts? Schedules, accounts, and sprite settings will remain unchanged.','Đặt lại tiến độ, dữ liệu nuôi tinh linh và tăng tốc cho ăn Gantt của tất cả vận hành viên? Lịch, tài khoản và cài đặt tinh linh sẽ không thay đổi.'))) return;
+  const g = G();
+  operators.forEach(a=>{ delete g.users[a.username]; });
+  const boostCount = Object.keys(g.boost||{}).length;
+  g.boost = {};
+  addAudit('operator-sprite-reset', {project:`${operators.length} operators · ${boostCount} boosts`});
+  saveGrowth(true);
+  toast(tx('已重置所有操作员精灵，排期与设置保持不变','All operator sprites were reset; schedules and settings are unchanged','Đã đặt lại tinh linh của tất cả vận hành viên; lịch và cài đặt được giữ nguyên'), 'ok');
+  render();
+}
 function growthCfgHtml(){
   const c = gCfg(), d = growthDefaults();
   const F = (name, label, v, opt={})=>`<div class="form-field cfg-f"><label for="cf_${name}">${escapeHtml(label)}</label><input id="cf_${name}" type="number" name="${name}" value="${escapeAttr(v)}" min="${opt.min??0}" ${opt.max!=null?`max="${opt.max}"`:''} step="${opt.step??1}"><small class="hint">${escapeHtml(tx('默认','Default','Mặc định'))} ${escapeHtml(String(opt.def ?? ''))}</small></div>`;
@@ -14334,7 +14361,7 @@ function growthCfgHtml(){
     ${H('玩法与显示','Gameplay and display','Lối chơi và hiển thị')}
     <div class="cfg-grid">${F('patrolDaily', tx('每日巡逻事件次数','Patrol events per day','Sự kiện tuần tra mỗi ngày'), c.patrolDaily, {def:d.patrolDaily, max:20})}${F('patrolCdMin', tx('巡逻事件间隔（分钟）','Patrol interval (min)','Khoảng cách tuần tra (phút)'), c.patrolCdMin, {def:d.patrolCdMin})}${F('gameDaily', tx('每日小游戏次数','Mini-game plays per day','Lượt trò chơi mỗi ngày'), c.gameDaily, {def:d.gameDaily, max:20})}
       <div class="form-field cfg-f cfg-checks">${C('showHidden', tx('向操作员展示隐藏成就的名称和条件','Show hidden achievement names and conditions to operators','Hiển thị tên và điều kiện thành tựu ẩn cho vận hành viên'), c.showHidden)}${C('autoEvents', tx('每个赛季自动生成默认活动','Create default events automatically each season','Tự tạo sự kiện mặc định mỗi mùa'), c.autoEvents!==false)}${C('guestFx', tx('访客仍显示甘特条上的原有进度精灵特效（不含任何养成内容）','Guests still see the original progress sprites on Gantt bars (no growth content)','Khách vẫn thấy tinh linh tiến độ gốc trên thanh Gantt (không có nội dung nuôi)'), c.guestFx!==false)}</div></div>
-    <div class="cfg-actions"><button type="button" class="btn btn-ghost btn-sm" data-act="spCfgDefaults">${escapeHtml(tx('恢复默认值','Restore defaults','Khôi phục mặc định'))}</button><button class="btn btn-primary btn-sm" data-act="growthCfgSave">${escapeHtml(tx('保存设置','Save settings','Lưu cài đặt'))}</button></div>
+    <div class="cfg-actions"><button type="button" class="btn btn-ghost btn-sm" data-act="spCfgDefaults">${escapeHtml(tx('恢复默认值','Restore defaults','Khôi phục mặc định'))}</button><button type="button" class="btn btn-danger btn-sm" data-act="resetOperatorSprites">${escapeHtml(tx('重置操作员精灵','Reset operator sprites','Đặt lại tinh linh vận hành viên'))}</button><button class="btn btn-primary btn-sm" data-act="growthCfgSave">${escapeHtml(tx('保存设置','Save settings','Lưu cài đặt'))}</button></div>
   </form>
   <div class="hint" style="margin-top:8px;">${escapeHtml(tx('防刷：投喂冷却、每日次数、每日 / 每周经验上限、能量饲料每日获取上限；操作带唯一编号去重并加锁；1 分钟内同类操作超过 30 次自动暂停计数并标记异常（全员数据中可见），被标记的操作员领取奖励改为需审核。','Anti-abuse: feeding cooldown, daily limits, daily / weekly XP caps and a daily energy feed cap; every action carries a unique ID for de-duplication and is locked; more than 30 identical actions within 1 minute pause counting and raise a flag (visible in All users), and flagged operators\' reward claims require review.','Chống gian lận: thời gian chờ, giới hạn lượt mỗi ngày, giới hạn EXP ngày / tuần và giới hạn thức ăn mỗi ngày; mỗi thao tác có mã riêng để chống trùng và được khóa; hơn 30 thao tác giống nhau trong 1 phút sẽ tạm dừng tính và gắn cờ (xem ở Tất cả người dùng), vận hành viên bị gắn cờ phải được duyệt khi nhận thưởng.'))}</div>`;
 }
@@ -14576,7 +14603,7 @@ function spDevice(){
   return spDeviceId;
 }
 function spCanPlay(){ return !!currentUser() && state.role==='operator'; }
-function spCanSee(){ return !!currentUser() && ['admin','operator'].includes(state.role); }
+function spCanSee(){ return canViewSpriteContent(); }
 function spIsAdmin(){ return !!currentUser() && state.role==='admin'; }
 function spMe(){ return currentUser()?.username || ''; }
 function spUserName(user){ return translateData(state.accounts?.find(a=>a.username===user)?.displayName || user); }
