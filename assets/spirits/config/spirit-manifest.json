@@ -1,0 +1,210 @@
+{
+  "meta": {
+    "spiritCount": 402,
+    "stages": [
+      "lv1",
+      "lv2",
+      "lv3",
+      "lv4",
+      "lv5"
+    ],
+    "renderChain": [
+      "image_asset",
+      "vector_placeholder"
+    ],
+    "forbidGroundFx": [
+      "ground_aura",
+      "ground_ring",
+      "ground_glyph",
+      "ground_glow"
+    ]
+  },
+  "aliases": {},
+  "spirits": {
+    "sp_lantern": {
+      "id": "001",
+      "key": "lantern",
+      "category": "festival",
+      "visibility": "operator",
+      "styleAnchor": "seer_cel_flat",
+      "forbidden": {
+        "noGroundAura": true,
+        "noGroundRing": true,
+        "noGroundGlyph": true,
+        "noGroundGlow": true
+      },
+      "stageModel": {
+        "lv1": {
+          "stage": "lv1",
+          "asset": "assets/spirits/festival/001/spirit_001_lantern_lv1.png"
+        },
+        "lv2": {
+          "stage": "lv2",
+          "asset": "assets/spirits/festival/001/spirit_001_lantern_lv2.png"
+        },
+        "lv3": {
+          "stage": "lv3",
+          "asset": "assets/spirits/festival/001/spirit_001_lantern_lv3.png"
+        },
+        "lv4": {
+          "stage": "lv4",
+          "asset": "assets/spirits/festival/001/spirit_001_lantern_lv4.png",
+          "thumb": "assets/spirits/festival/001/spirit_001_lantern_lv4_thumb.png"
+        },
+        "lv5": {
+          "stage": "lv5",
+          "asset": "assets/spirits/festival/001/spirit_001_lantern_lv5.png",
+          "faxiang": "assets/spirits/festival/001/spirit_001_lantern_lv5_faxiang.png"
+        }
+      }
+    },
+    "sp_flame": {
+      "id": "002",
+      "key": "flame",
+      "category": "elem",
+      "visibility": "operator",
+      "styleAnchor": "seer_cel_flat",
+      "forbidden": {
+        "noGroundAura": true,
+        "noGroundRing": true,
+        "noGroundGlyph": true,
+        "noGroundGlow": true
+      },
+      "stageModel": {
+        "lv1": {
+          "stage": "lv1",
+          "asset": "assets/spirits/elem/002/spirit_002_flame_lv1.png"
+        },
+        "lv2": {
+          "stage": "lv2",
+          "asset": "assets/spirits/elem/002/spirit_002_flame_lv2.png"
+        },
+        "lv3": {
+          "stage": "lv3",
+          "asset": "assets/spirits/elem/002/spirit_002_flame_lv3.png"
+        },
+        "lv4": {
+          "stage": "lv4",
+          "asset": "assets/spirits/elem/002/spirit_002_flame_lv4.png",
+          "thumb": "assets/spirits/elem/002/spirit_002_flame_lv4_thumb.png"
+        },
+        "lv5": {
+          "stage": "lv5",
+          "asset": "assets/spirits/elem/002/spirit_002_flame_lv5.png",
+          "faxiang": "assets/spirits/elem/002/spirit_002_flame_lv5_faxiang.png"
+        }
+      }
+    },
+    "sp_hour": {
+      "id": "003",
+      "key": "chrono",
+      "category": "time",
+      "visibility": "operator",
+      "styleAnchor": "seer_cel_flat",
+      "forbidden": {
+        "noGroundAura": true,
+        "noGroundRing": true,
+        "noGroundGlyph": true,
+        "noGroundGlow": true
+      },
+      "stageModel": {
+        "lv1": {
+          "stage": "lv1",
+          "asset": "assets/spirits/time/003/spirit_003_chrono_lv1.png"
+        },
+        "lv2": {
+          "stage": "lv2",
+          "asset": "assets/spirits/time/003/spirit_003_chrono_lv2.png"
+        },
+        "lv3": {
+          "stage": "lv3",
+          "asset": "assets/spirits/time/003/spirit_003_chrono_lv3.png"
+        },
+        "lv4": {
+          "stage": "lv4",
+          "asset": "assets/spirits/time/003/spirit_003_chrono_lv4.png",
+          "thumb": "assets/spirits/time/003/spirit_003_chrono_lv4_thumb.png"
+        },
+        "lv5": {
+          "stage": "lv5",
+          "asset": "assets/spirits/time/003/spirit_003_chrono_lv5.png",
+          "faxiang": "assets/spirits/time/003/spirit_003_chrono_lv5_faxiang.png"
+        }
+      }
+    },
+    "sp_starbeast": {
+      "id": "004",
+      "key": "stargleam",
+      "category": "myth",
+      "visibility": "operator",
+      "styleAnchor": "seer_cel_flat",
+      "forbidden": {
+        "noGroundAura": true,
+        "noGroundRing": true,
+        "noGroundGlyph": true,
+        "noGroundGlow": true
+      },
+      "stageModel": {
+        "lv1": {
+          "stage": "lv1",
+          "asset": "assets/spirits/myth/004/spirit_004_stargleam_lv1.png"
+        },
+        "lv2": {
+          "stage": "lv2",
+          "asset": "assets/spirits/myth/004/spirit_004_stargleam_lv2.png"
+        },
+        "lv3": {
+          "stage": "lv3",
+          "asset": "assets/spirits/myth/004/spirit_004_stargleam_lv3.png"
+        },
+        "lv4": {
+          "stage": "lv4",
+          "asset": "assets/spirits/myth/004/spirit_004_stargleam_lv4.png",
+          "thumb": "assets/spirits/myth/004/spirit_004_stargleam_lv4_thumb.png"
+        },
+        "lv5": {
+          "stage": "lv5",
+          "asset": "assets/spirits/myth/004/spirit_004_stargleam_lv5.png",
+          "faxiang": "assets/spirits/myth/004/spirit_004_stargleam_lv5_faxiang.png"
+        }
+      }
+    },
+    "sp_gear": {
+      "id": "005",
+      "key": "gearguard",
+      "category": "mech",
+      "visibility": "operator",
+      "styleAnchor": "seer_cel_flat",
+      "forbidden": {
+        "noGroundAura": true,
+        "noGroundRing": true,
+        "noGroundGlyph": true,
+        "noGroundGlow": true
+      },
+      "stageModel": {
+        "lv1": {
+          "stage": "lv1",
+          "asset": "assets/spirits/mech/005/spirit_005_gearguard_lv1.png"
+        },
+        "lv2": {
+          "stage": "lv2",
+          "asset": "assets/spirits/mech/005/spirit_005_gearguard_lv2.png"
+        },
+        "lv3": {
+          "stage": "lv3",
+          "asset": "assets/spirits/mech/005/spirit_005_gearguard_lv3.png"
+        },
+        "lv4": {
+          "stage": "lv4",
+          "asset": "assets/spirits/mech/005/spirit_005_gearguard_lv4.png",
+          "thumb": "assets/spirits/mech/005/spirit_005_gearguard_lv4_thumb.png"
+        },
+        "lv5": {
+          "stage": "lv5",
+          "asset": "assets/spirits/mech/005/spirit_005_gearguard_lv5.png",
+          "faxiang": "assets/spirits/mech/005/spirit_005_gearguard_lv5_faxiang.png"
+        }
+      }
+    }
+  }
+}

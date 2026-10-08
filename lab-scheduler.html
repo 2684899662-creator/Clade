@@ -5918,7 +5918,7 @@ function saveAccounts(){
 function currentUser(){ return state.accounts.find(account=>account.id===state.currentUserId && account.enabled) || null; }
 function canViewSpriteContent(){
   const user = currentUser();
-  return !!user && (user.role==='admin' || user.canViewSprite===true);
+  return !!user && (user.role==='admin' || user.role==='operator');
 }
 function canExport(){ return state.role === 'admin'; }   /* 仅超级管理员可导出 / 下载 CSV */
 /* 密码规则：6 位，可含大小写英文字母、数字和特殊符号（不含空格及中文） */
@@ -14607,6 +14607,17 @@ function spDevice(){
 function spCanPlay(){ return !!currentUser() && state.role==='operator'; }
 function spCanSee(){ return canViewSpriteContent(); }
 function spIsAdmin(){ return !!currentUser() && state.role==='admin'; }
+function spRoleVisibility(){ return state.role==='admin' ? 'super_admin' : state.role==='operator' ? 'operator' : 'guest'; }
+function spDefaultVisibility(def){ return (def?.cat==='hidden' || def?.cat==='adm' || /^ad_/.test(def?.id||'')) ? 'super_admin' : 'operator'; }
+function spVisibleForRole(vis, role){
+  const r = role || spRoleVisibility();
+  if(r==='super_admin') return true;
+  if(r==='guest') return false;
+  if(Array.isArray(vis)) return vis.includes('operator');
+  if(vis && typeof vis==='object') return vis.operator===true;
+  const v = String(vis || 'operator');
+  return v==='operator' || v==='all';
+}
 function spMe(){ return currentUser()?.username || ''; }
 function spUserName(user){ return translateData(state.accounts?.find(a=>a.username===user)?.displayName || user); }
 function spOperators(){ return (state.accounts||[]).filter(a=>a.role==='operator' && a.enabled!==false); }
@@ -16046,7 +16057,12 @@ function spPartCore(spec, c, ac, dk){
   }
   return ['', ''];
 }
-function spPartsAt(def, stage){ const out = []; for(let s=1; s<=Math.min(5, stage); s++) (def.parts?.[s]||[]).forEach(p=>{ if(!out.includes(p)) out.push(p); }); return out; }
+function spPartsAt(def, stage){
+  const out = [];
+  for(let s=1; s<=Math.min(5, stage); s++) (def.parts?.[s]||[]).forEach(p=>{ if(!out.includes(p)) out.push(p); });
+  const banGround = def?.forbidden?.noGroundRing!==false || def?.forbidden?.noGroundAura!==false || def?.forbidden?.noGroundGlyph!==false || def?.forbidden?.noGroundGlow!==false;
+  return banGround ? out.filter(p=>{ const k = String(p||'').split(':')[0]; return k!=='ring' && k!=='mount'; }) : out;
+}
 /* 资源：内置 SVG / 图片 / 序列帧 / 视频；骨骼 / Live2D / 3D 需外部运行库，离线版显示参数化建模预览 + 资源标记 */
 function spResHtml(def, stage, size){
   const r = def.res; if(!r || !r.type || r.type==='svg') return '';
@@ -16913,6 +16929,7 @@ function spgMk(o){
   /* o: {id, no, cat, rar, name, desc, body, col, eyes, mouth, parts, fx, style, acts, pers, wing, bucket, pub} */
   const parts = JSON.parse(JSON.stringify(o.parts || {}));
   return {id:o.id, no:o.no, cat:o.cat, rar:o.rar, name:o.name, desc:o.desc, body:o.body||'blob', col:o.col, eyes:o.eyes||'dot', mouth:o.mouth||'smile', parts, fx:o.fx||'none', style:o.style||'q', acts:o.acts||['hop','spin','wave'], pers:o.pers??0,
+    stageModel:o.stageModel||null, styleAnchor:o.styleAnchor||'', forbidden:o.forbidden||{noGroundAura:true,noGroundRing:true,noGroundGlyph:true,noGroundGlow:true}, visibility:o.visibility||'operator',
     sources:[], inPool:false, weight:1, limited:o.rar==='EX', festival:o.rar==='FD', hidden:o.rar==='HD', returnable:['EX','FD'].includes(o.rar), enabled:false, reserved:false, res:null, returnLog:[], ver:1, gen:true, bucket:o.bucket||o.cat,
     pub:{status:'reserve', pools:o.pools||[], releaseAt:'', until:'', cond:o.cond||{type:'none', n:0}, limit:0, codex:true, returnable:['EX','FD'].includes(o.rar), rate:1, shop:{cur:'codex', price:0, limit:1, period:'month', stock:0}, ...(o.pub||{})}};
 }
@@ -17043,6 +17060,31 @@ function spPubLive(p, now){
   return true;
 }
 function spPoolsToSources(pools){ const m = {season:'season', event:'event', hidden:'hidden', collab:'event', shop:'shop', return:'ret'}; return [...new Set((pools||[]).map(x=>m[x]).filter(Boolean))]; }
+var SP_STAGE_KEYS = ['lv1','lv2','lv3','lv4','lv5'];
+var SPIRIT_MANIFEST = {
+  meta:{spiritCount:402, stages:SP_STAGE_KEYS.slice(), renderChain:['image_asset','vector_placeholder'], forbidGroundFx:['ground_aura','ground_ring','ground_glyph','ground_glow']},
+  aliases:{},
+  spirits:{
+    sp_lantern:{id:'001', key:'lantern', category:'festival', visibility:'operator', styleAnchor:'seer_cel_flat', forbidden:{noGroundAura:true,noGroundRing:true,noGroundGlyph:true,noGroundGlow:true}},
+    sp_flame:{id:'002', key:'flame', category:'elem', visibility:'operator', styleAnchor:'seer_cel_flat', forbidden:{noGroundAura:true,noGroundRing:true,noGroundGlyph:true,noGroundGlow:true}},
+    sp_hour:{id:'003', key:'chrono', category:'time', visibility:'operator', styleAnchor:'seer_cel_flat', forbidden:{noGroundAura:true,noGroundRing:true,noGroundGlyph:true,noGroundGlow:true}},
+    sp_starbeast:{id:'004', key:'stargleam', category:'myth', visibility:'operator', styleAnchor:'seer_cel_flat', forbidden:{noGroundAura:true,noGroundRing:true,noGroundGlyph:true,noGroundGlow:true}},
+    sp_gear:{id:'005', key:'gearguard', category:'mech', visibility:'operator', styleAnchor:'seer_cel_flat', forbidden:{noGroundAura:true,noGroundRing:true,noGroundGlyph:true,noGroundGlow:true}}
+  }
+};
+function spManifestResolveId(id){ const a = SPIRIT_MANIFEST.aliases||{}; return a[id] || id; }
+function spManifestSpirit(id){ return SPIRIT_MANIFEST.spirits?.[spManifestResolveId(id)] || null; }
+function spManifestAssetPath(meta, st, kind){
+  if(!meta || st<1 || st>5) return '';
+  const base = `assets/spirits/${meta.category}/${meta.id}`;
+  if(kind==='faxiang') return `${base}/spirit_${meta.id}_${meta.key}_lv5_faxiang.png`;
+  if(kind==='thumb') return `${base}/spirit_${meta.id}_${meta.key}_lv4_thumb.png`;
+  return `${base}/spirit_${meta.id}_${meta.key}_lv${st}.png`;
+}
+function spStageModelFallback(def){
+  const meta = spManifestSpirit(def?.id) || {id:(String(def?.id||'spirit').replace(/[^a-z0-9]/gi,'').slice(-12) || 'sample'), key:'placeholder', category:(def?.cat||'misc')};
+  return {lv1:{stage:'lv1', asset:spManifestAssetPath(meta,1,'base')}, lv2:{stage:'lv2', asset:spManifestAssetPath(meta,2,'base')}, lv3:{stage:'lv3', asset:spManifestAssetPath(meta,3,'base')}, lv4:{stage:'lv4', asset:spManifestAssetPath(meta,4,'base'), thumb:spManifestAssetPath(meta,4,'thumb')}, lv5:{stage:'lv5', asset:spManifestAssetPath(meta,5,'base'), faxiang:spManifestAssetPath(meta,5,'faxiang')}};
+}
 function spLibFinish(d){
   const p = d.pub = spPubNorm(d.pub);
   const live = !d.deleted && spPubLive(p);
@@ -17051,6 +17093,11 @@ function spLibFinish(d){
   d.reserved = p.status==='slot';
   d.sources = spPoolsToSources(p.pools).concat(p.pools.includes('collab') ? ['collab'] : []);
   d.returnable = p.returnable; d.weight = p.rate;
+  const mf = spManifestSpirit(d.id);
+  d.styleAnchor = d.styleAnchor || mf?.styleAnchor || 'seer_cel_flat';
+  d.forbidden = {...{noGroundAura:true,noGroundRing:true,noGroundGlyph:true,noGroundGlow:true}, ...(mf?.forbidden||{}), ...(d.forbidden||{})};
+  d.visibility = d.visibility || mf?.visibility || spDefaultVisibility(d);
+  d.stageModel = d.stageModel || mf?.stageModel || spStageModelFallback(d);
   return d;
 }
 function spLibBuild(){
@@ -17072,7 +17119,12 @@ function spLibBuild(){
 /* 精灵库 = 默认 + 生成 + 超级管理员的编辑 / 新增；includeAll 含已删除 */
 function spLib(includeAll){ const c = spLibBuild(); return includeAll ? c.all : c.list; }
 /* 操作员可见：已发布（在上线期内）或自己已拥有的 */
-function spVisibleTo(d, u){ if(!d || d.deleted) return false; if(spIsAdmin()) return true; return d.live || !!u?.spc?.[d.id]; }
+function spVisibleTo(d, u){
+  if(!d || d.deleted) return false;
+  if(spIsAdmin()) return true;
+  if(!spVisibleForRole(d.visibility, spRoleVisibility())) return false;
+  return d.live || !!u?.spc?.[d.id];
+}
 function spLibVisible(u){ return spLib().filter(d=>d.pub.status!=='slot' && spVisibleTo(d, u)); }
 function spPoolList(pool){ return spLib().filter(d=>d.live && d.pub.pools.includes(pool)); }
 
@@ -19351,6 +19403,28 @@ function spSpriteFitScan(){
     if(spFitQ.length) spIdle(run); else spFitBusy = false; };
   spIdle(run);
 }
+function spAssetChain(def, st, skinId){
+  const out = [], add = u=>{ const x = String(u||'').trim(); if(x && !out.includes(x)) out.push(x); };
+  const M = spManifestSpirit(def?.id);
+  if(M){
+    add(spManifestAssetPath(M, st, 'base'));
+    if(st===4) add(spManifestAssetPath(M, 4, 'thumb'));
+    if(st===5) add(spManifestAssetPath(M, 5, 'faxiang'));
+  }
+  const A = typeof spAssetFor==='function' ? spAssetFor(def, st, skinId) : null;
+  if(A?.src) add(A.src);
+  if(A?.set) String(A.set).split(',').forEach(seg=>add(seg.trim().split(/\s+/)[0]||''));
+  return out;
+}
+function spAssetOnErr(img){
+  try{
+    const list = JSON.parse(img.dataset.srcs || '[]');
+    let i = (+img.dataset.idx||0) + 1;
+    while(i < list.length && !list[i]) i++;
+    if(i < list.length){ img.dataset.idx = String(i); img.src = list[i]; return; }
+  }catch(_e){}
+  img.remove();
+}
 function spiritView(def, size, stage, opts={}){
   if(!def) return '';
   const st = Math.max(1, Math.min(5, stage||1));
@@ -19362,9 +19436,8 @@ function spiritView(def, size, stage, opts={}){
   const res = sil ? '' : (L.img ? `<img class="sp-res-img" src="${escapeAttr(L.img)}" width="${size}" height="${size}" alt="">` : spResHtml(def, st, size));
   const fxOff = opts.noFaxiang ?? spViewerFaxiangOff();
   const art = res || spiritSvg(def, st, {size, mood:opts.mood, hue:opts.hue, look:structural && !sil ? L : null, hideAcc, hideKeys, noSafe:opts.noSafe, noFaxiang:fxOff, rar, skinTier:opts.skinTierForce || (sk && structural ? (sk.admin || /^ad_|^as_/.test(sk.id) ? 'admin' : sk.collabAd ? 'collab' : sk.rarity) : null), skinAd:sk?.collabAd, school:opts.school, school2:opts.school2, ex:opts.ex, noArt:opts.noArt, sk:opts.sk, sk2:opts.sk2, geo:opts.geo});
-  /* v2.4 资源热更新：登记了 PNG 资源就叠加显示（按版本号刷新缓存，1x / 2x / 3x），加载失败自动回退矢量 */
-  const asset = !sil && !res && typeof spAssetFor==='function' ? spAssetFor(def, st, sk && structural ? sk.id : null) : null;
-  const assetImg = asset ? `<img class="sp-asset" src="${escapeAttr(asset.src)}" ${asset.set?`srcset="${escapeAttr(asset.set)}"`:''} width="${size}" height="${size}" alt="" loading="lazy" onload="var s=this.closest('.spv');if(s)s.classList.add('asset-ok')" onerror="this.remove()">` : '';
+  const assetChain = !sil && !res ? spAssetChain(def, st, sk && structural ? sk.id : null) : [];
+  const assetImg = assetChain.length ? `<img class="sp-asset" src="${escapeAttr(assetChain[0])}" data-srcs="${escapeAttr(JSON.stringify(assetChain))}" data-idx="0" width="${size}" height="${size}" alt="" loading="lazy" onload="var s=this.closest('.spv');if(s)s.classList.add('asset-ok')" onerror="spAssetOnErr(this)">` : '';
   const fxName = (structural && L.fx) || def.fx;
   const nfx = sil || opts.nofx ? 0 : st>=5 ? 7 : st>=4 ? 5 : st>=3 ? 3 : st>=2 ? 2 : 0;
   const fx = nfx && fxName && fxName!=='none' ? `<span class="spx fx-${fxName}" aria-hidden="true">${Array.from({length:nfx},(_,i)=>`<i style="--i:${i}"></i>`).join('')}</span>` : '';
@@ -19377,7 +19450,7 @@ function spiritView(def, size, stage, opts={}){
   const ent = opts.entrance && st>=5 ? 'ent-'+spGene(def).d5[0]+' ent-s-'+spGene(def).d5[1] : '';
   const spk = `${def.id}|${st}|${sk && structural ? sk.id : ''}|${fxOff && st>=5 ? 0 : 1}|${sil ? 's' : ''}|${hideAcc ? 'h' : ''}`;
   return `<span class="spv spirit st-${st} sr-${sil?'none':rar} sty-${def.style||'q'} ${st>=5?'aw5':''} ${mv} ${anc} ${opts.dir==='l'?'dir-l':''} ${opts.entrance && st<5?'ent-token':''} ${ent} ${sk?`sk-${sk.rarity} ${L.anim?'sk-anim-'+L.anim:''} ${L.act?'sk-act-'+L.act:''}`:''} ${opts.cls||''} ${sil?'sil':''} ${fxOff && st>=5 ? 'fx-off' : ''}" style="--sz:${size}px;--rc:${sprColor(rar)};${sk && L.glow?`--skg:${L.glow};`:''}${SP_FIT.has(spk)?`--fit:${SP_FIT.get(spk).f};--fy:${SP_FIT.get(spk).y};`:''}" data-spirit="${escapeAttr(def.id)}" data-spk="${escapeAttr(spk)}">
-    ${!sil?'<i class="spr-aura" aria-hidden="true"></i>':''}<span class="spv-body" style="${sil?'':style}">${art}</span>${assetImg}${fx}${sil?'':acc}${opts.fxLv && !sil?`<i class="spv-tal t${opts.fxLv}" aria-hidden="true"></i>`:''}${resTag}</span>`;
+    <span class="spv-body" style="${sil?'':style}">${art}</span>${assetImg}${fx}${sil?'':acc}${opts.fxLv && !sil?`<i class="spv-tal t${opts.fxLv}" aria-hidden="true"></i>`:''}${resTag}</span>`;
 }
 
 /* ---------- 试验精灵觉醒体：同样按「材质 + 结构」方向真正变形（无脚下光圈） ---------- */
@@ -24372,7 +24445,7 @@ function spModelTexList(M, A){ const tx = []; (M?.nodes||[]).forEach(n=>(SP_MNOD
 ========================================================= */
 var SP_SKIN_RAR = {common:['普通','Common','Thường'], rare:['稀有','Rare','Hiếm'], epic:['史诗','Epic','Sử thi'], legend:['传说','Legendary','Huyền thoại'], limited:['绝版','Limited','Tuyệt bản'], festival:['节日','Festival','Lễ hội'], collab:['联名','Co-branded','Hợp tác'], admin:['管理员','Admin','Quản trị']};
 var SP_ASSET_SPEC = {portrait:2048, card:512, avatar:128, silhouette:512, scales:[1,2,3], fmt:['PNG','WebP'], color:'sRGB', skel:['Spine','DragonBones'], opt:['Live2D','3D'], fps:[24,30],
-  naming:'spirit_{id}_{stage}_{variant}.png', dir:'assets/spirits/{category}/{spirit_id}/', files:['lv1.png … lv5.png（512，@2x / @3x 同名后缀）','skins/{skin_id}_lv{n}.png','animations/{state}_lv{n}.json','effects/{fx}.png']};
+  naming:'spirit_{id}_{name}_lv{n}.png / spirit_{id}_{name}_lv5_faxiang.png / spirit_{id}_{name}_lv4_thumb.png', dir:'assets/spirits/{category}/{spirit_id}/', files:['spirit_{id}_{name}_lv1.png … spirit_{id}_{name}_lv5.png（支持 @2x / @3x）','spirit_{id}_{name}_lv5_faxiang.png','spirit_{id}_{name}_lv4_thumb.png','skins/{skin_id}_lv{n}.png']};
 function spArtCatName(k){ return trT(SP_FAMS[k]?.n || SP_ART_CAT_N[k] || [k,k,k]); }
 function spArtCatKeys(){ return Object.keys(SP_ART_CAT); }
 function spArtCatSample(k){
@@ -24414,11 +24487,35 @@ function spAssetParse(paths){
   (paths||[]).forEach(p0=>{ const p = String(p0).replace(/\\/g,'/').replace(/^\/?(assets\/spirits\/)?/,'');
     let m = /^([a-z0-9_-]+)\/([a-z0-9_#-]+)\/lv([1-5])(@([23])x)?\.png$/i.exec(p);
     if(m){ const k = spAssetKey(m[2], +m[3]); const e = list[k] || {cat:m[1], id:m[2], stage:+m[3], variant:'base', path:`${m[1]}/${m[2]}/lv${m[3]}.png`, scales:[1]}; if(m[5]) e.scales = [...new Set([...e.scales, +m[5]])].sort(); list[k] = e; return; }
+    m = /^([a-z0-9_-]+)\/([a-z0-9_#-]+)\/spirit_([0-9]{3})_([a-z0-9_-]+)_lv([1-5])(@([23])x)?\.png$/i.exec(p);
+    if(m){ const id = m[2], st = +m[5], k = spAssetKey(id, st); const e = list[k] || {cat:m[1], id, stage:st, variant:'base', path:`${m[1]}/${m[2]}/spirit_${m[3]}_${m[4]}_lv${m[5]}.png`, scales:[1]}; if(m[7]) e.scales = [...new Set([...e.scales, +m[7]])].sort(); list[k] = e; return; }
+    m = /^([a-z0-9_-]+)\/([a-z0-9_#-]+)\/spirit_([0-9]{3})_([a-z0-9_-]+)_lv5_faxiang(@([23])x)?\.png$/i.exec(p);
+    if(m){ const id = m[2], k = spAssetKey(id, 5, 'faxiang'); const e = list[k] || {cat:m[1], id, stage:5, variant:'faxiang', path:`${m[1]}/${m[2]}/spirit_${m[3]}_${m[4]}_lv5_faxiang.png`, scales:[1]}; if(m[6]) e.scales = [...new Set([...e.scales, +m[6]])].sort(); list[k] = e; return; }
+    m = /^([a-z0-9_-]+)\/([a-z0-9_#-]+)\/spirit_([0-9]{3})_([a-z0-9_-]+)_lv4_thumb(@([23])x)?\.png$/i.exec(p);
+    if(m){ const id = m[2], k = spAssetKey(id, 4, 'thumb'); const e = list[k] || {cat:m[1], id, stage:4, variant:'thumb', path:`${m[1]}/${m[2]}/spirit_${m[3]}_${m[4]}_lv4_thumb.png`, scales:[1]}; if(m[6]) e.scales = [...new Set([...e.scales, +m[6]])].sort(); list[k] = e; return; }
     m = /^([a-z0-9_-]+)\/([a-z0-9_#-]+)\/skins\/([a-z0-9_-]+)_lv([1-5])(@([23])x)?\.png$/i.exec(p);
     if(m){ const k = spAssetKey(m[2], +m[4], m[3]); const e = list[k] || {cat:m[1], id:m[2], stage:+m[4], variant:m[3], path:`${m[1]}/${m[2]}/skins/${m[3]}_lv${m[4]}.png`, scales:[1]}; if(m[6]) e.scales = [...new Set([...e.scales, +m[6]])].sort(); list[k] = e; } });
   return list;
 }
 function spArtSaveCfg(patch, act){ const C = gCfg().artCfg || {}; G().config = {...gCfg(), artCfg:{...C, ...patch}, updatedAt:gNowIso(), updatedBy:spMe()}; spAuditCore(act||'art-config', '', {}); spCacheVer++; saveGrowth(true); }
+async function spSpiritManifestLoad(){
+  try{
+    const r = await fetch('assets/spirits/config/spirit-manifest.json', {cache:'no-store'});
+    if(!r.ok) return;
+    const j = await r.json();
+    if(!j || typeof j!=='object') return;
+    SPIRIT_MANIFEST = {
+      ...SPIRIT_MANIFEST,
+      ...j,
+      meta:{...(SPIRIT_MANIFEST.meta||{}), ...(j.meta||{})},
+      aliases:{...(SPIRIT_MANIFEST.aliases||{}), ...(j.aliases||{})},
+      spirits:{...(SPIRIT_MANIFEST.spirits||{}), ...(j.spirits||{})}
+    };
+    spCacheVer++;
+    try{ render(); }catch(_e){}
+  }catch(_e){}
+}
+setTimeout(()=>{ try{ spSpiritManifestLoad(); }catch(_e){} }, 0);
 async function spAssetScan(){
   try{ const r = await fetch('api/assets', {cache:'no-store'}); if(!r.ok) throw new Error(r.status); const j = await r.json(); const list = spAssetParse(j.files||[]);
     const C = spArtCfg(); spArtSaveCfg({assets:{...C.assets, list, ver:(C.assets.ver||1)+1, scanned:gNowIso()}}, 'art-asset-scan');
