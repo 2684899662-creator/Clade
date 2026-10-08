@@ -11815,7 +11815,7 @@ async function onAction(e){
     case 'rewardSave': return rewardSave();
     case 'rewardDelete': return rewardDelete(id);
     case 'growthCfgSave': return growthCfgSave();
-    case 'resetOperatorSprites': return resetOperatorSprites();
+    case 'resetOperatorSprites': return resetOperatorSprites(id);
     case 'seasonRecheck': return seasonRecheck(id);
     case 'evoLegend': state.nestOpen = false; state.modal = {type:'evoLegend'}; break;
     case 'nestFx': state.energyFx = !energyFxOn(); writeLocalStorage('lab-scheduler-energy-fx', state.energyFx ? '1' : '0'); break;
@@ -14314,18 +14314,22 @@ function growthCfgSave(){
   spAudit('cfg', '', {by:currentUser()?.username});
   saveGrowth(true); seasonSettle(); spApplyGanttSkins(); toast(t('成就设置已保存'), 'ok'); render();
 }
-function resetOperatorSprites(){
-  if(state.role!=='admin') return toast(tx('仅超级管理员可以重置操作员精灵','Only super admins can reset operator sprites','Chỉ quản trị viên cấp cao mới có thể đặt lại tinh linh vận hành viên'), 'error');
-  const operators = (state.accounts||[]).filter(a=>a.role==='operator');
-  if(!operators.length) return toast(tx('没有可重置的操作员','There are no operators to reset','Không có vận hành viên để đặt lại'), 'info');
-  if(!confirm(tx('确定重置所有操作员的精灵进度、养成数据与甘特投喂加速？排期、账号及精灵设置不会改变。','Reset all operators’ sprite progress, growth data, and Gantt feed boosts? Schedules, accounts, and sprite settings will remain unchanged.','Đặt lại tiến độ, dữ liệu nuôi tinh linh và tăng tốc cho ăn Gantt của tất cả vận hành viên? Lịch, tài khoản và cài đặt tinh linh sẽ không thay đổi.'))) return;
-  const g = G();
-  operators.forEach(a=>{ delete g.users[a.username]; });
-  const boostCount = Object.keys(g.boost||{}).length;
-  g.boost = {};
-  addAudit('operator-sprite-reset', {project:`${operators.length} operators · ${boostCount} boosts`});
+function resetOperatorSprites(username){
+  if(!spIsAdmin()) return toast(tx('仅超级管理员可以重置操作员精灵形态','Only super admins can reset an operator’s sprite form','Chỉ quản trị viên cấp cao mới có thể đặt lại hình dạng tinh linh của vận hành viên'), 'error');
+  const operator = (state.accounts||[]).find(a=>a.username===username && a.role==='operator');
+  if(!operator) return toast(tx('请选择有效的操作员','Choose a valid operator','Hãy chọn một vận hành viên hợp lệ'), 'error');
+  const name = spUserName(username);
+  const message = tx(
+    '确定将操作员“{name}”的精灵形态重置为初始形态？仅重置当前操作员的精灵形态，不影响进度、养成、甘特投喂加速、排期、账号及其他设置。',
+    'Reset operator “{name}” to their initial sprite form? Only this operator’s sprite form changes; progress, growth, Gantt feed boosts, schedules, accounts, and other settings are unaffected.',
+    'Đặt lại hình dạng tinh linh ban đầu cho vận hành viên “{name}”? Chỉ hình dạng tinh linh của người này thay đổi; tiến độ, dữ liệu nuôi, tăng tốc cho ăn Gantt, lịch, tài khoản và các cài đặt khác không bị ảnh hưởng.'
+  ).replace('{name}', name);
+  if(!confirm(message)) return;
+  const seasonSprite = G().users?.[username]?.ss?.[seasonNow().id];
+  if(!seasonSprite) return toast(`${name} · ${tx('尚无当前赛季精灵形态可重置','has no current-season sprite form to reset','chưa có hình dạng tinh linh mùa hiện tại để đặt lại')}`, 'info');
+  seasonSprite.form = seasonSprite.sp ? SP_FORMS[spHash(seasonSprite.sp) % SP_FORMS.length] : 'orb';
   saveGrowth(true);
-  toast(tx('已重置所有操作员精灵，排期与设置保持不变','All operator sprites were reset; schedules and settings are unchanged','Đã đặt lại tinh linh của tất cả vận hành viên; lịch và cài đặt được giữ nguyên'), 'ok');
+  toast(`${name} · ${tx('精灵形态已重置为初始形态','sprite form reset to its initial form','đã đặt lại hình dạng tinh linh ban đầu')}`, 'ok');
   render();
 }
 function growthCfgHtml(){
@@ -14334,9 +14338,7 @@ function growthCfgHtml(){
   const C = (name, label, on)=>`<label class="checkline"><input type="checkbox" name="${name}" ${on?'checked':''}> ${escapeHtml(label)}</label>`;
   const H = (z,e,v)=>`<div class="cfg-h">${escapeHtml(tx(z,e,v))}</div>`;
   const srcN = {login:['每日登录','Daily login','Đăng nhập hằng ngày'], feed:['投喂','Feeding','Cho ăn'], task:['完成真实任务','Real tasks','Nhiệm vụ thực tế'], gantt:['更新甘特','Gantt updates','Cập nhật Gantt'], evolve:['精灵进化（每阶段 1 次）','Sprite evolves (once per stage)','Tiến hóa (mỗi giai đoạn 1 lần)'], skin:['获得新皮肤','New skin','Trang phục mới'], codex:['解锁图鉴','Codex unlock','Mở khóa sách tranh'], activity:['参与活动','Join events','Tham gia sự kiện'], assist:['协助他人','Help others','Hỗ trợ người khác']};
-  const resetBox = spIsAdmin() ? `<div class="cfg-actions" style="justify-content:flex-start;align-items:center;margin-bottom:10px;"><button type="button" class="btn btn-danger btn-sm" data-act="resetOperatorSprites">${escapeHtml(tx('重置操作员精灵','Reset operator sprites','Đặt lại tinh linh vận hành viên'))}</button><span class="hint">${escapeHtml(tx('仅重置所有操作员的精灵进度、养成数据与甘特投喂加速，不影响排期、账号与其他设置','Only resets all operators’ sprite progress, growth data, and Gantt feed boosts; schedules, accounts and other settings are unaffected','Chỉ đặt lại tiến độ, dữ liệu nuôi tinh linh và tăng tốc cho ăn Gantt của vận hành viên; lịch, tài khoản và cài đặt khác không đổi'))}</span></div>` : '';
   return `<form id="growthCfgForm" class="cfg-form" onsubmit="return false">
-    ${resetBox}
     ${H('成就等级（累计当季经验，逐级递增）','Achievement levels (cumulative season XP, increasing)','Cấp thành tựu (EXP mùa tích lũy, tăng dần)')}
     <div class="lv-edit">${c.levels.slice(0, d.levels.length).concat(d.levels.slice(c.levels.length)).map((l,i)=>`<span><input name="lvName${i}" value="${escapeAttr(l.name)}" maxlength="8" aria-label="${escapeAttr(tx('等级名称','Level name','Tên cấp'))} ${i+1}"><input type="number" name="lvMin${i}" value="${l.min}" min="0" ${i===0?'readonly':''} aria-label="${escapeAttr(tx('所需经验','Required XP','EXP cần'))} ${i+1}"><small>${t('伙伴精灵')} Lv.${levelStage(i)}</small></span>`).join('')}</div>
     ${H('赛季','Season','Mùa')}
@@ -15565,12 +15567,12 @@ function spAdmOverview(){
     <div class="sp-note">${escapeHtml(tx('权限：超级管理员可配置全部规则、审核、发放、回滚与补偿，但不参与养成；操作员参与养成并只看到自己的数据（排行榜与好友家园除外）；访客看不到任何精灵赛季内容。','Permissions: super admins configure every rule, review, grant, roll back and compensate, but don\'t raise sprites; operators raise sprites and see only their own data (except leaderboards and friend homes); guests see no Sprite Season content at all.','Quyền: quản trị viên cấp cao cấu hình mọi quy tắc, duyệt, cấp, hoàn tác và bù nhưng không nuôi tinh linh; vận hành viên nuôi tinh linh và chỉ thấy dữ liệu của mình (trừ bảng xếp hạng và nhà bạn bè); khách không thấy nội dung Mùa tinh linh.'))}</div>`;
 }
 function spAdmUsers(){
-  const sid = seasonNow().id, S = spS();
+  const sid = seasonNow().id, S = spS(), ops = (state.accounts||[]).filter(a=>a.role==='operator');
   if(S.viewUser){ const u = spU(S.viewUser); return `<div style="margin-bottom:8px;"><button class="btn btn-ghost btn-sm" data-act="spAdmViewUser" data-id="">‹ ${escapeHtml(tx('返回全员数据','Back to all users','Quay lại tất cả người dùng'))}</button></div>${achvUserCard(u)}${achvListHtml(u)}`; }
   return `<div class="table-scroll"><table class="data-table"><thead><tr><th>${escapeHtml(tx('操作员','Operator','Vận hành viên'))}</th><th>${escapeHtml(tx('当季等级','Season level','Cấp mùa'))}</th><th>XP</th><th>${escapeHtml(tx('赛季精灵','Season sprite','Tinh linh mùa'))}</th><th>${escapeHtml(tx('试验精灵','Trial sprites','Tinh linh thử nghiệm'))}</th><th>🥣</th><th>🎫</th><th>🔷</th><th>⭐</th><th>👗</th><th>${escapeHtml(tx('图鉴','Codex','Sách tranh'))}</th><th>${escapeHtml(tx('异常','Flags','Cờ'))}</th><th></th></tr></thead><tbody>
-    ${spOperators().map(a=>{ const u = spU(a.username), s = u.ss[sid], L = achvLevel(achvPoints(u));
+    ${ops.map(a=>{ const u = spU(a.username), s = u.ss[sid], L = achvLevel(achvPoints(u));
       return `<tr><td data-i18n-ignore="1" class="nowrap">${escapeHtml(translateData(a.displayName||a.username))} <small class="hint">${escapeHtml(a.username)}</small></td><td><span class="lv-pill lvb-${L.idx}">${escapeHtml(t(L.name))}</span></td><td>${achvPoints(u)}</td><td>${s?`${spUserSpiritView(u, 22)} LV${spRecStage(s)}`:'—'}</td><td>${Object.keys(u.tr).length}/9</td><td>${u.crystals||0}</td><td>${u.tickets||0}</td><td>${u.shards||0}</td><td>${spPoints(u)}</td><td>${Object.keys(u.skins).length}</td><td>${spCodexPct(u).toFixed(0)}%</td>
-        <td>${u.flags.length?`<span class="tag warn" title="${escapeAttr(u.flags.slice(-5).map(f=>`${f.date} ${f.metric}：${f.metric==='xpCap' ? tx('已达经验上限（每日 / 每周），超出部分不计','XP cap reached (daily / weekly); the excess is not counted','Đã chạm giới hạn kinh nghiệm (ngày / tuần); phần dư không tính') : f.note}`).join('\n'))}">${u.flags.length}</span>`:'—'}</td><td><button class="btn btn-ghost btn-sm" data-act="spAdmViewUser" data-id="${escapeAttr(a.username)}">${escapeHtml(tx('查看','View','Xem'))}</button></td></tr>`; }).join('')}</tbody></table></div>`;
+        <td>${u.flags.length?`<span class="tag warn" title="${escapeAttr(u.flags.slice(-5).map(f=>`${f.date} ${f.metric}：${f.metric==='xpCap' ? tx('已达经验上限（每日 / 每周），超出部分不计','XP cap reached (daily / weekly); the excess is not counted','Đã chạm giới hạn kinh nghiệm (ngày / tuần); phần dư không tính') : f.note}`).join('\n'))}">${u.flags.length}</span>`:'—'}</td><td class="nowrap"><button class="btn btn-ghost btn-sm" data-act="spAdmViewUser" data-id="${escapeAttr(a.username)}">${escapeHtml(tx('查看','View','Xem'))}</button> <button class="btn btn-danger btn-sm" data-act="resetOperatorSprites" data-id="${escapeAttr(a.username)}">${escapeHtml(tx('重置当前操作员精灵形态','Reset this operator’s sprite form','Đặt lại hình dạng tinh linh của vận hành viên này'))}</button></td></tr>`; }).join('')}</tbody></table></div>`;
 }
 function spAdmPool(){
   const sid = seasonNow().id, g = G(), dups = spDupCheck();
