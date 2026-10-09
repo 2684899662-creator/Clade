@@ -21250,7 +21250,7 @@ function spRecDef(s){
 }
 function spSeasonView(s, size, opts={}){
   if(!s) return '';
-  const def = spRecDef(s), stage = opts.stage || s.stage || spDispStage(s);
+  const def = spRecDef(s), stage = opts.stage ?? (s.sid === seasonNow().id ? spDispStage(s) : (s.stage || spDispStage(s)));
   if(def) return spiritView(def, size, stage, {hue:spPalHue(s.pal), rar:s.rar||def.rar, ...opts});
   return spriteView(s.form||'orb', spPalColor(s.form||'orb', s.pal), size, stage, opts);
 }
