@@ -6729,7 +6729,8 @@ async function awaitCsvWrite(label, warnNoTarget=false){
     return true;
   }
   const saved = await (state.csvDirectorySaveChain || Promise.resolve(false));
-  toast(saved ? `${label}，${t('CSV 写入完成')}` : `${label}，${t('但 CSV 写入失败，请检查目录权限后重试')}`, saved ? 'ok' : 'error');
+  const failDetail = !saved && state.csvStatus ? `（${String(state.csvStatus).replace(/^CSV 保存失败：/,'')}）` : '';
+  toast(saved ? `${label}，${t('CSV 写入完成')}` : `${label}，${t('但 CSV 写入失败，请检查目录权限后重试')}${failDetail}`, saved ? 'ok' : 'error');
   return saved;
 }
 function addNormalNotification(key, title, desc, icon='check', important=false, extra={}){
@@ -12712,7 +12713,13 @@ function queueCsvDirectorySave(){
     const run = csvWriteChain.then(async ()=>{
       /* 逐个文件生成并在文件之间让出主线程，界面不会因写 CSV 卡住 */
       const snapshot = {};
-      for(const [key, build] of Object.entries(csvBuilders)){ snapshot[key] = build(); await yieldToUi(); }
+      const buildErrors = [];
+      for(const [key, build] of Object.entries(csvBuilders)){
+        /* 某个附属文件（如精灵数据）生成失败时不应拖垮账号等主数据的保存：跳过该文件并记录原因 */
+        try{ snapshot[key] = build(); }catch(buildError){ console.warn(`CSV 生成失败：${key}`, buildError); buildErrors.push(`${key}: ${buildError?.message || buildError}`); }
+        await yieldToUi();
+      }
+      state.csvBuildErrors = buildErrors;
       if(window.csvApi?.writeAll){
         let result = await window.csvApi.writeAll(snapshot).catch(e=>({ok:false, error:e?.message || String(e)}));
         if(!result?.ok){
@@ -12726,7 +12733,7 @@ function queueCsvDirectorySave(){
       }
       if(!(await csvDirectoryPermission(state.csvDirectory))) throw new Error('CSV 目录未授权');
       for(const [key, name] of Object.entries(CSV_FILES)){
-        if(lastWrittenCsv[key]===snapshot[key]) continue;
+        if(snapshot[key]===undefined || lastWrittenCsv[key]===snapshot[key]) continue;
         await writeCsvDirectoryFile(name, snapshot[key]);
         lastWrittenCsv[key] = snapshot[key];
         await yieldToUi();
