@@ -15290,7 +15290,7 @@ function spAuditCore(act, user, detail, delta){
   g.gaudit[id] = {id, at:gNowIso(), act, user:user||'', by:spMe()||'system', dev:spDevice(), detail:detail||{}, delta:delta||null, updatedAt:gNowIso()};
   const keys = Object.keys(g.gaudit); if(keys.length > 1500){ keys.sort((a,b)=>String(g.gaudit[a].at).localeCompare(String(g.gaudit[b].at))).slice(0, keys.length-1500).forEach(k=>delete g.gaudit[k]); }
 }
-var SP_AUDIT_LABEL = {'spirit-gain':['获得精灵','Spirit obtained','Nhận tinh linh'], 'spirit-dup':['重复精灵转碎片','Duplicate spirit to shards','Tinh linh trùng thành mảnh'], 'spirit-draw':['精灵祈愿','Spirit wish','Cầu nguyện tinh linh'], 'spirit-awaken':['精灵觉醒','Spirit awakening','Thức tỉnh tinh linh'], 'spirit-synth':['精灵碎片合成','Spirit synthesis','Ghép tinh linh'], 'spirit-ticket':['使用精灵兑换券','Spirit ticket used','Dùng vé đổi tinh linh'], 'spirit-hidden':['解锁隐藏精灵','Hidden spirit unlocked','Mở khóa tinh linh ẩn'], 'spirit-config':['配置精灵库','Spirit library configured','Cấu hình kho tinh linh'], 'spirit-pack':['导入资源包','Resource pack imported','Nhập gói tài nguyên'], 'sprite-feed':['投喂精灵','Feed sprite','Cho tinh linh ăn'], 'sprite-evolve':['精灵进化','Sprite evolved','Tinh linh tiến hóa'], 'season-sprite-assign':['分配赛季精灵','Season sprite assigned','Phân tinh linh mùa'], 'season-sprite-reassign':['重新分配赛季精灵','Season sprite reassigned','Phân lại tinh linh mùa'], 'trial-unlock':['解锁试验精灵','Trial sprite unlocked','Mở khóa tinh linh thử nghiệm'], 'skin-gain':['获得皮肤','Skin obtained','Nhận trang phục'], 'skin-dup':['重复皮肤转碎片','Duplicate skin to shards','Trang phục trùng thành mảnh'], 'skin-draw':['补给抽取','Supply draw','Rút tiếp tế'], 'skin-equip':['装备皮肤','Equip skin','Trang bị trang phục'], 'skin-unequip':['卸下皮肤','Remove skin','Gỡ trang phục'], 'shard-exchange':['碎片兑换','Shard exchange','Đổi mảnh'], 'workshop':['皮肤工坊','Skin workshop','Xưởng trang phục'], 'shop-buy':['商店兑换','Shop exchange','Đổi ở cửa hàng'], 'event-checkin':['活动签到','Event check-in','Điểm danh sự kiện'], 'event-claim':['领取活动奖励','Event reward claimed','Nhận thưởng sự kiện'], 'return-redeem':['返场兑换','Return redemption','Đổi tái xuất'], 'event-config':['配置活动','Event configured','Cấu hình sự kiện'], 'return-review':['返场审核','Return review','Duyệt tái xuất'], 'gift-request':['申请赠送碎片','Shard gift request','Yêu cầu tặng mảnh'], 'gift':['碎片赠送','Shard gift','Tặng mảnh'], 'visit':['好友家园','Friend home','Nhà bạn bè'], 'patrol':['巡逻事件','Patrol event','Sự kiện tuần tra'], 'ticket-exchange':['兑换投喂券','Feed tickets exchanged','Đổi vé cho ăn'], 'talent':['天赋加点','Talent point','Điểm thiên phú'], 'codex-reward':['图鉴奖励','Codex reward','Thưởng sách tranh'], 'guide-read':['阅读操作说明','Guide read','Đọc hướng dẫn'], 'guide-config':['配置操作说明','Guide configured','Cấu hình hướng dẫn'], 'guide-reset':['重置阅读状态','Read status reset','Đặt lại trạng thái đọc'], 'achv-level':['成就等级提升','Achievement level up','Lên cấp thành tựu'], 'season-reset':['赛季重置','Season reset','Đặt lại mùa'], 'grant':['超级管理员发放 / 补偿','Super admin grant / compensation','Quản trị viên cấp cao cấp / bù'], 'rollback':['回滚','Rollback','Hoàn tác'], 'feed-gain':['获得能量饲料','Energy feed gained','Nhận thức ăn năng lượng'], 'skin-config':['配置皮肤','Skin configured','Cấu hình trang phục'], 'shop-config':['配置商店','Shop configured','Cấu hình cửa hàng'], 'cfg':['修改数值配置','Settings changed','Đổi cấu hình']};
+var SP_AUDIT_LABEL = {'sprite-lvl-adjust':['管理员修改精灵等级','Admin adjusted sprite level','Quản trị viên chỉnh cấp tinh linh'], 'sprite-lvl-anomaly':['精灵等级修改异常','Sprite level adjustment anomaly','Bất thường chỉnh cấp tinh linh'], 'spirit-gain':['获得精灵','Spirit obtained','Nhận tinh linh'], 'spirit-dup':['重复精灵转碎片','Duplicate spirit to shards','Tinh linh trùng thành mảnh'], 'spirit-draw':['精灵祈愿','Spirit wish','Cầu nguyện tinh linh'], 'spirit-awaken':['精灵觉醒','Spirit awakening','Thức tỉnh tinh linh'], 'spirit-synth':['精灵碎片合成','Spirit synthesis','Ghép tinh linh'], 'spirit-ticket':['使用精灵兑换券','Spirit ticket used','Dùng vé đổi tinh linh'], 'spirit-hidden':['解锁隐藏精灵','Hidden spirit unlocked','Mở khóa tinh linh ẩn'], 'spirit-config':['配置精灵库','Spirit library configured','Cấu hình kho tinh linh'], 'spirit-pack':['导入资源包','Resource pack imported','Nhập gói tài nguyên'], 'sprite-feed':['投喂精灵','Feed sprite','Cho tinh linh ăn'], 'sprite-evolve':['精灵进化','Sprite evolved','Tinh linh tiến hóa'], 'season-sprite-assign':['分配赛季精灵','Season sprite assigned','Phân tinh linh mùa'], 'season-sprite-reassign':['重新分配赛季精灵','Season sprite reassigned','Phân lại tinh linh mùa'], 'trial-unlock':['解锁试验精灵','Trial sprite unlocked','Mở khóa tinh linh thử nghiệm'], 'skin-gain':['获得皮肤','Skin obtained','Nhận trang phục'], 'skin-dup':['重复皮肤转碎片','Duplicate skin to shards','Trang phục trùng thành mảnh'], 'skin-draw':['补给抽取','Supply draw','Rút tiếp tế'], 'skin-equip':['装备皮肤','Equip skin','Trang bị trang phục'], 'skin-unequip':['卸下皮肤','Remove skin','Gỡ trang phục'], 'shard-exchange':['碎片兑换','Shard exchange','Đổi mảnh'], 'workshop':['皮肤工坊','Skin workshop','Xưởng trang phục'], 'shop-buy':['商店兑换','Shop exchange','Đổi ở cửa hàng'], 'event-checkin':['活动签到','Event check-in','Điểm danh sự kiện'], 'event-claim':['领取活动奖励','Event reward claimed','Nhận thưởng sự kiện'], 'return-redeem':['返场兑换','Return redemption','Đổi tái xuất'], 'event-config':['配置活动','Event configured','Cấu hình sự kiện'], 'return-review':['返场审核','Return review','Duyệt tái xuất'], 'gift-request':['申请赠送碎片','Shard gift request','Yêu cầu tặng mảnh'], 'gift':['碎片赠送','Shard gift','Tặng mảnh'], 'visit':['好友家园','Friend home','Nhà bạn bè'], 'patrol':['巡逻事件','Patrol event','Sự kiện tuần tra'], 'ticket-exchange':['兑换投喂券','Feed tickets exchanged','Đổi vé cho ăn'], 'talent':['天赋加点','Talent point','Điểm thiên phú'], 'codex-reward':['图鉴奖励','Codex reward','Thưởng sách tranh'], 'guide-read':['阅读操作说明','Guide read','Đọc hướng dẫn'], 'guide-config':['配置操作说明','Guide configured','Cấu hình hướng dẫn'], 'guide-reset':['重置阅读状态','Read status reset','Đặt lại trạng thái đọc'], 'achv-level':['成就等级提升','Achievement level up','Lên cấp thành tựu'], 'season-reset':['赛季重置','Season reset','Đặt lại mùa'], 'grant':['超级管理员发放 / 补偿','Super admin grant / compensation','Quản trị viên cấp cao cấp / bù'], 'rollback':['回滚','Rollback','Hoàn tác'], 'feed-gain':['获得能量饲料','Energy feed gained','Nhận thức ăn năng lượng'], 'skin-config':['配置皮肤','Skin configured','Cấu hình trang phục'], 'shop-config':['配置商店','Shop configured','Cấu hình cửa hàng'], 'cfg':['修改数值配置','Settings changed','Đổi cấu hình']};
 /* 回滚：按审计记录的资源变化做反向操作（能量饲料 / 投喂券 / 碎片 / 积分 / 皮肤） */
 function spRollback(id){
   if(!spIsAdmin()) return;
@@ -15654,7 +15654,7 @@ function spAdminLocalizedField(label, prefix, values, options={}){
 function spAdmUsers(){
   const sid = seasonNow().id, S = spS(), ops = (state.accounts||[]).filter(a=>a.role==='operator');
   if(S.viewUser){ const u = spU(S.viewUser); return `<div style="margin-bottom:8px;"><button class="btn btn-ghost btn-sm" data-act="spAdmViewUser" data-id="">‹ ${escapeHtml(tx('返回全员数据','Back to all users','Quay lại tất cả người dùng'))}</button></div>${achvUserCard(u)}${achvListHtml(u)}`; }
-  return `<div class="sp-note"><button type="button" class="btn btn-primary btn-sm" data-act="spAdmTab" data-v="gift">🎁 ${escapeHtml(tx('赠礼','Gifts','Quà tặng'))}</button> <span class="hint">${escapeHtml(tx('为操作员直接选择精灵 / 皮肤 / 道具 / 经验 / 线下实物赠送（单个或批量）','Send spirits / skins / items / XP / offline items to operators (single or batch)','Tặng tinh linh / trang phục / vật phẩm / EXP / hiện vật cho vận hành viên (đơn lẻ hoặc hàng loạt)'))}</span></div>`+`<div class="table-scroll"><table class="data-table"><thead><tr><th>${escapeHtml(tx('操作员','Operator','Vận hành viên'))}</th><th>${escapeHtml(tx('当季等级','Season level','Cấp mùa'))}</th><th>XP</th><th>${escapeHtml(tx('赛季精灵','Season sprite','Tinh linh mùa'))}</th><th>${escapeHtml(tx('试验精灵','Trial sprites','Tinh linh thử nghiệm'))}</th><th>🥣</th><th>🎫</th><th>🔷</th><th>⭐</th><th>👗</th><th>${escapeHtml(tx('图鉴','Codex','Sách tranh'))}</th><th>${escapeHtml(tx('异常','Flags','Cờ'))}</th><th></th></tr></thead><tbody>
+  return `<div class="sp-note"><button type="button" class="btn btn-ghost btn-sm" data-act="spLvlOpen">🧬 ${escapeHtml(tx('修改精灵等级','Adjust sprite level','Chỉnh cấp tinh linh'))}</button> <button type="button" class="btn btn-primary btn-sm" data-act="spAdmTab" data-v="gift">🎁 ${escapeHtml(tx('赠礼','Gifts','Quà tặng'))}</button> <span class="hint">${escapeHtml(tx('为操作员直接选择精灵 / 皮肤 / 道具 / 经验 / 线下实物赠送（单个或批量）','Send spirits / skins / items / XP / offline items to operators (single or batch)','Tặng tinh linh / trang phục / vật phẩm / EXP / hiện vật cho vận hành viên (đơn lẻ hoặc hàng loạt)'))}</span></div>`+`<div class="table-scroll"><table class="data-table"><thead><tr><th>${escapeHtml(tx('操作员','Operator','Vận hành viên'))}</th><th>${escapeHtml(tx('当季等级','Season level','Cấp mùa'))}</th><th>XP</th><th>${escapeHtml(tx('赛季精灵','Season sprite','Tinh linh mùa'))}</th><th>${escapeHtml(tx('试验精灵','Trial sprites','Tinh linh thử nghiệm'))}</th><th>🥣</th><th>🎫</th><th>🔷</th><th>⭐</th><th>👗</th><th>${escapeHtml(tx('图鉴','Codex','Sách tranh'))}</th><th>${escapeHtml(tx('异常','Flags','Cờ'))}</th><th></th></tr></thead><tbody>
     ${ops.map(a=>{ const u = spU(a.username), s = u.ss[sid], L = achvLevel(achvPoints(u));
       return `<tr><td data-i18n-ignore="1" class="nowrap">${escapeHtml(translateData(a.displayName||a.username))} <small class="hint">${escapeHtml(a.username)}</small></td><td><span class="lv-pill lvb-${L.idx}">${escapeHtml(t(L.name))}</span></td><td>${achvPoints(u)}</td><td>${s?`${spUserSpiritView(u, 22)} LV${spRecStage(s)}`:'—'}</td><td>${Object.keys(u.tr).length}/9</td><td>${u.crystals||0}</td><td>${u.tickets||0}</td><td>${u.shards||0}</td><td>${spPoints(u)}</td><td>${Object.keys(u.skins).length}</td><td>${spCodexPct(u).toFixed(0)}%</td>
         <td>${u.flags.length?`<span class="tag warn" title="${escapeAttr(u.flags.slice(-5).map(f=>`${f.date} ${f.metric}：${f.metric==='xpCap' ? tx('已达经验上限（每日 / 每周），超出部分不计','XP cap reached (daily / weekly); the excess is not counted','Đã chạm giới hạn kinh nghiệm (ngày / tuần); phần dư không tính') : f.note}`).join('\n'))}">${u.flags.length}</span>`:'—'}</td><td class="nowrap"><button class="btn btn-ghost btn-sm" data-act="spAdmViewUser" data-id="${escapeAttr(a.username)}">${escapeHtml(tx('查看','View','Xem'))}</button> <button class="btn btn-danger btn-sm" data-act="resetOperatorSprites" data-id="${escapeAttr(a.username)}">${escapeHtml(tx('重置精灵','Reset sprite','Đặt lại tinh linh'))}</button></td></tr>`; }).join('')}</tbody></table></div>`;
@@ -20014,6 +20014,8 @@ function spRenderModal(){
   if(m.type==='spCodex') return spCodexDetailHtml(m.key);
   if(m.type==='spEvDetail') return spEvDetailHtml(m.id);
   if(m.type==='spConfirm') return spConfirmHtml();
+  if(m.type==='spLvl') return spLvlHtml();
+  if(m.type==='spGfPv') return spGfPvHtml();
   if(m.type==='spSpDetail') return spSpDetailHtml(m);
   if(m.type==='spSkinPv') return spSkinPvHtml(m.id);
   if(m.type==='spLibPv' && typeof spLibPvHtml==='function') return spLibPvHtml(m.id);
@@ -27257,7 +27259,7 @@ function spGiftHtml(){
         <div class="sp-form-row"><span class="hint">${escapeHtml(tx('通知渠道','Channels','Kênh thông báo'))}</span><label class="checkline"><input type="checkbox" checked disabled> ${escapeHtml(tx('站内信','In-app','Trong ứng dụng'))}</label>
           <label class="checkline"><input type="checkbox" data-sp-gfch="push" ${S.gfPush!==false?'checked':''}> ${escapeHtml(tx('浏览器推送','Browser push','Thông báo đẩy'))}</label>
           <label class="checkline"><input type="checkbox" data-sp-gfch="mail" ${S.gfMail?'checked':''}> ${escapeHtml(tx('邮件（生成邮件草稿）','Email (opens a draft)','Email (mở bản nháp)'))}</label></div>
-        <div class="sp-form-act"><button type="button" class="btn btn-primary" data-act="spGiftSend">${escapeHtml(tx('发送赠礼','Send gift','Gửi quà'))} <small>${users.length} × ${items.length}</small></button></div></div></section>
+        <div class="sp-form-act"><button type="button" class="btn btn-ghost" data-act="spGfPreview">${escapeHtml(tx('预览','Preview','Xem trước'))}</button> <button type="button" class="btn btn-primary" data-act="spGiftSend">${escapeHtml(tx('发送赠礼','Send gift','Gửi quà'))} <small>${users.length} × ${items.length}</small></button></div></div></section>
     <div class="sp-sec-h"><h3>${escapeHtml(tx('赠礼 / 发放记录','Gift / grant records','Bản ghi quà / cấp'))}</h3><select data-sp-input="gfSt" aria-label="${escapeAttr(tx('状态','Status','Trạng thái'))}"><option value="">${escapeHtml(tx('全部状态','All statuses','Mọi trạng thái'))}</option>${Object.entries(SP_PEND_ST).map(([k,n])=>`<option value="${k}" ${S.gfSt===k?'selected':''}>${escapeHtml(trT(n))}</option>`).join('')}</select></div>
     <div class="table-scroll"><table class="data-table"><thead><tr><th>${escapeHtml(tx('时间','Time','Thời gian'))}</th><th>${escapeHtml(tx('接收人','To','Người nhận'))}</th><th>${escapeHtml(tx('奖励','Reward','Phần thưởng'))}</th><th>${escapeHtml(tx('来源','Source','Nguồn'))}</th><th>${escapeHtml(tx('发放人','By','Người cấp'))}</th><th>${escapeHtml(tx('附言','Message','Lời nhắn'))}</th><th>${escapeHtml(tx('有效期','Expiry','Hạn'))}</th><th>${escapeHtml(tx('状态','Status','Trạng thái'))}</th><th></th></tr></thead><tbody>
       ${hist.map(r=>`<tr><td class="mono nowrap">${escapeHtml(localDT(r.granted_at))}</td><td data-i18n-ignore="1">${escapeHtml(spUserName(r.operator_id))}</td><td data-i18n-ignore="1">${escapeHtml(spRewardLabel(r.reward_type, r.reward_content))}</td><td>${escapeHtml(trT(SP_PEND_SRC[r.source]||SP_PEND_SRC.grant))}</td><td data-i18n-ignore="1">${escapeHtml(spUserName(r.granted_by))}</td><td class="hint" data-i18n-ignore="1">${escapeHtml(r.note||'')}${+r.cond?.minStage>1?` · LV${r.cond.minStage}+`:''}</td><td class="mono">${escapeHtml(r.expire_at?localDT(r.expire_at):'—')}</td><td>${escapeHtml(trT(SP_PEND_ST[r.status]||[r.status,r.status,r.status]))}${r.claimed_at?` <small class="hint">${escapeHtml(localDT(r.claimed_at))}</small>`:''}</td><td>${r.status==='pending'?`<button type="button" class="btn btn-ghost btn-sm" data-act="spGfRevoke" data-id="${escapeAttr(r.id)}">${escapeHtml(tx('撤回','Revoke','Thu hồi'))}</button>`:''}</td></tr>`).join('') || `<tr><td colspan="9" class="hint">${escapeHtml(tx('暂无记录','No records yet','Chưa có bản ghi'))}</td></tr>`}</tbody></table></div></div>`;
@@ -27287,6 +27289,97 @@ function spGfAdd(type){
   } else if(type==='xp'){ const n = Math.max(1, Math.floor(+S.gfN||0)); items.push({type:'xp', content:{n}}); }
   else { const text = String(S.gfText||'').trim(); if(!text) return toast(tx('请填写线下实物名称','Enter the item name','Hãy nhập tên vật phẩm'), 'warn'); items.push({type:'offline', content:{text, n:Math.max(1, Math.floor(+S.gfN||1))}}); }
 }
+
+/* ---------- 管理员修改精灵等级（仅超级管理员）：只改精灵养成字段，不碰成就 / 真实进度 / 甘特条 / 业务统计 ---------- */
+var spLvlLast = 0;
+function spLvlCfg(){ const c = gCfg().lvlAdm || {}; return {daily:+c.daily>0 ? +c.daily : 30, cooldownMs:c.cooldownMs>=0 ? +c.cooldownMs : 3000, notify:c.notify!==false, bigXp:+c.bigXp>0 ? +c.bigXp : 3000}; }
+function spLvlToday(){ const d = gToday(), me = spMe(); return Object.values(G().gaudit||{}).filter(a=>a.act==='sprite-lvl-adjust' && a.by===me && String(a.at).slice(0,10)===d).length; }
+function spLvlHtml(){
+  if(!spIsSuper()) return '';
+  const m = state.modal, ops = spOperators(), sid = seasonNow().id, cfg = spLvlCfg(), c = spCurve();
+  const skins = spSkins();
+  return `<div class="modal sp-lvl" role="dialog" aria-modal="true" aria-labelledby="spLvlT" style="max-width:720px">
+    <div class="modal-head"><h2 id="spLvlT">🧬 ${escapeHtml(tx('修改精灵等级','Adjust sprite level','Chỉnh cấp tinh linh'))}</h2><button class="modal-close" data-act="spLvlClose" aria-label="${escapeAttr(tx('关闭','Close','Đóng'))}">${svgIcon('x',15)}</button></div>
+    <form id="spLvlForm" class="modal-body" onsubmit="return false">
+      <p class="hint">${escapeHtml(tx('仅修改精灵养成数据（阶段 / XP / 亲密度 / 心情 / 皮肤 / 图鉴）。成就进度、真实进度、甘特条与业务统计不会改变；阶段由 XP 实时派生，LV5 需觉醒。','Only sprite growth data is changed (stage / XP / intimacy / mood / skin / codex). Achievements, real progress, Gantt bars and business stats are untouched. Stage derives from XP; LV5 needs awakening.','Chỉ đổi dữ liệu nuôi tinh linh. Thành tựu, tiến độ thật, thanh Gantt và thống kê không đổi. Giai đoạn suy ra từ XP; LV5 cần thức tỉnh.'))}</p>
+      <div class="sp-filter"><b>${escapeHtml(tx('操作员（可多选 = 批量）','Operators (multi = batch)','Vận hành viên (nhiều = hàng loạt)'))}</b></div>
+      <div class="sp-rp-list" style="max-height:160px;overflow:auto">${ops.map(a=>{ const r = spU(a.username).ss[sid]; return `<label class="sp-rp-row"><input type="checkbox" name="u" value="${escapeAttr(a.username)}" ${m.pre===a.username?'checked':''}><b data-i18n-ignore="1">${escapeHtml(translateData(a.displayName||a.username))}</b> <small class="hint">${r?`LV${spStageOf(+r.xp||0, r)} · ${+r.xp||0} XP`:escapeHtml(tx('无当季精灵','No season sprite','Không có'))}</small></label>`; }).join('')}</div>
+      <div class="sp-form-row"><label>${escapeHtml(tx('直接设置阶段','Set stage','Đặt giai đoạn'))}<select name="stage"><option value="">—</option>${[1,2,3,4].map(i=>`<option value="${i}">LV${i} (≥${c[i-1]} XP)</option>`).join('')}</select></label>
+        <label>${escapeHtml(tx('设置 XP','Set XP','Đặt XP'))}<input type="number" name="xp" min="0" step="1"></label>
+        <label>${escapeHtml(tx('增减 XP','XP ±','XP ±'))}<input type="number" name="dxp" step="1"></label></div>
+      <div class="sp-form-row"><label>${escapeHtml(tx('亲密度','Intimacy','Thân mật'))}<input type="number" name="int" min="0" max="${+gCfg().intimacyMax||1000}"></label>
+        <label>${escapeHtml(tx('心情','Mood','Tâm trạng'))}<input type="number" name="mood" min="0" max="${+gCfg().moodMax||100}"></label>
+        <label>${escapeHtml(tx('装备皮肤（须已拥有）','Equip skin (owned)','Trang phục (đã có)'))}<select name="skin"><option value="">—</option>${skins.map(k=>`<option value="${escapeAttr(k.id)}" data-i18n-ignore="1">${escapeHtml(trT(k.name))}</option>`).join('')}</select></label></div>
+      <div class="sp-form-row"><label style="flex:1 1 280px">${escapeHtml(tx('解锁图鉴（精灵 ID，逗号分隔）','Unlock codex (spirit ids, comma separated)','Mở sách tranh (ID, cách nhau dấu phẩy)'))}<input name="codex" data-i18n-ignore="1"></label></div>
+      <div class="sp-form-row"><label style="flex:1 1 280px">${escapeHtml(tx('修改理由（必填）','Reason (required)','Lý do (bắt buộc)'))}<input name="reason" maxlength="120" data-i18n-ignore="1"></label></div>
+      <p class="hint">${escapeHtml(tx(`今日已修改 ${spLvlToday()} / ${cfg.daily} 次；冷却 ${cfg.cooldownMs/1000} 秒；降低 XP、跨 2 阶以上、单次 ±${cfg.bigXp} XP 以上或批量属高风险，需二次确认。`, `Today ${spLvlToday()} / ${cfg.daily}; cooldown ${cfg.cooldownMs/1000}s; lowering XP, jumping 2+ stages, ±${cfg.bigXp}+ XP or batches are high-risk and need a second confirmation.`, `Hôm nay ${spLvlToday()} / ${cfg.daily}; chờ ${cfg.cooldownMs/1000}s; thao tác rủi ro cao cần xác nhận lần hai.`))}</p>
+    </form>
+    <div class="modal-foot"><span style="flex:1"></span><button class="btn btn-ghost btn-sm" data-act="spLvlClose">${escapeHtml(tx('取消','Cancel','Hủy'))}</button><button class="btn btn-primary btn-sm" data-act="spLvlApply">${escapeHtml(tx('应用','Apply','Áp dụng'))}</button></div></div>`;
+}
+function spLvlApply(){
+  if(!spIsSuper()) return;
+  const f = document.getElementById('spLvlForm'); if(!f) return;
+  const fd = new FormData(f), cfg = spLvlCfg(), sid = seasonNow().id, c = spCurve(), g = k=>String(fd.get(k)||'').trim();
+  const users = fd.getAll('u').filter(x=>spOperators().some(a=>a.username===x));
+  if(!users.length) return toast(tx('请选择操作员','Choose operators','Hãy chọn vận hành viên'), 'error');
+  const reason = g('reason'); if(!reason) return toast(tx('请填写修改理由','Please enter a reason','Hãy nhập lý do'), 'error');
+  const num = k=>{ const v = g(k); if(v==='') return null; const n = Math.floor(+v); return Number.isFinite(n) ? n : NaN; };
+  const stage = num('stage'), xpSet = num('xp'), dxp = num('dxp'), inti = num('int'), mood = num('mood'), skin = g('skin');
+  const codex = g('codex').split(/[,，\s]+/).filter(Boolean);
+  if([stage,xpSet,dxp,inti,mood].some(Number.isNaN)) return toast(tx('数值无效','Invalid number','Số không hợp lệ'), 'error');
+  if(xpSet!=null && xpSet < 0) return toast(tx('XP 不能为负','XP can\'t be negative','XP không được âm'), 'error');
+  if(skin && !spSkin(skin)) return toast(tx('皮肤不存在','Skin not found','Không có trang phục'), 'error');
+  const badCodex = codex.filter(id=>!spDef(id)); if(badCodex.length) return toast(tx('图鉴精灵不存在：','Unknown spirit: ','Không có tinh linh: ')+badCodex.join(','), 'error');
+  if([stage,xpSet,dxp,inti,mood].every(v=>v==null) && !skin && !codex.length) return toast(tx('没有要修改的内容','Nothing to change','Không có gì để đổi'), 'warn');
+  if(Date.now() - spLvlLast < cfg.cooldownMs) return toast(tx('操作过于频繁，请稍后再试（冷却中）','Too fast, please wait (cooldown)','Quá nhanh, vui lòng chờ'), 'warn');
+  if(spLvlToday() + users.length > cfg.daily) return toast(tx(`超过每日修改次数上限（${cfg.daily}）`, `Daily adjustment limit (${cfg.daily}) exceeded`, `Vượt giới hạn mỗi ngày (${cfg.daily})`), 'error');
+  const plan = users.map(name=>{ const u = spU(name), r = u.ss[sid]; if(!r) return null;
+    const old = +r.xp||0; let nx = old; if(stage!=null) nx = c[stage-1]; if(xpSet!=null) nx = xpSet; if(dxp!=null) nx = Math.max(0, nx + dxp);
+    return {name, u, r, old, nx, oldStage:spStageOf(old, r), newStage:spStageOf(nx, r)}; }).filter(Boolean);
+  const skipped = users.length - plan.length; if(!plan.length) return toast(tx('所选操作员没有当季精灵','Selected operators have no season sprite','Không có tinh linh mùa'), 'error');
+  const risky = plan.length > 1 || plan.some(p=>p.nx < p.old || Math.abs(p.newStage - p.oldStage) >= 2 || Math.abs(p.nx - p.old) >= cfg.bigXp);
+  const go = ()=>{
+    spLvlLast = Date.now();
+    plan.forEach(p=>{
+      const {u, r, name} = p, before = {xp:p.old, stage:p.oldStage, intimacy:+r.intimacy||0, mood:spMood(r), skin:u.equip.season||''}, anomalies = [];
+      r.xp = p.nx;
+      if(inti!=null) r.intimacy = Math.max(0, Math.min(+gCfg().intimacyMax||1000, inti));
+      if(mood!=null) spMoodSet(r, mood);
+      if(skin){ if(u.skins[skin]) u.equip.season = skin; else anomalies.push('skin-not-owned'); }
+      codex.forEach(id=>{ const k = `sp:${id}`; if(!u.codex[k]) u.codex[k] = gNowIso(); });
+      if(Math.abs(p.nx - p.old) >= cfg.bigXp) anomalies.push('big-xp');
+      if(Math.abs(p.newStage - p.oldStage) >= 2) anomalies.push('stage-jump');
+      if(plan.length > 1) anomalies.push('batch');
+      const after = {xp:r.xp, stage:spStageOf(r.xp, r), intimacy:+r.intimacy||0, mood:spMood(r), skin:u.equip.season||''};
+      spAudit('sprite-lvl-adjust', name, {reason, before, after, codex, risky, batch:plan.length>1});
+      if(anomalies.some(a=>a!=='batch')) spAudit('sprite-lvl-anomaly', name, {reason, flags:anomalies});
+      gTouch(u);
+      if(cfg.notify) spNotify('season', `lvl:${name}:${Date.now()}`, tx('你的精灵数据已被管理员调整','Your sprite data was adjusted by an admin','Dữ liệu tinh linh của bạn đã được quản trị viên chỉnh'), `${reason} · LV${before.stage}→LV${after.stage}, XP ${before.xp}→${after.xp}`, false, name);
+    });
+    saveGrowth(true); state.modal = null;
+    toast(`${tx('已修改精灵数据','Sprite data updated','Đã cập nhật')} · ${plan.length}${skipped?` (${tx('跳过','skipped','bỏ qua')} ${skipped})`:''}`, 'ok'); render();
+  };
+  if(risky){ if(!confirm(tx(`高风险操作：将修改 ${plan.length} 位操作员的精灵数据。\n理由：${reason}\n确认执行？`, `High-risk: sprite data of ${plan.length} operator(s) will change.\nReason: ${reason}\nProceed?`, `Rủi ro cao: đổi dữ liệu của ${plan.length} người.\nLý do: ${reason}\nTiếp tục?`))) return; }
+  go();
+}
+/* ---------- 赠礼预览弹窗：发送前预览，可返回修改 ---------- */
+function spGfPreview(){
+  if(!spIsAdmin()) return;
+  const S = spS(), users = (S.gfUsers||[]).filter(x=>spOperators().some(a=>a.username===x)), items = S.gfItems||[];
+  if(!users.length) return toast(tx('请选择接收人','Choose at least one recipient','Hãy chọn người nhận'), 'error');
+  if(!items.length) return toast(tx('奖励清单为空','The reward list is empty','Danh sách phần thưởng trống'), 'error');
+  state.modal = {type:'spGfPv'};
+}
+function spGfPvHtml(){
+  const S = spS(), users = (S.gfUsers||[]), items = S.gfItems||[];
+  return `<div class="modal sp-gfpv" role="dialog" aria-modal="true" style="width:min(900px,100vw);max-width:100vw;max-height:min(640px,100vh)">
+    <div class="modal-head"><h2>👁 ${escapeHtml(tx('赠礼预览','Gift preview','Xem trước quà'))}</h2><button class="modal-close" data-act="spGfPvBack" aria-label="${escapeAttr(tx('返回修改','Back','Quay lại'))}">${svgIcon('x',15)}</button></div>
+    <div class="modal-body" style="overflow:auto"><p><b>${users.length}</b> × <b>${items.length}</b> = ${users.length*items.length} ${escapeHtml(tx('条待领取记录','pending records','bản ghi chờ nhận'))}</p>
+      <div class="sp-gfpv-cols"><div><h4>${escapeHtml(tx('接收人','Recipients','Người nhận'))}</h4><ul>${users.map(u=>`<li data-i18n-ignore="1">${escapeHtml(spUserName(u))}</li>`).join('')}</ul></div>
+      <div><h4>${escapeHtml(tx('奖励','Rewards','Phần thưởng'))}</h4><ul>${items.map(it=>`<li data-i18n-ignore="1">${escapeHtml(spRewardLabel(it.type, it.content))}</li>`).join('')}</ul></div>
+      <div><h4>${escapeHtml(tx('设置','Settings','Cài đặt'))}</h4><ul><li data-i18n-ignore="1">${escapeHtml(S.gfNote||'—')}</li><li>${escapeHtml(tx('有效期','Valid days','Hạn'))}: ${escapeHtml(String(S.gfDays ?? 30))}</li></ul></div></div></div>
+    <div class="modal-foot"><span style="flex:1"></span><button class="btn btn-ghost btn-sm" data-act="spGfPvBack">${escapeHtml(tx('返回修改','Back to edit','Quay lại sửa'))}</button><button class="btn btn-primary btn-sm" data-act="spGiftSend">${escapeHtml(tx('确认发送','Confirm send','Xác nhận gửi'))}</button></div></div>`;
+}
 function spGiftSend(){
   if(!spIsAdmin()) return;
   const S = spS(), users = (S.gfUsers||[]).filter(x=>spOperators().some(a=>a.username===x)), items = S.gfItems||[], note = String(S.gfNote||'').trim();
@@ -27303,7 +27396,7 @@ function spGiftSend(){
     if(to) window.open(`mailto:${encodeURIComponent(to).replace(/%40/g,'@').replace(/%2C/g,',')}?subject=${encodeURIComponent(tx('您收到新的待领取奖励','You have new rewards to claim','Bạn có phần thưởng mới cần nhận'))}&body=${encodeURIComponent(body)}`);
     else toast(tx('收件人没有邮箱地址，已跳过邮件','No email address on file; email skipped','Không có địa chỉ email; bỏ qua email'), 'warn');
   }
-  S.gfItems = []; S.gfUsers = []; S.gfNote = '';
+  S.gfItems = []; S.gfUsers = []; S.gfNote = ''; if(state.modal?.type==='spGfPv') state.modal = null;
   toast(`${tx('赠礼已发送','Gift sent','Đã gửi quà')} · ${res.n}`, 'ok'); render();
 }
 function spAction20(act, el, id){
@@ -27312,7 +27405,12 @@ function spAction20(act, el, id){
     case 'spRpToggle': spRpToggle(v, id); return false;
     case 'spRpClear': S[spRpKind(v).sel] = []; spRpRefresh(); return false;
     case 'spRpAll': { const K = spRpKind(v), a = S[K.sel] = S[K.sel] || []; spRpRows(v).slice(0, 500).forEach(d=>{ if(!a.includes(d.id)) a.push(d.id); }); spRpRefresh(); return false; }
+    case 'spLvlOpen': if(!spIsSuper()) return false; state.modal = {type:'spLvl', pre:id||''}; return true;
+    case 'spLvlApply': spLvlApply(); return false;
+    case 'spLvlClose': state.modal = null; return true;
     case 'spGfType': S.gfType = v; return true;
+    case 'spGfPreview': spGfPreview(); return true;
+    case 'spGfPvBack': state.modal = null; return true;
     case 'spGfAdd': spGfAdd(v); return true;
     case 'spGfDel': (S.gfItems||[]).splice(+id, 1); return true;
     case 'spGfUsersAll': { const uq = String(S.gfUq||'').trim(), a = S.gfUsers = S.gfUsers || []; spOperators().filter(x=>!uq || spSearchMatch(uq, [x.username, x.displayName])).forEach(x=>{ if(!a.includes(x.username)) a.push(x.username); }); return true; }
