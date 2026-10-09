@@ -14153,7 +14153,7 @@ function spriteFeedDo(id){
   /* 投喂甘特精灵同时培养同类型的试验精灵（首次投喂即解锁） */
   { const su = spU(me), tp = spTypeOfBooking(b), tr = spTrialUnlock(su, tp, 'gantt-feed', b), sb = spStageOf(tr.xp);
     tr.xp = (+tr.xp||0) + (+cfg.feedXp||10); tr.feeds = (tr.feeds||0) + 1; spMoodSet(tr, spMood(tr) + 3);
-    const sa = spStageOf(tr.xp); if(sa > sb){ tr.stageMax = Math.max(tr.stageMax||1, sa); spOnEvolve(su, 'trial', tr, sb, sa); }
+    const sa = spStageOf(tr.xp); if(sa > sb){ tr.stageMax = Math.max(tr.stageMax||1, sa); onStageChange(su, 'trial', tr, sb, sa); }
     spAudit('sprite-feed', me, {kind:'gantt', key:b.id, type:tp, gain:cfg.feedXp}, {crystals:-(+cfg.boostCost||5)}); }
   if((d.boostN) > cfg.feedDailyLimit && u.bonusFeeds>0) u.bonusFeeds--;
   gTouch(u);
@@ -14817,7 +14817,7 @@ function spFeedDo(kind, key){
     if(hr < 5){ achvEvent('night', {oncePerDay:true}); spHiddenUnlock('sp_glitch', 'night-feed'); }
     if(crit) achvEvent('crit');
     achvEvent('spFeed');
-    if(after > before) spOnEvolve(u, kind, rec, before, after);
+    if(after > before) onStageChange(u, kind, rec, before, after);
     gTouch(u); saveGrowth(true);
     toast(`${crit ? '💥 '+tx('暴击！','Critical!','Chí mạng!')+' ' : ''}${tx('投喂成功','Fed','Đã cho ăn')} +${gain} ${tx('精灵经验','sprite XP','EXP tinh linh')}${mult>1?` (×${mult})`:''}${st.useTicket?` · ${tx('使用投喂券','used a feed ticket','dùng vé cho ăn')}`:''}`, 'ok');
     render();
@@ -14837,6 +14837,13 @@ function spOnEvolve(u, kind, rec, before, after){
   spAudit('sprite-evolve', u.user, {kind, key:kind==='season'?rec.sid:rec.type, from:before, to:after});
   if(u.user===spMe()) setTimeout(()=>spEvolveFx(form, spRecColor(kind, rec), after, spRecSkin(u, kind, rec), kind==='season' ? spDef(rec.sp) : null, kind==='season' ? rec : null, {from:before}), 120);
   if(kind==='season') for(let s2=before+1; s2<=after; s2++) spCodexAdd(u, `sps:${rec.sp}:${s2}`);
+}
+function onStageChange(u, kind, rec, before, after){
+  if(after<=before) return false;
+  rec.stageMax = Math.max(rec.stageMax||1, after);
+  spCacheVer++;
+  spOnEvolve(u, kind, rec, before, after);
+  return true;
 }
 /* 互动：摸摸 / 玩耍 / 聊天（亲密度 +2，5% 暴击 +5；每日 20 次） */
 function spInteract(kind, key, how){
@@ -17343,7 +17350,7 @@ function spSkin(id){ if(!id) return null; spSkins(); return spSkinCache.map.get(
    v2.0 逻辑层：阶段与觉醒（LV5）/ 统一精灵快照 / 资源登记表 / 资源确认窗口 / 兑换商店 v2 / 联动（委托 S10 · 外部试验室）
 ========================================================= */
 /* ---------- 阶段：LV1–LV4 由精灵经验进化；LV5 觉醒体需消耗觉醒材料 ---------- */
-function spStageOf(xp, rec){ const c = spCurve(); let s = 1; for(let i=1;i<4;i++) if(xp >= c[i]) s = i+1; if(s>=4 && rec && rec.awake5) s = 5; return s; }
+function spStageOf(xp, rec){ const c = spCurve(); let s = 1; for(let i=1;i<Math.min(c.length,5);i++) if(xp >= c[i]) s = i+1; if(s>=4 && rec && rec.awake5) s = 5; return s; }
 function spRecStage(rec){ return rec ? spStageOf(+rec.xp||0, rec) : 1; }
 function spDispStage(rec){ const s = spRecStage(rec); return s>=5 && rec?.showLv4 ? 4 : s; }
 function spStageInfo(xp, rec){
@@ -21448,7 +21455,7 @@ function spAdmGive(a, id, src){
   return true;
 }
 /* ---------- 阶段 / 养成 ---------- */
-function spAdmStage(o){ if(!o) return 1; const c = spCurve(); let s = 1; for(let i=1;i<4;i++) if((+o.xp||0) >= c[i]) s = i+1; if(o.awake5 && !o.showLv4) s = 5; return s; }
+function spAdmStage(o){ if(!o) return 1; const c = spCurve(); let s = 1; for(let i=1;i<Math.min(c.length,5);i++) if((+o.xp||0) >= c[i]) s = i+1; if(o.awake5 && !o.showLv4) s = 5; return s; }
 function spAdmViewDef(id, o){ const d = spAdmDef(id); if(!d || o?.branch!=='B') return d; const v = {...d, id:d.id+'#B', evoSeed:((d.gene?.seed||spHash(d.id)) ^ 0xad5) >>> 0, design:null}; delete v.gene; const nm = spBranchNames(d)[1]; v.forms = v.forms.map((x,i)=>x.map((y,k)=>k===3 ? nm[i] : y)); return v; }
 var SP_ADM_TAL = {audit:['审计','Audit','Kiểm toán'], dispatch:['调度','Dispatch','Điều phối'], publish:['发布','Publish','Phát hành'], rewind:['回溯','Rewind','Truy hồi'], patrol:['巡天','Patrol','Tuần thiên'], edict:['执令','Edict','Chấp lệnh']};
 var SP_ADM_SKB = {audit:['审计型','Auditor','Kiểm toán'], dispatch:['调度型','Dispatcher','Điều phối'], publish:['发布型','Publisher','Phát hành'], rewind:['回溯型','Rewinder','Truy hồi'], patrol:['巡天型','Patroller','Tuần thiên'], edict:['执令型','Commander','Chấp lệnh']};
