@@ -13808,7 +13808,7 @@ function feedSaveRec(id){
 ========================================================= */
 function growthDefaults(){
   return {
-    cfgVer:2,
+    cfgVer:3,
     /* 成就等级（累计当季经验）：青铜 0 / 白银 500 / 黄金 2000 / 铂金 5000 / 钻石 11000 / 传奇 21000 */
     levels:[{name:'青铜', min:0},{name:'白银', min:500},{name:'黄金', min:2000},{name:'铂金', min:5000},{name:'钻石', min:11000},{name:'传奇', min:21000}],
     /* 甘特精灵投喂加速 */
@@ -13816,9 +13816,9 @@ function growthDefaults(){
     crystalPerFeedOk:10, crystalPerMakeup:5, crystalDaily:20, interactDailyCap:40,
     seasonMonths:3, seasonAnchorMonth:1, seasonDay:1, seasonHour:0,
     /* 赛季 / 试验精灵：经验曲线（累计）幼年 0 → 成长 100 → 成熟 400 → 完全体 1200 → 觉醒所需 3200（LV5 觉醒体需消耗觉醒材料） */
-    spXp:[0,100,400,1200,3200], peakOn:true, awake5Mat:3, ticketDailyUse:10,
+    spXp:[0,1500,7500,19500,39500], spDayCap:600, spWeekCap:3500, spSeasonCap:40000, critDaily:10, peakOn:true, awake5Mat:3, ticketDailyUse:10,
     /* 投喂：每日 50 次、每次 +10 精灵经验、消耗 5 能量饲料、冷却 30 秒、5% 暴击双倍；能量饲料每日获取上限 200；10 能量饲料 = 1 投喂券 */
-    feedDaily:50, feedXp:10, feedCost:5, feedCdSec:30, feedCrit:5, feedDayCap:200, ticketRate:10,
+    feedDaily:40, feedXp:10, feedCost:5, feedCdSec:30, feedCrit:5, feedDayCap:200, ticketRate:10,
     /* 当季经验来源 [每次经验, 每日上限(0=不限)] */
     xpSrc:{login:[10,1], feed:[2,50], task:[20,5], gantt:[5,10], evolve:[100,0], skin:[50,0], codex:[30,0], activity:[20,1], assist:[15,3]},
     xpDayCap:500, xpWeekCap:2500, pointRate:50,
@@ -13853,6 +13853,7 @@ function migrateGrowthCfg(c){
   if(!(+c.cfgVer >= 2)){
     out = {...out, cfgVer:2, levels:d.levels, crystalPerFeedOk:d.crystalPerFeedOk, crystalPerMakeup:d.crystalPerMakeup, crystalDaily:d.crystalDaily, boostCost:d.boostCost, updatedAt:c.updatedAt ? new Date().toISOString() : ''};
   }
+  if(!(+c.cfgVer >= 3)) out = {...out, cfgVer:3, spXp:d.spXp, spDayCap:d.spDayCap, spWeekCap:d.spWeekCap, spSeasonCap:d.spSeasonCap, critDaily:d.critDaily, feedDaily:d.feedDaily, feedXp:d.feedXp, feedCdSec:d.feedCdSec};   /* v3 季度制经验：阈值与上限一次性重置 */
   return out;
 }
 function G(){ if(!state.growth) state.growth = normGrowth({}); return state.growth; }
@@ -14304,7 +14305,7 @@ function growthCfgSave(){
   const sum = Object.values(rarity).reduce((a2,b2)=>a2+b2.p, 0);
   if(Math.abs(sum-100) > 0.01) return toast(`${tx('稀有度概率合计必须为 100%，当前','Rarity probabilities must total 100%; now','Tổng xác suất độ hiếm phải là 100%; hiện tại')} ${sum.toFixed(2)}%`, 'error');
   const xpSrc = {}; Object.keys(d.xpSrc).forEach(k=>xpSrc[k] = [n('xv_'+k, 0, 1000), n('xl_'+k, 0, 1000)]);
-  G().config = {...c, cfgVer:2, levels, spXp, rarity, xpSrc, peakOn:fd.get('peakOn')==='on',
+  G().config = {...c, cfgVer:3, levels, spXp, rarity, xpSrc, peakOn:fd.get('peakOn')==='on',
     boostPerFeed:n('boostPerFeed',1,25), boostCost:n('boostCost'), feedDailyLimit:n('feedDailyLimit'), perSpriteDaily:n('perSpriteDaily'), spriteCooldownSec:n('spriteCooldownSec'),
     crystalPerFeedOk:n('crystalPerFeedOk'), crystalPerMakeup:n('crystalPerMakeup'), crystalDaily:n('crystalDaily'), interactDailyCap:n('interactDailyCap'),
     feedSrc:{task:n('fs_task'), gantt:n('fs_gantt')},
@@ -14653,7 +14654,14 @@ function spPalColor(form, palId){ const p = SP_PALETTES.find(x=>x.id===palId); r
 function spCreatureName(form, stage){ const a = SP_NAMES[form] || SP_NAMES.orb, s = Math.max(1, Math.min(5, stage||1)); const base = a[Math.min(4, s)-1]; return s>=5 ? [`觉醒·${base[0]}`, `Awakened ${base[1]}`, `${base[2]} thức tỉnh`] : base; }
 
 /* ---------- 经验曲线 / 阶段 ---------- */
-function spCurve(){ const c = gCfg().spXp; return Array.isArray(c) && c.length>=5 ? c.map(Number) : [0,100,400,1200,3200]; }
+var SP_XP_DEFAULT = [0,1500,7500,19500,39500];   /* 季度制：LV1 <1500 / LV2 <7500 / LV3 <19500 / LV4 <39500 / LV5 >=39500 */
+var SP_XP_SEASON = {feed:10, interact:2, task:20, gantt:5, activity:20, assist:15, patrol:15, team:25};   /* 赛季精灵经验来源（每次） */
+var SP_SRC_TO_SEASON = {task:'task', gantt:'gantt', activity:'activity', assist:'assist', teamFeed:'team'};
+function spCurveValid(c){ return Array.isArray(c) && c.length>=5 && c.slice(0,5).every((v,i)=>Number.isFinite(+v) && (i===0 ? +v===0 : +v>+c[i-1])); }
+function spCurve(){ const c = gCfg().spXp; return spCurveValid(c) ? c.slice(0,5).map(Number) : SP_XP_DEFAULT.slice(); }
+function calculateStage(xp){ const c = spCurve(), x = Math.max(0, +xp||0); let s = 1; for(let i=1;i<5;i++) if(x >= c[i]) s = i+1; return s; }
+function spCapsValid(){ const g = gCfg(), c = spCurve(), d = +g.spDayCap, w = +g.spWeekCap, z = +g.spSeasonCap; return d>0 && w>=d && z>=w && d < c[1] && z >= c[4]; }   /* 每日上限 < LV2 门槛（禁止一天满级），赛季上限 >= LV5 门槛 */
+(function spCurveStartupCheck(){ try{ const c = gCfg().spXp; if(!spCurveValid(c)) console.warn('[sprite] spXp 阈值配置无效，已回退默认值', c, SP_XP_DEFAULT); if(!spCapsValid()) console.warn('[sprite] 经验上限配置不合理（每日 < LV2 门槛 ≤ ... ≤ 赛季上限 ≥ LV5 门槛）'); }catch(_e){} })();
 /* ---------- 心情（每天衰减）与亲密度 ---------- */
 function spMood(rec){
   const c = gCfg(), max = +c.moodMax||100;
@@ -14762,7 +14770,7 @@ var SP_TALENTS = [
 ];
 function spTalentPoints(u){ let p = Math.max(0, u.best?.idx ?? 0); Object.values(u.tr||{}).forEach(r=>p += Math.min(4, spRecStage(r))-1); return p; }
 function spTalentUsed(u){ return Object.values(u.tal||{}).reduce((a,b)=>a+(+b||0), 0); }
-function spCooldownSec(u){ return Math.max(10, (+gCfg().feedCdSec||30) - 2*(+u.tal?.speed||0)); }
+function spCooldownSec(u){ return Math.max(30, (+gCfg().feedCdSec||30) - 2*(+u.tal?.speed||0)); }
 
 /* ---------- 精灵引用：{kind:'season'|'trial', key} ---------- */
 function spRec(u, kind, key){ return kind==='season' ? u.ss[key || seasonNow().id] : u.tr[key]; }
@@ -14781,9 +14789,29 @@ function spFeedState(u, kind, key){
   let why = '';
   if(!spCanPlay()) why = tx('仅操作员可以投喂精灵','Only operators can feed sprites','Chỉ vận hành viên mới cho tinh linh ăn được');
   else if(left<=0) why = tx('今日投喂次数已用完','No feeds left today','Hôm nay đã hết lượt cho ăn');
+  else if(kind==='season' && ((+rec.xp||0) >= (+c.spSeasonCap||40000) || (+rec.xpDay?.[today]||0) >= (+c.spDayCap||600) || (+rec.xpWeek?.[spWeekKey()]||0) >= (+c.spWeekCap||3500))) why = tx('赛季精灵经验已达上限（每日 / 每周 / 每赛季）','Sprite XP cap reached (daily / weekly / season)','Đã đạt giới hạn EXP tinh linh');
   else if(cdLeft>0) why = `${tx('冷却中','Cooling down','Đang chờ')} ${Math.ceil(cdLeft/1000)}s`;
   else if((+u.crystals||0) < cost && !useTicket) why = (+u.tickets>0) ? `${tx('今日投喂券已用满','Feed-ticket limit reached today','Hôm nay đã dùng hết lượt vé')} (${tLim})` : tx('能量饲料不足','Not enough energy feed','Không đủ thức ăn năng lượng');
   return {ok:!why, why, left, cdLeft, cost, useTicket};
+}
+/* 赛季精灵经验统一入口：每日 / 每周 / 每赛季上限，返回实际增加值；超限记异常标记 */
+function spSeasonXpGain(u, rec, n, opts={}){
+  n = Math.max(0, Math.floor(+n||0)); if(!rec || !n) return 0;
+  const c = gCfg(), today = gToday(), wk = spWeekKey(); rec.xpDay = rec.xpDay || {}; rec.xpWeek = rec.xpWeek || {};
+  const dayLeft = opts.noPeriod ? Infinity : Math.max(0, (+c.spDayCap||600) - (+rec.xpDay[today]||0));
+  const wkLeft = opts.noPeriod ? Infinity : Math.max(0, (+c.spWeekCap||3500) - (+rec.xpWeek[wk]||0));
+  const seaLeft = Math.max(0, (+c.spSeasonCap||40000) - (+rec.xp||0));
+  const real = Math.min(n, dayLeft, wkLeft, seaLeft);
+  if(real < n && u.flags && !u.flags.some(f=>f.date===today && f.metric==='spXpCap')){ u.flags.push({date:today, metric:'spXpCap', at:gNowIso(), note:'赛季精灵经验已达上限（每日 / 每周 / 每赛季），超出部分不计'}); u.flags = u.flags.slice(-30); }
+  if(real){ rec.xp = (+rec.xp||0) + real; if(!opts.noPeriod){ rec.xpDay[today] = (+rec.xpDay[today]||0) + real; rec.xpWeek[wk] = (+rec.xpWeek[wk]||0) + real; }
+    Object.keys(rec.xpDay).sort().slice(0,-7).forEach(k=>delete rec.xpDay[k]); Object.keys(rec.xpWeek).sort().slice(0,-4).forEach(k=>delete rec.xpWeek[k]); }
+  return real;
+}
+function spSeasonXpSrc(u, src){
+  const rec = u?.ss?.[seasonNow().id], n = SP_XP_SEASON[src]; if(!rec || !n) return 0;
+  const before = spRecStage(rec), real = spSeasonXpGain(u, rec, n), after = spRecStage(rec);
+  if(after > before && typeof onStageChange==='function') onStageChange(u, 'season', rec, before, after);
+  return real;
 }
 function spEventMult(metric){
   let m = 1; spEvents().forEach(ev=>{ if(ev.kind==='double' && spEvStatus(ev).k==='on' && (ev.cfg?.metric||'feedXp')===metric) m = Math.max(m, +ev.cfg?.factor||2); });
@@ -14799,10 +14827,13 @@ function spFeedDo(kind, key){
     if(u.ops.includes(opId)) return;
     const before = spRecStage(rec);
     if(st.useTicket){ u.tickets = (+u.tickets||0) - 1; const dd = (u.day[today] = u.day[today] || {}); dd.ticketUse = (+dd.ticketUse||0) + 1; } else u.crystals = (+u.crystals||0) - st.cost;
-    const crit = spRand()*100 < (+c.feedCrit||5);
-    const mult = (kind==='season' ? (+rec.mult||1) : 1) * spEventMult('feedXp');
-    const gain = Math.round((+c.feedXp||10) * (crit ? 2 : 1) * mult);
-    rec.xp = (+rec.xp||0) + gain; rec.feeds = (rec.feeds||0) + 1; rec.lastFeed = gNowIso();
+    const dd2 = (u.day[today] = u.day[today] || {}), critOk = (+dd2.spCritN||0) < (+c.critDaily||10);
+    const crit = critOk && spRand()*100 < (+c.feedCrit||5); if(crit) dd2.spCritN = (+dd2.spCritN||0) + 1;
+    const mult = 1;
+    const want = SP_XP_SEASON.feed;   /* 单次投喂固定 10 XP，暴击只有表现与成就，不加经验 */
+    const gain = kind==='season' ? spSeasonXpGain(u, rec, want) : want;
+    if(kind!=='season') rec.xp = (+rec.xp||0) + gain;
+    rec.feeds = (rec.feeds||0) + 1; rec.lastFeed = gNowIso();
     spMoodSet(rec, spMood(rec) + 5);
     const d = (u.day[today] = u.day[today] || {}); d.spFeedN = (d.spFeedN||0) + 1;
     u.ops = [...u.ops, opId].slice(-40);
@@ -14854,6 +14885,7 @@ function spInteract(kind, key, how){
   d.spIntN = (d.spIntN||0) + 1;
   const crit = spRand()*100 < 5, gain = (crit ? 5 : (+c.interactGain||2)) + (+u.tal?.social||0);
   rec.intimacy = Math.min(+c.intimacyMax||1000, (+rec.intimacy||0) + gain);
+  if(kind==='season'){ const b0 = spRecStage(rec); spSeasonXpGain(u, rec, SP_XP_SEASON.interact); const a0 = spRecStage(rec); if(a0 > b0) onStageChange(u, 'season', rec, b0, a0); }
   spMoodSet(rec, spMood(rec) + 3);
   achvEvent('interact', {cap:gCfg().interactDailyCap});
   spAchvGauges(u);
@@ -15160,6 +15192,7 @@ function spPatrolCollect(){
   if(r < .45){ const n = spEarnFeed(u, 5 + Math.floor(spRand()*11), 'patrol'); msg = `${tx('巡逻发现能量饲料','Patrol found energy feed','Tuần tra tìm được thức ăn năng lượng')} +${n}`; }
   else if(r < .8){ const i = Math.floor(spRand()*SP_CARDS.length); u.cards[i] = (u.cards[i]||0) + 1; msg = `${tx('获得卡片','Card found','Nhận thẻ')}：${trT(SP_CARDS[i])}`; }
   else { const s = spRec(u, 'season'); if(s) spMoodSet(s, spMood(s) + 10); msg = tx('遇到流星，赛季精灵心情 +10','A shooting star! Season sprite mood +10','Gặp sao băng! Tâm trạng tinh linh mùa +10'); }
+  spSeasonXpSrc(u, 'patrol');
   achvEvent('patrol');
   spAudit('patrol', u.user, {msg}); gTouch(u); saveGrowth(true);
   toast(`🧭 ${msg}`, 'ok'); spSound('pop'); render();
@@ -15431,7 +15464,7 @@ function spReviewData(user, sid){
   const unlocked = Object.entries(u.unlocked||{}).filter(([,at])=>inRange(at)).length;
   const skins = Object.entries(u.skins||{}).filter(([,v])=>inRange(v.at)).map(([k])=>k);
   const rank = (z?.snapshot || Object.values(G().users).map(x=>({user:x.user, xp:+(x.xp?.[sid]||0)})).sort((a,b)=>b.xp-a.xp)).findIndex(x=>x.user===user) + 1;
-  return {u, z, cur, s, xp, L, unlocked, skins, rank, feeds:+s?.feeds||0, stage:s ? (cur ? spRecStage(s) : (s.stage || spRecStage(s))) : 0};
+  return {u, z, cur, s, xp, L, unlocked, skins, rank, feeds:+s?.feeds||0, stage:s ? (cur || s.xp != null ? spRecStage(s) : (s.stage || 1)) : 0};
 }
 function spReviewHtml(){
   const S = spS(), seasons = [{id:seasonNow().id, label:seasonNow().label}, ...Object.values(G().seasons).sort((a,b)=>String(b.start).localeCompare(String(a.start))).map(z=>({id:z.id, label:z.label}))];
@@ -16074,7 +16107,8 @@ function spPartsAt(def, stage){ const out = []; for(let s=1; s<=Math.min(5, stag
 /* 资源：内置 SVG / 图片 / 序列帧 / 视频；骨骼 / Live2D / 3D 需外部运行库，离线版显示参数化建模预览 + 资源标记 */
 function spResHtml(def, stage, size){
   const r = def.res; if(!r || !r.type || r.type==='svg') return '';
-  const src = r.stages?.[stage] || r.data;
+  const hasStages = r.stages && Object.keys(r.stages).length;
+  const src = r.stages?.[stage] || (hasStages ? '' : r.data);   /* 缺少该阶段资源时不再用其他阶段的图冒充，交给矢量立绘回退 */
   if(!src) return '';
   if(r.type==='img') return `<img class="sp-res-img" src="${escapeAttr(src)}" width="${size}" height="${size}" alt="">`;
   if(r.type==='seq'){ const n = Math.max(1, +r.frames||1), fps = Math.max(1, +r.fps||8); return `<span class="sp-res-seq" style="width:${size}px;height:${size}px;background-image:url('${escapeAttr(src)}');background-size:${n*100}% 100%;--n:${n};animation-duration:${(n/fps).toFixed(2)}s"></span>`; }
@@ -17350,7 +17384,7 @@ function spSkin(id){ if(!id) return null; spSkins(); return spSkinCache.map.get(
    v2.0 逻辑层：阶段与觉醒（LV5）/ 统一精灵快照 / 资源登记表 / 资源确认窗口 / 兑换商店 v2 / 联动（委托 S10 · 外部试验室）
 ========================================================= */
 /* ---------- 阶段：LV1–LV4 由精灵经验进化；LV5 觉醒体需消耗觉醒材料 ---------- */
-function spStageOf(xp, rec){ const c = spCurve(); let s = 1; for(let i=1;i<Math.min(c.length,5);i++) if(xp >= c[i]) s = i+1; if(s>=4 && rec && rec.awake5) s = 5; return s; }
+function spStageOf(xp, rec){ let s = calculateStage(xp); if(s>=4 && rec && rec.awake5) s = 5; return s; }
 function spRecStage(rec){ return rec ? spStageOf(+rec.xp||0, rec) : 1; }
 function spDispStage(rec){ const s = spRecStage(rec); return s>=5 && rec?.showLv4 ? 4 : s; }
 function spStageInfo(xp, rec){
@@ -21257,7 +21291,7 @@ function spRecDef(s){
 }
 function spSeasonView(s, size, opts={}){
   if(!s) return '';
-  const def = spRecDef(s), stage = opts.stage ?? (s.sid === seasonNow().id ? spDispStage(s) : (s.stage || spDispStage(s)));
+  const def = spRecDef(s), stage = opts.stage ?? (s.sid === seasonNow().id || s.xp != null ? spDispStage(s) : (s.stage || 1));
   if(def) return spiritView(def, size, stage, {hue:spPalHue(s.pal), rar:s.rar||def.rar, ...opts});
   return spriteView(s.form||'orb', spPalColor(s.form||'orb', s.pal), size, stage, opts);
 }
@@ -23061,6 +23095,7 @@ function spSrcAllow(u, src, onceKey){
   if(+wlim){ u.srcW = u.srcW || {}; const w = (u.srcW[wk] = u.srcW[wk] || {}); if((w[src]||0) >= +wlim) return 0; w[src] = (w[src]||0) + 1; Object.keys(u.srcW).sort().slice(0, -3).forEach(k=>delete u.srcW[k]); }
   d[src] = (d[src]||0) + 1; if(onceKey) u.srcOnce[`${src}|${onceKey}`] = gNowIso();
   Object.keys(u.src).sort().slice(0,-7).forEach(k=>delete u.src[k]);
+  if(SP_SRC_TO_SEASON[src]) spSeasonXpSrc(u, SP_SRC_TO_SEASON[src]);
   return +v||0;
 }
 function spAchXp(u, src, onceKey){ if(!u) return 0; const v = spSrcAllow(u, src, onceKey); return v ? gainXp(u, v) : 0; }
@@ -23346,7 +23381,7 @@ function spEvxClaim(evId, i){
   if(!u.ev?.[evId]) return toast(tx('参与活动后才能领取','Join the event first','Hãy tham gia trước'), 'warn');
   u.evx = u.evx || {}; u.evx[evId] = u.evx[evId] || {}; if(u.evx[evId][i]) return;
   if(r.type==='item'){ if(String(r.key).startsWith('adm:')) return toast(tx('管理员资源不会发放给操作员','Admin resources are never given to operators','Tài nguyên quản trị không cấp cho vận hành viên'), 'warn'); u[r.key] = (+u[r.key]||0) + r.n; if(r.key==='feed') u.crystals = (+u.crystals||0); }
-  if(r.type==='xp'){ if(r.xpKind==='show'){ const rec = u.ss?.[seasonNow().id]; if(rec) rec.xp = (+rec.xp||0) + r.n; } else gainXp(u, r.n); }
+  if(r.type==='xp'){ if(r.xpKind==='show'){ const rec = u.ss?.[seasonNow().id]; if(rec) spSeasonXpGain(u, rec, r.n, {noPeriod:true}); } else gainXp(u, r.n); }
   if(r.type==='spirit'){ const d = spDef(r.sp); if(!d || d.rar==='AD' || /^ad_/.test(r.sp)) return; spCollect(u, r.sp, 'event'); }
   u.evx[evId][i] = gNowIso(); spAudit('event-claim', u.user, {id:evId, reward:i, type:r.type}); gTouch(u); saveGrowth(true); toast(tx('已领取','Claimed','Đã nhận'), 'ok'); render();
 }
