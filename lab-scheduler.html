@@ -5937,13 +5937,14 @@ function loadAccounts(){
   return defaults;
 }
 function saveAccounts(){
-  const ok = writeLocalStorage(STORAGE_KEYS.accounts, JSON.stringify(state.accounts), '账号信息无法保存，请清理浏览器存储空间后重试');
-  if(ok){
-    const hasTarget = hasCsvWriteTarget();
+  const hasTarget = hasCsvWriteTarget();
+  /* 浏览器存储空间不足时不应阻断 CSV 写入（CSV 才是主数据） */
+  const localOk = writeLocalStorage(STORAGE_KEYS.accounts, JSON.stringify(state.accounts), hasTarget ? '' : '账号信息无法保存，请清理浏览器存储空间后重试');
+  if(hasTarget){
     queueCsvDirectorySave();
-    if(hasTarget) awaitCsvWrite(t('账号保存'));
+    awaitCsvWrite(t('账号保存'));
   }
-  return ok;
+  return localOk || hasTarget;
 }
 function currentUser(){ return state.accounts.find(account=>account.id===state.currentUserId && account.enabled) || null; }
 function canViewSpriteContent(){
