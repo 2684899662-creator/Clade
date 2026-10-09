@@ -14153,7 +14153,7 @@ function spriteFeedDo(id){
   /* 投喂甘特精灵同时培养同类型的试验精灵（首次投喂即解锁） */
   { const su = spU(me), tp = spTypeOfBooking(b), tr = spTrialUnlock(su, tp, 'gantt-feed', b), sb = spStageOf(tr.xp);
     tr.xp = (+tr.xp||0) + (+cfg.feedXp||10); tr.feeds = (tr.feeds||0) + 1; spMoodSet(tr, spMood(tr) + 3);
-    const sa = spStageOf(tr.xp); if(sa > sb){ tr.stageMax = Math.max(tr.stageMax||1, sa); spOnEvolve(su, 'trial', tr, sb, sa); }
+    const sa = spStageOf(tr.xp); if(sa > sb){ tr.stageMax = Math.max(tr.stageMax||1, sa); onStageChange(su, 'trial', tr, sb, sa); }
     spAudit('sprite-feed', me, {kind:'gantt', key:b.id, type:tp, gain:cfg.feedXp}, {crystals:-(+cfg.boostCost||5)}); }
   if((d.boostN) > cfg.feedDailyLimit && u.bonusFeeds>0) u.bonusFeeds--;
   gTouch(u);
@@ -14817,7 +14817,7 @@ function spFeedDo(kind, key){
     if(hr < 5){ achvEvent('night', {oncePerDay:true}); spHiddenUnlock('sp_glitch', 'night-feed'); }
     if(crit) achvEvent('crit');
     achvEvent('spFeed');
-    if(after > before) spOnEvolve(u, kind, rec, before, after);
+    if(after > before) onStageChange(u, kind, rec, before, after);
     gTouch(u); saveGrowth(true);
     toast(`${crit ? '💥 '+tx('暴击！','Critical!','Chí mạng!')+' ' : ''}${tx('投喂成功','Fed','Đã cho ăn')} +${gain} ${tx('精灵经验','sprite XP','EXP tinh linh')}${mult>1?` (×${mult})`:''}${st.useTicket?` · ${tx('使用投喂券','used a feed ticket','dùng vé cho ăn')}`:''}`, 'ok');
     render();
@@ -14837,6 +14837,13 @@ function spOnEvolve(u, kind, rec, before, after){
   spAudit('sprite-evolve', u.user, {kind, key:kind==='season'?rec.sid:rec.type, from:before, to:after});
   if(u.user===spMe()) setTimeout(()=>spEvolveFx(form, spRecColor(kind, rec), after, spRecSkin(u, kind, rec), kind==='season' ? spDef(rec.sp) : null, kind==='season' ? rec : null, {from:before}), 120);
   if(kind==='season') for(let s2=before+1; s2<=after; s2++) spCodexAdd(u, `sps:${rec.sp}:${s2}`);
+}
+function onStageChange(u, kind, rec, before, after){
+  if(after<=before) return false;
+  rec.stageMax = Math.max(rec.stageMax||1, after);
+  spCacheVer++;
+  spOnEvolve(u, kind, rec, before, after);
+  return true;
 }
 /* 互动：摸摸 / 玩耍 / 聊天（亲密度 +2，5% 暴击 +5；每日 20 次） */
 function spInteract(kind, key, how){
