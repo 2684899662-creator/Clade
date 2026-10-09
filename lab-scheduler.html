@@ -17350,7 +17350,7 @@ function spSkin(id){ if(!id) return null; spSkins(); return spSkinCache.map.get(
    v2.0 逻辑层：阶段与觉醒（LV5）/ 统一精灵快照 / 资源登记表 / 资源确认窗口 / 兑换商店 v2 / 联动（委托 S10 · 外部试验室）
 ========================================================= */
 /* ---------- 阶段：LV1–LV4 由精灵经验进化；LV5 觉醒体需消耗觉醒材料 ---------- */
-function spStageOf(xp, rec){ const c = spCurve(); let s = 1; for(let i=1;i<4;i++) if(xp >= c[i]) s = i+1; if(s>=4 && rec && rec.awake5) s = 5; return s; }
+function spStageOf(xp, rec){ const c = spCurve(); let s = 1; for(let i=1;i<Math.min(c.length,5);i++) if(xp >= c[i]) s = i+1; if(s>=4 && rec && rec.awake5) s = 5; return s; }
 function spRecStage(rec){ return rec ? spStageOf(+rec.xp||0, rec) : 1; }
 function spDispStage(rec){ const s = spRecStage(rec); return s>=5 && rec?.showLv4 ? 4 : s; }
 function spStageInfo(xp, rec){
@@ -21455,7 +21455,7 @@ function spAdmGive(a, id, src){
   return true;
 }
 /* ---------- 阶段 / 养成 ---------- */
-function spAdmStage(o){ if(!o) return 1; const c = spCurve(); let s = 1; for(let i=1;i<4;i++) if((+o.xp||0) >= c[i]) s = i+1; if(o.awake5 && !o.showLv4) s = 5; return s; }
+function spAdmStage(o){ if(!o) return 1; const c = spCurve(); let s = 1; for(let i=1;i<Math.min(c.length,5);i++) if((+o.xp||0) >= c[i]) s = i+1; if(o.awake5 && !o.showLv4) s = 5; return s; }
 function spAdmViewDef(id, o){ const d = spAdmDef(id); if(!d || o?.branch!=='B') return d; const v = {...d, id:d.id+'#B', evoSeed:((d.gene?.seed||spHash(d.id)) ^ 0xad5) >>> 0, design:null}; delete v.gene; const nm = spBranchNames(d)[1]; v.forms = v.forms.map((x,i)=>x.map((y,k)=>k===3 ? nm[i] : y)); return v; }
 var SP_ADM_TAL = {audit:['审计','Audit','Kiểm toán'], dispatch:['调度','Dispatch','Điều phối'], publish:['发布','Publish','Phát hành'], rewind:['回溯','Rewind','Truy hồi'], patrol:['巡天','Patrol','Tuần thiên'], edict:['执令','Edict','Chấp lệnh']};
 var SP_ADM_SKB = {audit:['审计型','Auditor','Kiểm toán'], dispatch:['调度型','Dispatcher','Điều phối'], publish:['发布型','Publisher','Phát hành'], rewind:['回溯型','Rewinder','Truy hồi'], patrol:['巡天型','Patroller','Tuần thiên'], edict:['执令型','Commander','Chấp lệnh']};
