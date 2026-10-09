@@ -2664,6 +2664,30 @@ tr.muted td{opacity:.5;}
 .sp-page input:focus-visible,.sp-page select:focus-visible,.sp-page textarea:focus-visible{outline:2px solid var(--cold);outline-offset:1px;}
 .sp-mine-top{align-items:start;}
 .sp-adm-body td.nowrap{white-space:nowrap;} .sp-adm-body td.nowrap .btn{display:inline-flex;margin:1px 2px;}
+
+/* ===== v7 搜索 / 奖励选择器 / 待领取 / 我的精灵 ===== */
+.sp-rp{display:flex;flex-direction:column;gap:8px;margin:8px 0;}
+.sp-rp-list{max-height:260px;overflow:auto;border:1px solid var(--line, #e5e7eb);border-radius:8px;padding:4px;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:2px;-webkit-overflow-scrolling:touch;}
+.sp-rp-row{display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:6px;cursor:pointer;font-size:13px;min-width:0;}
+.sp-rp-row:hover,.sp-rp-row.on{background:var(--cold-soft, rgba(37,99,235,.1));}
+.sp-rp-row b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600;}
+.sp-rp-row small,.sp-rp-rar{color:var(--text-dim);font-size:11.5px;white-space:nowrap;}
+.sp-rp-rar{margin-left:auto;}
+.sp-rp-quick{display:flex;flex-wrap:wrap;align-items:center;gap:6px;}
+.sp-gift .sp-card{margin-bottom:10px;}
+.sp-my-item{position:relative;min-width:0;}
+.sp-my-fav{position:absolute;top:6px;right:6px;z-index:3;appearance:none;border:0;background:rgba(255,255,255,.85);border-radius:50%;width:28px;height:28px;font-size:16px;line-height:1;cursor:pointer;color:#94a3b8;}
+.sp-my-fav.on{color:#f59e0b;}
+.sp-my-compact{cursor:pointer;}
+.sp-my-compact.cur{outline:2px solid var(--cold);}
+.sp-my-bar input[type=search]{min-width:200px;flex:1 1 260px;scroll-margin-top:80px;scroll-margin-bottom:40vh;}
+.sp-ib-list{display:flex;flex-direction:column;gap:8px;}
+.sp-ib-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line, #e5e7eb);border-radius:10px;background:var(--panel, #fff);}
+.sp-ib-item.locked{opacity:.65;}
+.sp-ib-main{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0;}
+.sp-ib-rw{font-size:15px;}
+.sp-ib-bar{display:flex;gap:6px;flex-wrap:wrap;}
+@media (max-width:900px){ input[data-sp-input]{font-size:16px;scroll-margin-bottom:45vh;} .sp-rp-list{max-height:200px;} .sp-ib-item{flex-wrap:wrap;} }
 /* ===== v1.9 精灵库与稀有度 ===== */
 .spr-pill{display:inline-flex;align-items:center;gap:3px;font-size:11px;padding:1px 7px 1px 3px;border-radius:999px;background:color-mix(in srgb,var(--rc) 14%,var(--panel));color:var(--rc);border:1px solid color-mix(in srgb,var(--rc) 45%,transparent);white-space:nowrap;font-weight:700;}
 .spr-pill b{background:var(--rc);color:#fff;border-radius:999px;padding:0 5px;font-size:10px;}
@@ -6846,6 +6870,7 @@ function captureFocusTarget(){
   const active = document.activeElement;
   if(!active || active===document.body) return null;
   if(active.id) return {id:active.id, start:active.selectionStart, end:active.selectionEnd};
+  if(active.dataset?.spInput) return {spInput:active.dataset.spInput, start:active.selectionStart, end:active.selectionEnd};
   if(active.matches('input,select,textarea')) return {formId:active.form?.id || '', name:active.name, start:active.selectionStart, end:active.selectionEnd};
   if(active.dataset?.act) return {act:active.dataset.act, id:active.dataset.id, value:active.dataset.v};
   return null;
@@ -6853,6 +6878,7 @@ function captureFocusTarget(){
 function restoreFocusTarget(target){
   if(!target) return;
   let element = target.id ? document.getElementById(target.id) : null;
+  if(!element && target.spInput) element = document.querySelector(`[data-sp-input="${target.spInput}"]`);
   if(!element && target.formId && target.name){
     const form = document.getElementById(target.formId);
     element = [...(form?.elements || [])].find(field=>field.name===target.name) || null;
@@ -13843,7 +13869,7 @@ function loadGrowth(){
 function normGrowth(g){
   g = g || {};
   return {config:migrateGrowthCfg(g.config||{}), users:g.users||{}, boost:g.boost||{}, rewards:g.rewards||{}, claims:g.claims||{}, seasons:g.seasons||{}, seasonMeta:g.seasonMeta||null,
-    events:g.events||{}, shop:g.shop||{}, guides:g.guides||{}, gaudit:g.gaudit||{}, visits:g.visits||{}, reqs:g.reqs||{}, skins:g.skins||{}, spiritLib:g.spiritLib||{}, links:g.links||{}, drafts:g.drafts||{}, lsubs:g.lsubs||{}, plans:g.plans||{}, adminU:g.adminU||{}, adminLib:g.adminLib||{}, pubLog:g.pubLog||{}, tgen:g.tgen||{}};
+    events:g.events||{}, shop:g.shop||{}, guides:g.guides||{}, gaudit:g.gaudit||{}, visits:g.visits||{}, reqs:g.reqs||{}, skins:g.skins||{}, spiritLib:g.spiritLib||{}, links:g.links||{}, drafts:g.drafts||{}, lsubs:g.lsubs||{}, plans:g.plans||{}, adminU:g.adminU||{}, adminLib:g.adminLib||{}, pubLog:g.pubLog||{}, tgen:g.tgen||{}, pend:g.pend||{}};
 }
 /* 配置迁移：v1.8 及以前（5 级、小数值）→ v1.9 默认配置表；嵌套对象与默认值合并 */
 function migrateGrowthCfg(c){
@@ -14518,6 +14544,7 @@ function growthCsvData(){
   Object.entries(g.adminLib||{}).forEach(([id,x])=>rows.push([`adml:${id}`, '管理员精灵池', x.name?.[0]||id, '', x.opPub?'已发布到操作员':'', x.updatedAt||'', JSON.stringify({...x, id})]));
   Object.values(g.pubLog||{}).forEach(x=>rows.push([`prec:${x.id}`, '精灵发布记录', x.sp||'', x.by||'', x.act||'', x.updatedAt||'', JSON.stringify(x)]));
   Object.values(g.tgen||{}).forEach(x=>rows.push([`tgen:${x.id}`, '试验精灵生成记录', x.variant||'', x.user||'', x.tt||'', x.updatedAt||x.at||'', JSON.stringify(x)]));   /* v2.4：试验变种生成日志持久化 */
+  Object.values(g.pend||{}).forEach(x=>rows.push([`pr:${x.id}`, '待领取奖励', x.reward_type||'', x.operator_id||'', x.status||'', x.updatedAt||'', JSON.stringify(x)]));   /* pending_rewards */
   Object.values(g.gaudit||{}).forEach(a=>rows.push([`ga:${a.id}`, '精灵审计', a.act, a.user, a.rolledBack?'已回滚':'', a.updatedAt||'', JSON.stringify(a)]));
   return {filename:'growth.csv', headers:['键','类型','名称','用户','状态','更新时间','完整数据(JSON)'], rows};
 }
@@ -14537,7 +14564,7 @@ function applyGrowthRows(rows){
     else if(type==='seasonmeta'){ if(!g.seasonMeta || ts(o) >= ts(g.seasonMeta)) g.seasonMeta = o; }
     else if(type==='season'){ if(!g.seasons[id] || ts(o) >= ts(g.seasons[id])) g.seasons[id] = o; }
     else if(type==='claim'){ if(!g.claims[id] || ts(o) >= ts(g.claims[id])) g.claims[id] = o; }
-    else { const coll = {event:'events', shop:'shop', guide:'guides', ga:'gaudit', visit:'visits', req:'reqs', skin:'skins', spirit:'spiritLib', lk:'links', draft:'drafts', ls:'lsubs', plan:'plans', admu:'adminU', adml:'adminLib', prec:'pubLog', tgen:'tgen'}[type];
+    else { const coll = {event:'events', shop:'shop', guide:'guides', ga:'gaudit', visit:'visits', req:'reqs', skin:'skins', spirit:'spiritLib', lk:'links', draft:'drafts', ls:'lsubs', plan:'plans', admu:'adminU', adml:'adminLib', prec:'pubLog', tgen:'tgen', pr:'pend'}[type];
       if(coll){ g[coll] = g[coll] || {}; if(!g[coll][id] || ts(o) >= ts(g[coll][id])) g[coll][id] = o; } }
   });
   spCacheVer++;
@@ -14545,6 +14572,7 @@ function applyGrowthRows(rows){
 
 /* ---------- 被动事件：活跃日、日视图、跨时间轴、互动 ---------- */
 function growthAfterRender(){
+  try{ if(typeof spPendWatch==='function') spPendWatch(); }catch(_e){ console.warn(_e); }
   if(!gIsOperator() || !window.__spReady) return;
   achvActiveToday();
   if(state.view==='timeline' && state.subview==='day'){
@@ -14752,6 +14780,7 @@ function spDupCheck(sid){
 }
 /* 传承：试验精灵的外观（已装备皮肤）/ 称号可带到新赛季精灵；只影响展示，不改变随机结果 */
 function spSeasonSkin(u, sid){
+  if(String(sid||'').startsWith('own:')) return u.mys?.[String(sid).slice(4)]?.equipped_skin || '';
   const s = u.ss?.[sid || seasonNow().id];
   if(u.equip.season) return u.equip.season;
   if(u.inherit?.skin && s){ const tk = Object.values(u.equip.trial||{}).find(Boolean); if(tk) return tk; }
@@ -14773,7 +14802,7 @@ function spTalentUsed(u){ return Object.values(u.tal||{}).reduce((a,b)=>a+(+b||0
 function spCooldownSec(u){ return Math.max(30, (+gCfg().feedCdSec||30) - 2*(+u.tal?.speed||0)); }
 
 /* ---------- 精灵引用：{kind:'season'|'trial', key} ---------- */
-function spRec(u, kind, key){ return kind==='season' ? u.ss[key || seasonNow().id] : u.tr[key]; }
+function spRec(u, kind, key){ return kind==='season' ? (String(key||'').startsWith('own:') ? u.mys?.[String(key).slice(4)] : u.ss[key || seasonNow().id]) : u.tr[key]; }
 function spRecForm(kind, rec){ return kind==='season' ? rec.form : SP_TYPE_FORM[rec.type] || 'orb'; }
 function spRecColor(kind, rec){ return kind==='season' ? spPalColor(rec.form, rec.pal) : spFormColor(SP_TYPE_FORM[rec.type]); }
 function spRecSkin(u, kind, rec){ return kind==='season' ? spSeasonSkin(u, rec.sid) : (u.equip.trial?.[rec.type] || ''); }
@@ -14871,7 +14900,7 @@ function spOnEvolve(u, kind, rec, before, after){
 }
 function onStageChange(u, kind, rec, before, after){
   if(after<=before) return false;
-  rec.stageMax = Math.max(rec.stageMax||1, after);
+  rec.stageMax = Math.max(rec.stageMax||1, after); if(rec.spirit_id) rec.stage = after;
   spCacheVer++;
   spOnEvolve(u, kind, rec, before, after);
   return true;
@@ -15326,11 +15355,12 @@ function spMyPreview(size, stage, opts={}){ const me = spCanPlay() ? spU() : nul
 function spBadgeCount(){
   if(!spCanSee()) return 0;
   if(spIsAdmin()){ return Object.values(G().claims).filter(c=>c.status==='pending').length + Object.values(G().reqs||{}).filter(r=>r.status==='pending').length + spEvents().filter(e=>e.kind==='return' && e.review==='pending').length; }
-  const u = spU(); return spEvBadge(u) + Object.values(G().rewards).filter(r=>!r.deleted && rewardStatusFor(r, u.user).k==='available').length;
+  const u = spU(); return spPendCount(u.user) + spEvBadge(u) + Object.values(G().rewards).filter(r=>!r.deleted && rewardStatusFor(r, u.user).k==='available').length;
 }
 function spPageBadge(k){
   if(!spCanSee()) return 0;
   const u = spCanPlay() ? spU() : null;
+  if(k==='inbox') return u ? spPendCount(u.user) : 0;
   if(k==='events') return u ? spEvBadge(u) : spEvents().filter(e=>e.kind==='return' && e.review==='pending').length;
   if(k==='achv') return u ? Object.values(G().rewards).filter(r=>!r.deleted && rewardStatusFor(r, u.user).k==='available').length : Object.values(G().claims).filter(c=>c.status==='pending').length;
   if(k==='codex' && u) return SP_CODEX_MILESTONES.filter((m,i)=>!u.codexClaim?.[i] && spCodexPct(u) >= m.pct).length;
@@ -15624,7 +15654,7 @@ function spAdminLocalizedField(label, prefix, values, options={}){
 function spAdmUsers(){
   const sid = seasonNow().id, S = spS(), ops = (state.accounts||[]).filter(a=>a.role==='operator');
   if(S.viewUser){ const u = spU(S.viewUser); return `<div style="margin-bottom:8px;"><button class="btn btn-ghost btn-sm" data-act="spAdmViewUser" data-id="">‹ ${escapeHtml(tx('返回全员数据','Back to all users','Quay lại tất cả người dùng'))}</button></div>${achvUserCard(u)}${achvListHtml(u)}`; }
-  return `<div class="table-scroll"><table class="data-table"><thead><tr><th>${escapeHtml(tx('操作员','Operator','Vận hành viên'))}</th><th>${escapeHtml(tx('当季等级','Season level','Cấp mùa'))}</th><th>XP</th><th>${escapeHtml(tx('赛季精灵','Season sprite','Tinh linh mùa'))}</th><th>${escapeHtml(tx('试验精灵','Trial sprites','Tinh linh thử nghiệm'))}</th><th>🥣</th><th>🎫</th><th>🔷</th><th>⭐</th><th>👗</th><th>${escapeHtml(tx('图鉴','Codex','Sách tranh'))}</th><th>${escapeHtml(tx('异常','Flags','Cờ'))}</th><th></th></tr></thead><tbody>
+  return `<div class="sp-note"><button type="button" class="btn btn-primary btn-sm" data-act="spAdmTab" data-v="gift">🎁 ${escapeHtml(tx('赠礼','Gifts','Quà tặng'))}</button> <span class="hint">${escapeHtml(tx('为操作员直接选择精灵 / 皮肤 / 道具 / 经验 / 线下实物赠送（单个或批量）','Send spirits / skins / items / XP / offline items to operators (single or batch)','Tặng tinh linh / trang phục / vật phẩm / EXP / hiện vật cho vận hành viên (đơn lẻ hoặc hàng loạt)'))}</span></div>`+`<div class="table-scroll"><table class="data-table"><thead><tr><th>${escapeHtml(tx('操作员','Operator','Vận hành viên'))}</th><th>${escapeHtml(tx('当季等级','Season level','Cấp mùa'))}</th><th>XP</th><th>${escapeHtml(tx('赛季精灵','Season sprite','Tinh linh mùa'))}</th><th>${escapeHtml(tx('试验精灵','Trial sprites','Tinh linh thử nghiệm'))}</th><th>🥣</th><th>🎫</th><th>🔷</th><th>⭐</th><th>👗</th><th>${escapeHtml(tx('图鉴','Codex','Sách tranh'))}</th><th>${escapeHtml(tx('异常','Flags','Cờ'))}</th><th></th></tr></thead><tbody>
     ${ops.map(a=>{ const u = spU(a.username), s = u.ss[sid], L = achvLevel(achvPoints(u));
       return `<tr><td data-i18n-ignore="1" class="nowrap">${escapeHtml(translateData(a.displayName||a.username))} <small class="hint">${escapeHtml(a.username)}</small></td><td><span class="lv-pill lvb-${L.idx}">${escapeHtml(t(L.name))}</span></td><td>${achvPoints(u)}</td><td>${s?`${spUserSpiritView(u, 22)} LV${spRecStage(s)}`:'—'}</td><td>${Object.keys(u.tr).length}/9</td><td>${u.crystals||0}</td><td>${u.tickets||0}</td><td>${u.shards||0}</td><td>${spPoints(u)}</td><td>${Object.keys(u.skins).length}</td><td>${spCodexPct(u).toFixed(0)}%</td>
         <td>${u.flags.length?`<span class="tag warn" title="${escapeAttr(u.flags.slice(-5).map(f=>`${f.date} ${f.metric}：${f.metric==='xpCap' ? tx('已达经验上限（每日 / 每周），超出部分不计','XP cap reached (daily / weekly); the excess is not counted','Đã chạm giới hạn kinh nghiệm (ngày / tuần); phần dư không tính') : f.note}`).join('\n'))}">${u.flags.length}</span>`:'—'}</td><td class="nowrap"><button class="btn btn-ghost btn-sm" data-act="spAdmViewUser" data-id="${escapeAttr(a.username)}">${escapeHtml(tx('查看','View','Xem'))}</button> <button class="btn btn-danger btn-sm" data-act="resetOperatorSprites" data-id="${escapeAttr(a.username)}">${escapeHtml(tx('重置精灵','Reset sprite','Đặt lại tinh linh'))}</button></td></tr>`; }).join('')}</tbody></table></div>`;
@@ -15731,8 +15761,12 @@ function spAdmAudit(){
       <select name="what" aria-label="${escapeAttr(tx('类型','Type','Loại'))}"><option value="feed">🥣 ${escapeHtml(tx('能量饲料','Energy feed','Thức ăn năng lượng'))}</option><option value="tickets">🎫 ${escapeHtml(tx('投喂券','Feed tickets','Vé cho ăn'))}</option><option value="shards">🔷 ${escapeHtml(tx('碎片','Shards','Mảnh'))}</option><option value="points">⭐ ${escapeHtml(tx('赛季积分','Season points','Điểm mùa'))}</option><option value="xp">XP ${escapeHtml(tx('当季经验','Season XP','EXP mùa'))}</option><option value="skin">👗 ${escapeHtml(tx('皮肤','Skin','Trang phục'))}</option><option value="spirit">🐾 ${escapeHtml(tx('精灵（含神话）','Spirit (incl. Mythic)','Tinh linh (cả Thần thoại)'))}</option><option value="spShards">💠 ${escapeHtml(tx('精灵碎片','Spirit shards','Mảnh tinh linh'))}</option><option value="spTickets">🎟 ${escapeHtml(tx('精灵兑换券','Spirit tickets','Vé đổi tinh linh'))}</option><option value="awakeMat">🧬 ${escapeHtml(tx('觉醒材料','Awakening material','Nguyên liệu thức tỉnh'))}</option><option value="evTickets">🎪 ${escapeHtml(tx('活动券','Event tickets','Vé sự kiện'))}</option><option value="retTickets">🎟️ ${escapeHtml(tx('返场券','Return tickets','Vé tái xuất'))}</option></select>
       <input type="number" name="n" placeholder="${escapeAttr(tx('数量（可为负）','Amount (can be negative)','Số lượng (có thể âm)'))}" aria-label="${escapeAttr(tx('数量','Amount','Số lượng'))}">
       <select name="skin" aria-label="${escapeAttr(tx('皮肤','Skin','Trang phục'))}"><option value="">—</option>${spSkins().filter(s=>!s.workshop).map(s=>`<option value="${s.id}">${escapeHtml(trT(s.name))}</option>`).join('')}</select>
-      <select name="spirit" aria-label="${escapeAttr(tx('精灵','Spirit','Tinh linh'))}"><option value="">—</option>${spLib().filter(d=>!d.reserved).map(d=>`<option value="${d.id}">${escapeHtml(`${d.rar} · ${trT(d.name)}`)}</option>`).join('')}</select>
+      <select name="gkind" aria-label="${escapeAttr(tx('类别','Kind','Loại'))}"><option value="grant">${escapeHtml(tx('发放','Grant','Cấp'))}</option><option value="compensate">${escapeHtml(tx('补偿','Compensation','Bù'))}</option></select>
+      <input type="number" name="days" min="0" max="365" value="30" placeholder="${escapeAttr(tx('有效期（天，0=不过期）','Valid days (0 = no expiry)','Hạn (ngày, 0 = không hết hạn)'))}" title="${escapeAttr(tx('有效期（天，0=不过期）','Valid days (0 = no expiry)','Hạn (ngày, 0 = không hết hạn)'))}" aria-label="${escapeAttr(tx('有效期（天）','Valid days','Hạn (ngày)'))}">
+      <label class="checkline"><input type="checkbox" name="all"> ${escapeHtml(tx('发给全部操作员','All operators','Tất cả vận hành viên'))}</label>
       <input name="note" maxlength="60" placeholder="${escapeAttr(tx('原因（必填）','Reason (required)','Lý do (bắt buộc)'))}" aria-label="${escapeAttr(tx('原因','Reason','Lý do'))}"><button class="btn btn-primary btn-sm" data-act="spGrant">${escapeHtml(tx('发放','Grant','Cấp'))}</button></form>
+    <div class="sp-note">${escapeHtml(tx('发放 / 补偿会生成「待领取」记录，操作员领取后才入账；类型选「精灵」时使用下方选择器（可多选、批量发放）。','Grants / compensation create "to claim" records that are credited when the operator claims them. For type "Spirit", use the picker below (multi-select, batch).','Cấp / bù tạo bản ghi "chờ nhận", chỉ ghi nhận khi vận hành viên nhận. Với loại "Tinh linh" hãy dùng bộ chọn bên dưới (chọn nhiều, cấp hàng loạt).'))}</div>
+    ${spRpHtml('spirit')}
     <div class="sp-filter"><select data-sp-input="audUser" aria-label="${escapeAttr(tx('用户','User','Người dùng'))}"><option value="">${escapeHtml(tx('全部用户','All users','Mọi người dùng'))}</option>${ops.map(a=>`<option value="${escapeAttr(a.username)}" ${fu===a.username?'selected':''} data-i18n-ignore="1">${escapeHtml(translateData(a.displayName||a.username))}</option>`).join('')}</select>
       <select data-sp-input="audAct" aria-label="${escapeAttr(tx('操作','Action','Thao tác'))}"><option value="">${escapeHtml(tx('全部操作','All actions','Mọi thao tác'))}</option>${acts.map(k=>`<option value="${k}" ${fa===k?'selected':''}>${escapeHtml(trT(SP_AUDIT_LABEL[k]||[k]))}</option>`).join('')}</select><span class="hint">${list.length} / ${Object.keys(G().gaudit||{}).length}</span>
       <button class="btn btn-ghost btn-sm" data-act="spAuditExport">⬇ CSV</button></div>
@@ -15843,7 +15877,7 @@ function spAction(act, el, id){
     case 'spShardEx': spShardExchange(); return false;
     case 'spWorkshop': spWorkshopMake(); return false;
     case 'spTryOn': S.tryOn = id||''; if(id){ S.page = 'mine'; toast(tx('已在「我的精灵」中试穿，点「结束试穿」恢复','Trying it on in "My sprites"; choose "Stop trying on" to undo','Đang thử ở "Tinh linh của tôi"; chọn "Dừng thử" để bỏ'), 'info'); } return true;
-    case 'spEquip': { const tg = S.skinTarget || 'season'; if(tg==='season') spEquip('season', seasonNow().id, id); else spEquip('trial', tg.split(':')[1], id); return false; }
+    case 'spEquip': { const tg = S.skinTarget || 'season'; if(tg==='season') spEquip('season', seasonNow().id, id); else if(tg.startsWith('own:')) spEquip('season', tg, id); else spEquip('trial', tg.split(':')[1], id); return false; }
     case 'spUnequip': { const u = spU(); if(u.equip.season===id) spEquip('season', seasonNow().id, ''); Object.entries(u.equip.trial).forEach(([k,x])=>{ if(x===id) spEquip('trial', k, ''); }); return false; }
     case 'spEvFilter': S.evFilter = v; return true;
     case 'spEvCheckin': spEvCheckin(id); return false;
@@ -15896,12 +15930,11 @@ function spAction(act, el, id){
 var spInputT = null;
 document.addEventListener('input', e=>{
   const el = e.target;
-  if(['q','evQ'].includes(el?.dataset?.spInput)){ const key = el.dataset.spInput; clearTimeout(spInputT); spInputT = setTimeout(()=>{ spS()[key] = el.value; state.focusTarget = {id:null}; render(); const n = document.querySelector(`[data-sp-input="${key}"]`); if(n){ n.focus(); n.setSelectionRange(n.value.length, n.value.length); } }, 220); }
   if(el?.dataset?.spWk){ const f = document.getElementById('spWorkshopForm'), pv = document.querySelector('#spWkPrev .spv-body'); if(f && pv){ const fd = new FormData(f); pv.style.filter = `hue-rotate(${+fd.get('hue')||0}deg) saturate(${fd.get('sat')}) brightness(${fd.get('bright')})`; } }
 });
 document.addEventListener('change', e=>{
   const el = e.target; if(!el?.dataset) return;
-  if(el.dataset.spInput && !['q','evQ'].includes(el.dataset.spInput)){ spS()[el.dataset.spInput] = el.value; render(); return; }
+  if(el.dataset.spInput){ if(el.tagName==='INPUT' || el.tagName==='TEXTAREA'){ spSearchFlush(el); return; } spS()[el.dataset.spInput] = el.value; if(el.dataset.spLive && typeof window[el.dataset.spLive]==='function'){ window[el.dataset.spLive](); return; } render(); return; }
   if(el.dataset.spPref && spCanSee()){ const u = spU(), k = el.dataset.spPref; if(k.startsWith('sub:')) u.np.subs[k.slice(4)] = el.checked; else u.np[k] = el.checked; gTouch(u); saveGrowth(); if(k==='sound' && el.checked) spSound('pop'); return; }
   if(el.dataset.spInherit && spCanPlay()){ const u = spU(); u.inherit[el.dataset.spInherit] = el.checked; gTouch(u); saveGrowth(true); render(); }
 });
@@ -16195,6 +16228,7 @@ function spCollect(u, id, src, silent){
     gTouch(u); return {ok:true, dup:true, shards:+R.shard||0, def};
   }
   u.spc[id] = {at:gNowIso(), src, count:1, ret: src==='ret'};
+  if(typeof spMysEnsure==='function') spMysEnsure(u, id, src);
   spCodexAdd(u, `sp:${id}`); spCodexAdd(u, `sps:${id}:1`);
   if(u.user===spMe() && spCanPlay()) gainXp(u, +R.pts||0);
   spSpiritGauges(u);
@@ -17696,9 +17730,10 @@ function spEquip(kind, key, id){
   const u = spU();
   if(id && !spOwned(u, id)) return toast(tx('尚未拥有该皮肤','You don\'t own this skin yet','Bạn chưa sở hữu trang phục này'), 'warn');
   const sk = spSkin(id);
-  if(sk && sk.forSp && (kind!=='season' || spRec(u,'season')?.sp!==sk.forSp)) return toast(tx('这是其他精灵的专属皮肤','This is another spirit\'s exclusive skin','Đây là trang phục riêng của tinh linh khác'), 'warn');
-  if(sk && !sk.forSp && sk.forms!=='all' && Array.isArray(sk.forms) && !sk.forms.includes(kind==='season' ? spRec(u,'season')?.form : SP_TYPE_FORM[key])) return toast(tx('该皮肤不适用于这只精灵','This skin doesn\'t fit this sprite','Trang phục này không hợp với tinh linh này'), 'warn');
-  if(kind==='season') u.equip.season = id||''; else u.equip.trial[key] = id||'';
+  if(sk && sk.forSp && (kind!=='season' || spRec(u,'season',key)?.sp!==sk.forSp)) return toast(tx('这是其他精灵的专属皮肤','This is another spirit\'s exclusive skin','Đây là trang phục riêng của tinh linh khác'), 'warn');
+  if(sk && !sk.forSp && sk.forms!=='all' && Array.isArray(sk.forms) && !sk.forms.includes(kind==='season' ? spRec(u,'season',key)?.form : SP_TYPE_FORM[key])) return toast(tx('该皮肤不适用于这只精灵','This skin doesn\'t fit this sprite','Trang phục này không hợp với tinh linh này'), 'warn');
+  if(kind==='season' && String(key||'').startsWith('own:')){ const mr = u.mys?.[key.slice(4)]; if(mr) mr.equipped_skin = id||''; }
+  else if(kind==='season') u.equip.season = id||''; else u.equip.trial[key] = id||'';
   gTouch(u); spAudit(id ? 'skin-equip' : 'skin-unequip', u.user, {kind, key, id}); saveGrowth(true); spApplyGanttSkins();
   toast(id ? `${tx('已装备','Equipped','Đã trang bị')}：${trT(sk.name)}` : tx('已卸下皮肤','Skin removed','Đã gỡ trang phục'), 'ok'); render();
 }
@@ -17821,6 +17856,7 @@ function spPages(){
   const op = spCanPlay();
   const list = [
     {k:'mine', icon:'🐾', n: op ? ['我的精灵','My sprites','Tinh linh của tôi'] : ['精灵总览','Sprite overview','Tổng quan tinh linh']},
+    ...(op ? [{k:'inbox', icon:'📬', n:['待领取','To claim','Chờ nhận']}] : []),
     {k:'codex', icon:'📖', n:['图鉴','Codex','Sách tranh']},
     {k:'skins', icon:'👗', n:['皮肤','Skins','Trang phục']},
     {k:'achv', icon:'🏆', n:['成就','Achievements','Thành tựu']},
@@ -17860,15 +17896,15 @@ function spGuideModalHtmlOp(){
 function renderSpiritView(){
   if(!window.__spReady) return '';
   if(!spCanSee()) return `<div class="panel-box"><h3>${escapeHtml(tx('无权查看','No access','Không có quyền'))}</h3><button class="btn btn-primary btn-sm" data-act="view" data-v="timeline">${escapeHtml(tx('返回排期','Back to schedule','Quay lại lịch'))}</button></div>`;
-  spSeedEvents();
+  spSeedEvents(); spPendSweep();
   const S = spS(); if(typeof spPageRedirect==='function') spPageRedirect(S); const pages = spPages();
   if(!pages.some(p=>p.k===S.page)) S.page = spIsAdmin() ? 'admin' : 'mine';
   let u = null;
-  if(spCanPlay()){ u = spU(); if(!u.ss[seasonNow().id]) spAssignSeason(u.user); spEnsureStarter(u); spLinkApplyUser(u); spHiddenCheck(u); }
+  if(spCanPlay()){ u = spU(); if(!u.ss[seasonNow().id]) spAssignSeason(u.user); spEnsureStarter(u); spMysSync(u); spLinkApplyUser(u); spHiddenCheck(u); }
   const page = S.page;
   let body = '';
   try{
-    body = page==='mine' ? (u ? spMineHtml(u) : spOverviewHtml()) : page==='codex' ? spCodexHtml() : page==='skins' ? spSkinsHtml() : page==='achv' ? achvPageHtml()
+    body = page==='mine' ? (u ? spMineHtml(u) : spOverviewHtml()) : page==='inbox' ? (u ? spInboxHtml(u) : '') : page==='codex' ? spCodexHtml() : page==='skins' ? spSkinsHtml() : page==='achv' ? achvPageHtml()
       : page==='events' ? spEventsHtml() : page==='shop' ? spShopHtml() : page==='res' ? (typeof spResGuideUnified==='function' ? spResGuideUnified() : spResGuideHtml()) : page==='board' ? spBoardHtml() : page==='review' ? spReviewHtml() : page==='link' ? spLinkPageHtml() : page==='admin' ? spAdminHtml() : page==='adminsp' && spIsAdmin() ? spAdmPageHtml() : page==='adminhub' && spIsAdmin() ? spAdmHubPageHtml() : page==='adminres' && spIsAdmin() ? spAdmResGuideHtml() : page==='home' ? spHomePageHtml(u) : '';
   }catch(err){ console.error(err); body = spStateHtml('err', tx('页面加载失败','Failed to load this page','Không tải được trang'), String(err?.message||err)); }
   const chip = (id, extra)=>{ const r = spRes(id), v = spResBal(u, id); return `<button type="button" class="sp-chip" data-act="spResOpen" data-v="${id}" title="${escapeAttr(`${trT(r.n)} · ${trT(r.use)}${extra?` · ${extra}`:''}`)}">${r.icon} <b>${v}</b><small>${escapeHtml(trT(r.n))}</small></button>`; };
@@ -17909,7 +17945,7 @@ function spCard4(u, kind, rec, o={}){
   const skin = spRecSkin(u, kind, rec), tryOn = mine && kind==='season' ? (spS().tryOn||'') : '', showSkin = tryOn || skin;
   const st = mine ? spFeedState(u, kind, key) : null, aw = mine ? spAwaken5State(u, kind, rec) : null;
   const name = spRecName(kind, rec), big = !!o.big, size = big ? 132 : 92;
-  const label = kind==='season' ? tx('赛季精灵','Season sprite','Tinh linh mùa') : `${tx('试验精灵','Trial sprite','Tinh linh thử nghiệm')} · ${spTypeLabel(rec.type)}`;
+  const label = kind==='season' ? (String(key).startsWith('own:') ? `${tx('已领取精灵','Claimed spirit','Tinh linh đã nhận')} · ${trT(SP_MY_SRC[spMySrcOf(rec.source, def)]||SP_MY_SRC.other)}` : tx('赛季精灵','Season sprite','Tinh linh mùa')) : `${tx('试验精灵','Trial sprite','Tinh linh thử nghiệm')} · ${spTypeLabel(rec.type)}`;
   const desc = def ? trT(def.desc) : `${tx('与','Grows with your','Lớn lên cùng các thử nghiệm')} ${spTypeLabel(rec.type)} ${tx('类试验一起成长的试验精灵，永久保留。','tests and is kept permanently.','và được giữ vĩnh viễn.')}`;
   const isNew = rec.at && spNowMs() - new Date(rec.at).getTime() < 86400000 && stage===1;
   const badges = [isNew?`<i class="c4-badge new">NEW</i>`:'', aw?.ok?`<i class="c4-badge hot">${escapeHtml(tx('可觉醒','Can awaken','Có thể thức tỉnh'))}</i>`:'', tryOn?`<i class="c4-badge try">${escapeHtml(tx('试穿中','Trying on','Đang thử'))}</i>`:''].join('');
@@ -17919,7 +17955,7 @@ function spCard4(u, kind, rec, o={}){
   const evoLabel = stage>=5 ? tx('已觉醒','Awakened','Đã thức tỉnh') : stage===4 ? (info.ready ? tx('可觉醒','Ready to awaken','Sẵn sàng thức tỉnh') : `${tx('觉醒进度','Awakening progress','Tiến độ thức tỉnh')} → LV5`) : `${tx('进化进度','Evolution progress','Tiến độ tiến hóa')} → LV${stage+1}`;
   const feedBtn = st ? `<button type="button" class="btn btn-primary btn-sm" data-act="spFeed" data-v="${kind}" data-id="${escapeAttr(key)}" ${st.ok?'':'disabled'} title="${escapeAttr(st.why || `${tx('消耗','Costs','Tốn')} ${st.cost} ${tx('能量饲料（不足时自动使用投喂券）','energy feed (uses a feed ticket when short)','thức ăn năng lượng (thiếu sẽ dùng vé cho ăn)')}`)}">🥣 ${escapeHtml(tx('投喂','Feed','Cho ăn'))} <small>${st.useTicket?'🎫1':`−${st.cost}`}</small></button>` : '';
   const intBtn = st ? `<button type="button" class="btn btn-ghost btn-sm" data-act="spInteract" data-v="${kind}" data-id="${escapeAttr(key)}" data-how="${big?'play':'pat'}">${big?'🎾':'🤲'} ${escapeHtml(big?tx('玩耍','Play','Chơi'):tx('摸摸','Pat','Xoa'))}</button>` : '';
-  const dressBtn = mine ? `<button type="button" class="btn btn-ghost btn-sm" data-act="spDress" data-v="${kind==='season'?'season':'trial:'+key}">👗 ${escapeHtml(tx('换装','Dress up','Thay đồ'))}</button>` : '';
+  const dressBtn = mine ? `<button type="button" class="btn btn-ghost btn-sm" data-act="spDress" data-v="${kind==='season'?(String(key).startsWith('own:')?key:'season'):'trial:'+key}">👗 ${escapeHtml(tx('换装','Dress up','Thay đồ'))}</button>` : '';
   const awBtn = aw && stage===4 ? `<button type="button" class="btn btn-ghost btn-sm sp-awaken ${aw.ok?'ready':''}" data-act="spAwaken5" data-v="${kind}" data-id="${escapeAttr(key)}" ${aw.ok?'':'disabled'} title="${escapeAttr(aw.why || `${tx('消耗觉醒材料','Costs awakening materials','Tốn nguyên liệu thức tỉnh')} ×${aw.cost}`)}">🧬 ${escapeHtml(tx('觉醒','Awaken','Thức tỉnh'))}</button>` : '';
   const detBtn = `<button type="button" class="btn btn-ghost btn-sm" data-act="spSpDetail" data-v="${kind}" data-id="${escapeAttr(key)}" data-user="${escapeAttr(u.user)}">${escapeHtml(tx('详情','Details','Chi tiết'))}</button>`;
   return `<section class="sp-c4 sp-card ${big?'wide sp-card-season big':kind==='season'?'sp-card-season':'sp-card-trial'} mood-${mi.k} st${stage}" data-sp-card="${kind}:${escapeAttr(key)}" style="--ec:${color}">
@@ -17960,8 +17996,7 @@ function spMineHtml(u){
   const home = spHomeCardHtml(u, true);
   return `<div class="sp-mine">
     <div class="sp-ovg">${ss ? spCard4(u, 'season', ss, {big:true}) : spStateHtml('empty', tx('本季还没有赛季精灵','No season sprite yet this season','Mùa này chưa có tinh linh mùa'))}${today}${link}</div>
-    <div class="sp-sec-h"><h3>🧪 ${escapeHtml(tx('试验精灵（永久养成）','Trial sprites (raised permanently)','Tinh linh thử nghiệm (nuôi vĩnh viễn)'))}</h3><span class="hint">${escapeHtml(tx('与甘特条上同类型的试验精灵互动或投喂即可解锁；与赛季精灵完全独立，赛季重置不影响。','Unlock by interacting with or feeding a Gantt sprite of the same test type; fully separate from the season sprite and kept across seasons.','Mở khóa khi tương tác hoặc cho ăn tinh linh Gantt cùng loại; tách biệt với tinh linh mùa và giữ qua các mùa.'))}</span></div>
-    <div class="sp-ovg sp-trial-grid">${spTrialMineHtml(u)}</div>
+    ${spMyAllHtml(u)}
     <div class="sp-ovg">
       <section class="sp-c4 sp-card sp-talent"><header class="c4-h"><div class="c4-title"><b class="c4-name">🌳 ${escapeHtml(tx('天赋树（永久）','Talent tree (permanent)','Cây thiên phú (vĩnh viễn)'))}</b></div><div class="c4-tags"><small>${escapeHtml(tx('可用','Free','Còn'))} <b>${Math.max(0, tp-used)}</b>/${tp}</small></div></header>
         <div class="c4-b"><div class="sp-tal-list">${SP_TALENTS.map(d=>`<div class="sp-tal"><span class="sp-tal-i" aria-hidden="true">${d.icon}</span><div><b>${escapeHtml(trT(d.n))}</b> <small>${+u.tal[d.k]||0}/${d.max}</small><div class="hint">${escapeHtml(trT(d.d))}</div><div class="sp-pips">${Array.from({length:d.max},(_,i)=>`<i class="${i<(+u.tal[d.k]||0)?'on':''}"></i>`).join('')}</div></div><button type="button" class="btn btn-ghost btn-sm" data-act="spTalent" data-v="${d.k}" ${(+u.tal[d.k]||0)>=d.max || used>=tp?'disabled':''} aria-label="${escapeAttr(`${trT(d.n)} +1`)}">+1</button></div>`).join('')}</div></div>
@@ -18177,8 +18212,8 @@ function spSkinsHtml(){
   if(flt==='general') skins = skins.filter(s=>!s.exclusive); else if(flt==='exclusive') skins = skins.filter(s=>s.exclusive && (!me || spIsAdmin() || me.spc?.[s.forSp] || ss?.sp===s.forSp)); else if(flt==='owned' && me) skins = skins.filter(s=>spOwned(me, s.id));
   else skins = skins.filter(s=>!s.exclusive || !me || me.spc?.[s.forSp] || ss?.sp===s.forSp || spOwned(me, s.id));
   const target = S.skinTarget || 'season';
-  const targets = me ? [['season', tx('赛季精灵','Season sprite','Tinh linh mùa')], ...Object.keys(me.tr).map(tp=>[`trial:${tp}`, `${tx('试验精灵','Trial sprite','Tinh linh thử nghiệm')} · ${spTypeLabel(tp)}`])] : [];
-  const equippedOn = id=>me ? [me.equip.season===id ? tx('赛季精灵','Season sprite','Tinh linh mùa') : '', ...Object.entries(me.equip.trial).filter(([,v])=>v===id).map(([k])=>spTypeLabel(k))].filter(Boolean) : [];
+  const targets = me ? [['season', tx('赛季精灵','Season sprite','Tinh linh mùa')], ...Object.keys(me.mys||{}).filter(k=>spDef(k)).map(k=>[`own:${k}`, `${tx('已领取精灵','Claimed spirit','Tinh linh đã nhận')} · ${trT(spDef(k).name)}`]), ...Object.keys(me.tr).map(tp=>[`trial:${tp}`, `${tx('试验精灵','Trial sprite','Tinh linh thử nghiệm')} · ${spTypeLabel(tp)}`])] : [];
+  const equippedOn = id=>me ? [me.equip.season===id ? tx('赛季精灵','Season sprite','Tinh linh mùa') : '', ...Object.values(me.mys||{}).filter(r=>r.equipped_skin===id).map(r=>trT(spDef(r.spirit_id)?.name||'')), ...Object.entries(me.equip.trial).filter(([,v])=>v===id).map(([k])=>spTypeLabel(k))].filter(Boolean) : [];
   const chips = [['all',['全部','All','Tất cả']],['general',['通用','General','Chung']],['exclusive',['专属','Exclusive','Riêng']],...(me?[['owned',['已拥有','Owned','Đã có']]]:[])];
   return `<div class="sp-skins">${me?spHideAccBar(me):''}
     ${me?`<div class="sp-ovg">
@@ -18326,7 +18361,7 @@ function spConfirmHtml(){
    v2.0 运营后台（简化版）：首页（概览 + 快捷操作）/ 精灵库与储备池（筛选、分页、批量）/ 新增精灵 5 步向导 /
    资源指引配置 / 资源确认配置 / 联动（委托 S10 · 外部试验室）/ 商店编辑 / 后台布局与默认模板
 ========================================================= */
-var SP_ADM_PRIMARY = ['home','library','wizard','events','shop','link','reqs'];
+var SP_ADM_PRIMARY = ['home','library','wizard','events','shop','link','reqs','gift'];
 var SP_ADM_TABS = {home:['首页','Home','Trang chủ'], library:['精灵库 · 储备池','Library · reserve','Kho · dự trữ'], wizard:['新增精灵','New spirit','Thêm tinh linh'], events:['活动与返场','Events and returns','Sự kiện và tái xuất'], shop:['兑换商店','Exchange shop','Cửa hàng đổi'], link:['联动','Partnerships','Hợp tác'], reqs:['审核与异常','Reviews and flags','Duyệt và cờ'],
   users:['全员数据','All users','Tất cả người dùng'], pool:['赛季精灵池','Season sprite pool','Kho tinh linh mùa'], rarity:['稀有度与突破','Rarity and breakthrough','Độ hiếm và đột phá'], draws:['抽取与保底记录','Draw and pity log','Nhật ký rút và bảo hiểm'], skins:['皮肤','Skins','Trang phục'], res:['资源指引配置','Resource guide settings','Cấu hình hướng dẫn tài nguyên'], confirm:['高风险二次确认','High-risk confirmation','Xác nhận rủi ro cao'], guides:['操作说明','Guides','Hướng dẫn'], audit:['审计与补偿','Audit and compensation','Kiểm toán và bù'], cfg:['赛季与数值配置','Season and numeric settings','Cấu hình mùa và số liệu']};
 var SP_QUICK = {wizard:{i:'🪄', n:['新增精灵','New spirit','Thêm tinh linh'], d:['5 步向导创建并发布','Create and publish in 5 steps','Tạo và phát hành trong 5 bước'], go:['wizard']}, event:{i:'🎪', n:['发布活动','Publish an event','Phát hành sự kiện'], d:['新建限时 / 双倍 / 祈愿活动','New limited / double / wish events','Tạo sự kiện giới hạn / nhân đôi / cầu nguyện'], go:['events','new']}, grant:{i:'🎁', n:['发放奖励','Grant rewards','Cấp thưởng'], d:['给操作员发放资源或精灵','Give resources or spirits to operators','Cấp tài nguyên hoặc tinh linh cho vận hành viên'], go:['audit']}, reserve:{i:'📦', n:['储备精灵池','Reserve pool','Bể dự trữ'], d:['发布 / 下架 / 批量设置','Publish / unlist / batch settings','Phát hành / gỡ / thiết lập hàng loạt'], go:['library','reserve']}, res:{i:'🧭', n:['资源指引配置','Resource guide settings','Cấu hình hướng dẫn tài nguyên'], d:['名称、图标、来源、上限','Names, icons, sources, caps','Tên, biểu tượng, nguồn, giới hạn'], go:['res']}, season:{i:'🗓️', n:['赛季配置','Season settings','Cấu hình mùa'], d:['经验曲线、上限、概率','XP curve, caps, rates','Đường EXP, giới hạn, tỉ lệ'], go:['cfg']}, link:{i:'🤝', n:['联动配置','Partnership settings','Cấu hình hợp tác'], d:['委托 S10 / 外部试验室','S10 commission / external labs','Ủy thác S10 / phòng thí nghiệm ngoài'], go:['link']}, confirm:{i:'✅', n:['二次确认','Second confirmation','Xác nhận lần hai'], d:['高风险操作的确认阈值','Threshold for high-risk actions','Ngưỡng cho thao tác rủi ro cao'], go:['confirm']}, shop:{i:'🛒', n:['商店上新','Add shop items','Thêm hàng'], d:['新增 / 编辑商品','Add / edit items','Thêm / sửa mặt hàng'], go:['shop','new']}};
@@ -18339,7 +18374,7 @@ function spAdminHtml(){
   const more = Object.keys(SP_ADM_TABS).filter(k=>!SP_ADM_PRIMARY.includes(k));
   let body = '';
   try{
-    body = tab==='home' ? spAdmHome() : tab==='library' ? spAdmLibrary() : tab==='wizard' ? spAdmWizard() : tab==='users' ? spAdmUsers() : tab==='pool' ? spAdmPool() : tab==='rarity' ? spAdmRarity() : tab==='draws' ? spAdmDraws() : tab==='skins' ? spAdmSkins() + spAdmSkinLayers() : tab==='events' ? spAdmEvents()
+    body = tab==='gift' ? spGiftHtml() : tab==='home' ? spAdmHome() : tab==='library' ? spAdmLibrary() : tab==='wizard' ? spAdmWizard() : tab==='users' ? spAdmUsers() : tab==='pool' ? spAdmPool() : tab==='rarity' ? spAdmRarity() : tab==='draws' ? spAdmDraws() : tab==='skins' ? spAdmSkins() + spAdmSkinLayers() : tab==='events' ? spAdmEvents()
       : tab==='shop' ? spAdmShop() : tab==='guides' ? spAdmGuides() : tab==='reqs' ? spAdmReqs() : tab==='audit' ? spAdmAudit() : tab==='res' ? spAdmRes() : tab==='confirm' ? spAdmConfirm() : tab==='link' ? spAdmLink() : tab==='theme' ? spAdmTheme() : tab==='plan' && typeof spAdmPlan==='function' ? spAdmPlan() : tab==='publish' && typeof spAdmPubHtml2==='function' ? spAdmPubHtml2() : tab==='trial' && typeof spAdmTrialHtml==='function' ? spAdmTrialHtml() : tab==='offline' && typeof spAdmOfflineHtml==='function' ? spAdmOfflineHtml() : tab==='rfilter' && typeof spAdmRfHtml==='function' ? spAdmRfHtml() : growthCfgHtml();
   }catch(err){ console.error(err); body = spStateHtml('err', tx('后台页面加载失败','Failed to load this page','Không tải được trang'), String(err?.message||err)); }
   return `<div class="sp-admin">
@@ -18834,7 +18869,6 @@ document.addEventListener('change', e=>{
 });
 document.addEventListener('input', e=>{
   const el = e.target;
-  if(['ovQ','libQ'].includes(el?.dataset?.spInput)){ const key = el.dataset.spInput; clearTimeout(spInputT); spInputT = setTimeout(()=>{ spS()[key] = el.value; if(key==='libQ') spS().libPage = 1; render(); const n = document.querySelector(`[data-sp-input="${key}"]`); if(n){ n.focus(); n.setSelectionRange(n.value.length, n.value.length); } }, 250); }
 });
 document.addEventListener('dragover', e=>{ const z = e.target.closest?.('[data-sp-drop]'); if(!z) return; e.preventDefault(); z.classList.add('over'); });
 document.addEventListener('dragleave', e=>{ const z = e.target.closest?.('[data-sp-drop]'); if(z) z.classList.remove('over'); });
@@ -20187,12 +20221,19 @@ function spAdvise(p){
 function spGrant(){
   if(!spIsAdmin()) return;
   const f = document.getElementById('spGrantForm'); if(!f) return;
-  const fd = new FormData(f), p = {user:String(fd.get('user')||''), what:String(fd.get('what')||''), n:Math.floor(+fd.get('n')||0), skin:String(fd.get('skin')||''), spirit:String(fd.get('spirit')||''), note:String(fd.get('note')||'').trim(), src:'grant'};
-  if(!p.user) return toast(tx('请选择操作员','Please choose an operator','Vui lòng chọn vận hành viên'), 'error');
+  const fd = new FormData(f), S = spS(), all = fd.get('all')==='on';
+  const p = {user:String(fd.get('user')||''), what:String(fd.get('what')||''), n:Math.floor(+fd.get('n')||0), skin:String(fd.get('skin')||''), spirit:'', note:String(fd.get('note')||'').trim(), src:'grant', kind:String(fd.get('gkind')||'grant'), days:Math.max(0, Math.floor(+fd.get('days')||0))};
+  if(all) p.users = spOperators().map(a=>a.username);
+  if(!p.user && !all) return toast(tx('请选择操作员','Please choose an operator','Vui lòng chọn vận hành viên'), 'error');
   if(!p.note) return toast(tx('请填写原因','Please enter a reason','Vui lòng nhập lý do'), 'error');
-  if(p.what==='spirit' && !spDef(p.spirit)) return toast(tx('请选择精灵','Please choose a spirit','Vui lòng chọn tinh linh'), 'error');
+  if(p.what==='spirit'){
+    const ids = (S.rpSel||[]).filter(id=>spDef(id));
+    if(!ids.length) return toast(tx('请在下方选择精灵','Please choose spirits below','Vui lòng chọn tinh linh bên dưới'), 'error');
+    p.spirit = ids[0]; if(ids.length>1) p.spirits = ids;
+  }
   if(p.what==='skin' && !spSkin(p.skin)) return toast(tx('请选择皮肤','Please choose a skin','Vui lòng chọn trang phục'), 'error');
   if(!['spirit','skin'].includes(p.what) && !p.n) return toast(tx('请填写数量','Please enter an amount','Vui lòng nhập số lượng'), 'error');
+  if(p.spirits || p.users) return spGrantApply(p, {decision:'batch'});
   spAdvisorOpen(p);
 }
 function spAdvisorOpen(p){ if(gCfg().inflationAdvisor===false) return spGrantApply(p, {decision:'off'}); state.modal = {type:'spAdvisor', p, adv:spAdvise(p)}; render(); }
@@ -20240,6 +20281,15 @@ function spAdvAct(kind, idx){
 function spGrantApply(p, adv){
   if(!spIsAdmin()) return;
   const users = Array.isArray(p.users) ? p.users : [p.user], sid = seasonNow().id, n = Math.floor(+p.n||0), what = p.what;
+  /* 后台发放 / 补偿：生成「待领取」记录，操作员在「待领取」窗口领取后才入账；扣减（负数）与联动奖励等其他来源仍直接生效 */
+  const items = (p.src||'grant')==='grant' && !p.direct ? spRewardItems(p) : null;
+  if(items && items.length){
+    const res = spPendGive({users, items, source:p.kind==='compensate' ? 'compensate' : 'grant', note:p.note||'', days:p.days ?? 30, minStage:p.minStage||0, channels:p.channels});
+    if(adv) spAudit('grant-advice', users.join(','), {what, n, level:adv.level||'', decision:adv.decision, why:adv.why||'', n0:adv.n0??n, from:adv.from||'', src:p.src||'grant'});
+    if(typeof p.onDone==='function') p.onDone();
+    if(state.modal?.type==='spAdvisor') state.modal = null;
+    saveGrowth(true); toast(`${tx('已发放，待操作员领取','Sent; waiting for the operator to claim','Đã gửi, chờ vận hành viên nhận')} · ${res.n}`, 'ok'); return render();
+  }
   users.forEach(user=>{
     const u = spU(user), delta = {};
     if(what==='skin'){ spGrantSkin(u, p.skin, 'grant'); delta.skin = p.skin; }
@@ -26768,7 +26818,7 @@ function spResGuideUnified(){
 function spAction19(act, el, id){
   const S = spS(), v = el?.dataset?.v;
   switch(act){ case 'spcResTab': S.resTab = v==='admin' ? 'admin' : 'op'; if(el?.dataset?.go){ S.page = el.dataset.go; state.modal = null; } return true; }
-  return null;
+  return typeof spAction20==='function' ? spAction20(act, el, id) : null;
 }
 /* 旧入口跳转：adminres → 资源指引（管理员页签）；adminhub → 管理员精灵 › 管理员中枢 */
 function spPageRedirect(S){
@@ -26786,7 +26836,7 @@ function spAdmHubPanel(a){
 
 /* ---------- 运营后台标题整合：更多功能按「运营 / 内容 / 系统能力」分组 ---------- */
 var SP_ADM_GROUPS = [
-  {k:'ops', n:['运营','Operations','Vận hành'], keys:['plan','publish','rfilter','users','pool','rarity','draws','skins','confirm','offline','audit']},
+  {k:'ops', n:['运营','Operations','Vận hành'], keys:['gift','plan','publish','rfilter','users','pool','rarity','draws','skins','confirm','offline','audit']},
   {k:'content', n:['内容','Content','Nội dung'], keys:['theme','guides','res','trial']},
   {k:'sys', n:['系统能力','System','Hệ thống'], keys:['cfg'], note:['由程序后台实现，这里提供配置入口与结果管理','Run by the program back end; configure and manage results here','Do chương trình chạy nền thực hiện; cấu hình và quản lý kết quả tại đây']},
 ];
@@ -26797,6 +26847,486 @@ function spAdmMoreHtml(tab){
   return `<div class="sp-adm-groups">${groups.filter(g=>g.keys.length).map(g=>`<div class="sp-adm-more sp-adm-grp" role="tablist" aria-label="${escapeAttr(trT(g.n))}"><span class="hint sp-adm-gl" ${g.note?`title="${escapeAttr(trT(g.note))}"`:''}>${escapeHtml(trT(g.n))}${g.note?' ⓘ':''}</span>${g.keys.map(k=>`<button type="button" role="tab" aria-selected="${tab===k}" class="sp-pillbtn ${tab===k?'active':''}" data-act="spAdmTab" data-v="${k}">${escapeHtml(trT(SP_ADM_TABS[k]))}</button>`).join('')}</div>`).join('')}</div>`;
 }
 function spAdmSysNote(tab){ const g = SP_ADM_GROUPS.find(x=>x.k==='sys'); return g.keys.includes(tab) ? `<div class="sp-note sp-sys-note">⚙ ${escapeHtml(trT(g.note))}</div>` : ''; }
+
+/* =========================================================
+   v7 · 搜索输入 / 奖励选择器 / 赠礼 / 待领取 / 我的精灵统一数据源
+   · my_spirits  = u.mys[spirit_id]（operator_id, spirit_id, source, acquired_at, xp, stage, intimacy, mood, equipped_skin, is_season_spirit, season_id, trial_id）
+     赠礼 / 发放 / 活动等获得的精灵：与赛季精灵同构的养成数据，可投喂 / 互动 / 进化 / 装备皮肤 / 放置家园
+   · pending_rewards = G().pend[id]（operator_id, reward_id, reward_type, reward_content, source, granted_by, granted_at, expire_at, status）
+     发放 / 赠礼立即生成待领取记录，操作员在「待领取」窗口领取后才入账；过期自动处理
+   · 数据只写 growth.csv，不影响真实进度、甘特条数据与业务统计；访客不可见
+========================================================= */
+/* ---------- 搜索：拼音 / 首字母 / 模糊（GB2312 一级汉字拼音表） ---------- */
+var SP_PY_TBL = 'a:啊阿|ai:埃挨哎唉哀皑癌蔼矮艾碍爱隘|an:鞍氨安俺按暗岸胺案|ang:肮昂盎|ao:凹敖熬翱袄傲奥懊澳嚣|ba:芭捌扒叭吧笆八疤巴拔跋靶把坝霸罢爸|bai:白柏百摆佰败拜稗|ban:斑班搬扳般颁板版扮拌伴瓣半办绊|bang:邦帮梆榜膀绑棒磅蚌镑傍谤|bao:苞胞包褒剥薄雹保堡饱宝抱报暴豹鲍爆|bei:杯碑悲卑北辈背贝钡倍狈备惫焙被|ben:奔苯本笨|beng:崩绷甭泵蹦迸|bi:逼鼻比鄙笔彼碧蓖蔽毕毙毖币庇痹闭敝弊必壁臂避陛|bian:鞭边编贬扁便变卞辨辩辫遍|biao:标彪膘表|bie:鳖憋别瘪|bin:彬斌濒滨宾摈|bing:兵冰柄丙秉饼炳病并|bo:玻菠播拨钵波博勃搏铂箔伯帛舶脖膊渤泊驳簿|bu:捕卜哺补埠不布步部怖|ca:擦|cai:猜裁材才财睬踩采彩菜蔡|can:餐参蚕残惭惨灿|cang:苍舱仓沧藏|cao:操糙槽曹草|ce:厕策侧册测|ceng:层蹭曾|cha:插叉茬茶查碴搽察岔差诧刹|chai:拆柴豺|chan:搀掺蝉馋谗缠铲产阐颤|chang:昌猖场尝常长偿肠厂敞畅唱倡|chao:超抄钞朝嘲潮巢吵炒|che:车扯撤掣彻澈|chen:郴臣辰尘晨忱沉陈趁衬|cheng:撑称城橙成呈乘程惩澄诚承逞骋秤|chi:吃痴持匙池迟弛驰耻齿侈尺赤翅斥炽|chong:充冲虫崇宠|chou:抽酬畴踌稠愁筹仇绸瞅丑臭|chu:初出橱厨躇锄雏滁除楚础储矗搐触处畜|chuai:揣|chuan:川穿椽传船喘串|chuang:疮窗床闯创|chui:吹炊捶锤垂|chun:春椿醇唇淳纯蠢|chuo:戳绰|ci:疵茨磁雌辞慈瓷词此刺赐次|cong:聪葱囱匆从丛|cou:凑|cu:粗醋簇促|cuan:蹿篡窜|cui:摧崔催脆瘁粹淬翠|cun:村存寸|cuo:磋撮搓措挫错|da:搭达答瘩打大|dai:呆歹傣戴带殆代贷袋待逮怠|dan:耽担丹单郸掸胆旦氮但惮淡诞蛋|dang:当挡党荡档|dao:刀捣蹈倒岛祷导到稻悼道盗|de:德得的|deng:蹬灯登等瞪凳邓|di:堤低滴迪敌笛狄涤嫡抵底地蒂第帝弟递缔|dian:颠掂滇碘点典靛垫电佃甸店惦奠淀殿|diao:碉叼雕凋刁掉吊钓|die:跌爹碟蝶迭谍叠|ding:丁盯叮钉顶鼎锭定订|diu:丢|dong:东冬董懂动栋侗恫冻洞|dou:兜抖斗陡豆逗痘都|du:督毒犊独读堵睹赌杜镀肚度渡妒|duan:端短锻段断缎|dui:堆兑队对|dun:墩吨蹲敦顿钝盾遁|duo:掇哆多夺垛躲朵跺舵剁惰堕|e:蛾峨鹅俄额讹娥恶厄扼遏鄂饿|en:恩|er:而儿耳尔饵洱二贰|fa:发罚筏伐乏阀法珐|fan:藩帆番翻樊矾钒繁凡烦反返范贩犯饭泛|fang:坊芳方肪房防妨仿访纺放|fei:菲非啡飞肥匪诽吠肺废沸费|fen:芬酚吩氛分纷坟焚汾粉奋份忿愤粪|feng:丰封枫蜂峰锋风疯烽逢冯缝讽奉凤|fo:佛|fou:否|fu:夫敷肤孵扶拂辐幅氟符伏俘服浮涪福袱弗甫抚辅俯釜斧腑府腐赴副覆赋复傅付阜父腹负富讣附妇缚咐|ga:噶嘎|gai:该改概钙盖溉|gan:干甘杆柑竿肝赶感秆敢赣|gang:冈刚钢缸肛纲岗港杠|gao:篙皋高膏羔糕搞稿告|ge:哥歌搁戈鸽胳疙割革葛格阁隔铬个各咯|gei:给|gen:根跟|geng:耕更庚羹埂耿梗|gong:工攻功恭龚供躬公宫弓巩汞拱贡共|gou:钩勾沟苟狗垢构购够|gu:辜菇咕箍估沽孤姑鼓古蛊骨谷股故顾固雇|gua:刮瓜剐寡挂褂|guai:乖拐怪|guan:棺关官冠观管馆罐惯灌贯|guang:光广逛|gui:瑰规圭硅归龟闺轨鬼诡癸桂柜跪贵刽|gun:辊滚棍|guo:锅郭国果裹过|ha:蛤哈|hai:骸孩海氦亥害骇还咳|han:酣憨邯韩含涵寒函喊罕翰撼捍旱憾悍焊汗汉|hang:夯杭航|hao:镐壕嚎豪毫郝好耗号浩|he:呵喝荷菏核禾和何合盒阂河涸赫褐鹤贺|hei:嘿黑|hen:痕很狠恨|heng:哼亨横衡恒|hong:轰哄烘虹鸿洪宏弘红|hou:喉侯猴吼厚候后|hu:呼乎忽瑚壶葫胡蝴狐糊湖弧虎唬护互沪户|hua:花哗华猾滑画划化话|huai:槐徊怀淮坏|huan:欢环桓缓换患唤痪豢焕涣宦幻|huang:荒慌黄磺蝗簧皇凰惶煌晃幌恍谎|hui:灰挥辉徽恢蛔回毁悔慧卉惠晦贿秽会烩汇讳诲绘|hun:荤昏婚魂浑混|huo:豁活伙火获或惑霍货祸|ji:击圾基机畸稽积箕肌饥迹激讥鸡姬绩缉吉极棘辑籍集及急疾汲即嫉级挤几脊己蓟技冀季伎祭剂悸济寄寂计记既忌际妓继纪|jia:嘉枷夹佳家加荚颊贾甲钾假稼价架驾嫁|jian:歼监坚尖笺间煎兼肩艰奸缄茧检柬碱硷拣捡简俭剪减荐鉴践贱见键箭件健舰剑饯渐溅涧建|jiang:僵姜将浆江疆蒋桨奖讲匠酱降|jiao:蕉椒礁焦胶交郊浇骄娇嚼搅铰矫侥脚狡角饺缴绞剿教酵轿较叫窖|jie:揭接皆秸街阶截劫节杰捷睫竭洁结解姐戒藉芥界借介疥诫届|jin:巾筋斤金今津襟紧锦仅谨进靳晋禁近烬浸尽劲|jing:荆兢茎睛晶鲸京惊精粳经井警景颈静境敬镜径痉靖竟竞净|jiong:炯窘|jiu:揪究纠玖韭久灸九酒厩救旧臼舅咎就疚|ju:桔鞠拘狙疽居驹菊局矩举沮聚拒据巨具距踞锯俱句惧炬剧|juan:捐鹃娟倦眷卷绢|jue:撅攫抉掘倔爵觉决诀绝|jun:均菌钧军君峻俊竣浚郡骏|ka:喀咖卡|kai:开揩楷凯慨|kan:槛刊堪勘坎砍看|kang:康慷糠扛抗亢炕|kao:考拷烤靠|ke:坷苛柯棵磕颗科壳可渴克刻客课|ken:肯啃垦恳|keng:坑吭|kong:空恐孔控|kou:抠口扣寇|ku:枯哭窟苦酷库裤|kua:夸垮挎跨胯|kuai:块筷侩快|kuan:宽款|kuang:匡筐狂框矿眶旷况|kui:亏盔岿窥葵奎魁傀馈愧溃|kun:坤昆捆困|kuo:括扩廓阔|la:垃拉喇蜡腊辣啦|lai:莱来赖|lan:蓝婪栏拦篮阑兰澜谰揽览懒缆烂滥|lang:琅榔狼廊郎朗浪|lao:捞劳牢老佬姥酪烙涝|le:勒乐|lei:雷镭蕾磊累儡垒擂肋类泪|leng:棱楞冷|li:厘梨犁黎篱狸离漓理李里鲤礼莉荔吏栗丽厉励砾历利傈例俐痢立粒沥隶力璃哩|lia:俩|lian:联莲连镰廉怜涟帘敛脸链恋炼练|liang:粮凉梁粱良两辆量晾亮谅|liao:撩聊僚疗燎寥辽潦了撂镣廖料|lie:列裂烈劣猎|lin:琳林磷霖临邻鳞淋凛赁吝拎|ling:玲菱零龄铃伶羚凌灵陵岭领另令|liu:溜琉榴硫馏留刘瘤流柳六|long:龙聋咙笼窿隆垄拢陇|lou:楼娄搂篓漏陋|lu:芦卢颅庐炉掳卤虏鲁麓碌露路赂鹿潞禄录陆戮|luan:峦挛孪滦卵乱|lun:抡轮伦仑沦纶论|luo:萝螺罗逻锣箩骡裸落洛骆络|ma:妈麻玛码蚂马骂嘛吗|mai:埋买麦卖迈脉|man:瞒馒蛮满蔓曼慢漫谩|mang:芒茫盲氓忙莽|mao:猫茅锚毛矛铆卯茂冒帽貌贸|me:么|mei:玫枚梅酶霉煤没眉媒镁每美昧寐妹媚|men:门闷们|meng:萌蒙檬盟锰猛梦孟|mi:眯醚靡糜迷谜弥米秘觅泌蜜密幂|mian:棉眠绵冕免勉娩缅面|miao:苗描瞄藐秒渺庙妙|mie:蔑灭|min:民抿皿敏悯闽|ming:明螟鸣铭名命|miu:谬|mo:貉摸摹蘑模膜磨摩魔抹末莫墨默沫漠寞陌|mou:谋某|mu:牟拇牡亩姆母墓暮幕募慕木目睦牧穆|na:拿哪呐钠那娜纳|nai:氖乃奶耐奈|nan:南男难|nang:囊|nao:挠脑恼闹淖|ne:呢|nei:馁内|nen:嫩|neng:能|ni:妮霓倪泥尼拟你匿腻逆溺|nian:蔫拈年碾撵捻念粘辗|niang:娘酿|niao:鸟尿|nie:捏聂孽啮镊镍涅|nin:您|ning:柠狞凝宁拧泞|niu:牛扭钮纽|nong:脓浓农弄|nu:奴努怒|nuan:暖|nuo:挪懦糯诺|o:哦|ou:欧鸥殴藕呕偶沤|pa:耙啪趴爬帕怕琶|pai:拍排牌徘湃派|pan:攀潘盘磐盼畔判叛|pang:乓庞旁耪胖|pao:抛咆刨炮袍跑泡|pei:呸胚培裴赔陪配佩沛|pen:喷盆|peng:砰抨烹澎彭蓬棚硼篷膨朋鹏捧碰|pi:辟坯砒霹批披劈琵毗啤脾疲皮匹痞僻屁譬|pian:篇偏片骗|piao:飘漂瓢票|pie:撇瞥|pin:拼频贫品聘|ping:乒坪苹萍平凭瓶评屏|po:坡泼颇婆破魄迫粕|pou:剖|pu:脯扑铺仆莆葡菩蒲埔朴圃普浦谱曝瀑|qi:期欺栖戚妻七凄漆柒沏其棋奇歧畦崎脐齐旗祈祁骑起岂乞企启契砌器气迄弃汽泣讫|qia:掐恰洽|qian:牵扦钎铅千迁签仟谦乾黔钱钳前潜遣浅谴堑嵌欠歉|qiang:枪呛腔羌墙蔷强抢|qiao:橇锹敲悄桥瞧乔侨巧鞘撬翘峭俏窍|qie:切茄且怯窃|qin:钦侵亲秦琴勤芹擒禽寝沁|qing:青轻氢倾卿清擎晴氰情顷请庆|qiong:琼穷|qiu:秋丘邱球求囚酋泅|qu:趋区蛆曲躯屈驱渠取娶龋趣去|quan:圈颧权醛泉全痊拳犬券劝|que:缺炔瘸却鹊榷确雀|qun:裙群|ran:然燃冉染|rang:瓤壤攘嚷让|rao:饶扰绕|re:惹热|ren:壬仁人忍韧任认刃妊纫|reng:扔仍|ri:日|rong:戎茸蓉荣融熔溶容绒冗|rou:揉柔肉|ru:茹蠕儒孺如辱乳汝入褥|ruan:软阮|rui:蕊瑞锐|run:闰润|ruo:若弱|sa:撒洒萨|sai:腮鳃塞赛|san:三叁伞散|sang:桑嗓丧|sao:搔骚扫嫂|se:瑟色涩|sen:森|seng:僧|sha:莎砂杀沙纱傻啥煞厦|shai:筛晒|shan:珊苫杉山删煽衫闪陕擅赡膳善汕扇缮栅|shang:墒伤商赏晌上尚裳|shao:梢捎稍烧芍勺韶少哨邵绍|she:奢赊蛇舌舍赦摄射慑涉社设|shen:砷申呻伸身深娠绅神沈审婶甚肾慎渗什|sheng:声生甥牲升绳省盛剩胜圣|shi:师失狮施湿诗尸虱十石拾时食蚀实识史矢使屎驶始式示士世柿事拭誓逝势是嗜噬适仕侍释饰氏市恃室视试|shou:收手首守寿授售受瘦兽|shu:蔬枢梳殊抒输叔舒淑疏书赎孰熟薯暑曙署蜀黍鼠属术述树束戍竖墅庶数漱恕|shua:刷耍|shuai:摔衰甩帅|shuan:栓拴|shuang:霜双爽|shui:谁水睡税|shun:吮瞬顺舜|shuo:说硕朔烁|si:斯撕嘶思私司丝死肆寺嗣四伺似饲巳|song:松耸怂颂送宋讼诵|sou:搜艘擞嗽|su:苏酥俗素速粟僳塑溯宿诉肃|suan:酸蒜算|sui:虽隋随绥髓碎岁穗遂隧祟|sun:孙损笋|suo:蓑梭唆缩琐索锁所|ta:塌他它她塔獭挞蹋踏|tai:胎苔抬台泰酞太态汰|tan:弹坍摊贪瘫滩坛檀痰潭谭谈坦毯袒碳探叹炭|tang:汤塘搪堂棠膛唐糖倘躺淌趟烫|tao:掏涛滔绦萄桃逃淘陶讨套|te:特|teng:藤腾疼誊|ti:梯剔踢锑提题蹄啼体替嚏惕涕剃屉|tian:天添填田甜恬舔腆|tiao:调挑条迢眺跳|tie:贴铁帖|ting:厅听烃汀廷停亭庭挺艇|tong:通桐酮瞳同铜彤童桶捅筒统痛|tou:偷投头透|tu:凸秃突图徒途涂屠土吐兔|tuan:湍团|tui:推颓腿蜕褪退|tun:囤吞屯臀|tuo:拖托脱鸵陀驮驼椭妥拓唾|wa:挖哇蛙洼娃瓦袜|wai:歪外|wan:豌弯湾玩顽丸烷完碗挽晚皖惋宛婉万腕|wang:汪王亡枉网往旺望忘妄|wei:威巍微危韦违桅围唯惟为潍维苇萎委伟伪尾纬未蔚味畏胃喂魏位渭谓尉慰卫|wen:瘟温蚊文闻纹吻稳紊问|weng:嗡翁瓮|wo:挝蜗涡窝我斡卧握沃|wu:巫呜钨乌污诬屋无芜梧吾吴毋武五捂午舞伍侮坞戊雾晤物勿务悟误|xi:昔熙析西硒矽晰嘻吸锡牺稀息希悉膝夕惜熄烯溪汐犀檄袭席习媳喜洗系隙戏细|xia:瞎虾匣霞辖暇峡侠狭下夏吓|xian:铣掀锨先仙鲜纤咸贤衔舷闲涎弦嫌显险现献县腺馅羡宪陷限线|xiang:相厢镶香箱襄湘乡翔祥详想响享项巷橡像向象|xiao:萧硝霄削哮销消宵淆晓小孝校肖啸笑效|xie:楔些歇蝎鞋协挟携邪斜胁谐写械卸蟹懈泄泻谢屑|xin:薪芯锌欣辛新忻心信衅|xing:星腥猩惺兴刑型形邢行醒幸杏性姓|xiong:兄凶胸匈汹雄熊|xiu:休修羞朽嗅锈秀袖绣|xu:墟戌需虚嘘须徐许蓄酗叙旭序恤絮婿绪续吁|xuan:轩喧宣悬旋玄选癣眩绚|xue:靴薛学穴雪血|xun:勋熏循旬询寻驯巡殉汛训讯逊迅|ya:压押鸦鸭呀丫芽牙蚜崖衙涯雅哑亚讶轧|yan:焉咽阉烟淹盐严研蜒岩延言颜阎炎沿奄掩眼衍演艳堰燕厌砚雁唁彦焰宴谚验|yang:殃央鸯秧杨扬佯疡羊洋阳氧仰痒养样漾|yao:邀腰妖瑶摇尧遥窑谣姚咬舀药要耀钥|ye:椰噎耶爷野冶也页掖业叶曳腋夜液|yi:一壹医揖铱依伊衣颐夷遗移仪胰疑沂宜姨彝椅蚁倚已乙矣以艺抑易邑屹亿役臆逸肄疫亦裔意毅忆义益溢诣议谊译异翼翌绎|yin:茵荫因殷音阴姻吟银淫寅饮尹引隐印|ying:英樱婴鹰应缨莹萤营荧蝇迎赢盈影颖硬映|yo:哟|yong:拥佣臃痈庸雍踊蛹咏泳涌永恿勇用|you:幽优悠忧尤由邮铀犹油游酉有友右佑釉诱又幼|yu:迂淤于盂榆虞愚舆余俞逾鱼愉渝渔隅予娱雨与屿禹宇语羽玉域芋郁遇喻峪御愈欲狱育誉浴寓裕预豫驭|yuan:鸳渊冤元垣袁原援辕园员圆猿源缘远苑愿怨院|yue:曰约越跃岳粤月悦阅|yun:耘云郧匀陨允运蕴酝晕韵孕|za:匝砸杂咋|zai:栽哉灾宰载再在仔|zan:咱攒暂赞|zang:赃脏葬|zao:遭糟凿藻枣早澡蚤躁噪造皂灶燥|ze:责择则泽|zei:贼|zen:怎|zeng:增憎赠|zha:扎喳渣札铡闸眨榨乍炸诈柞|zhai:翟摘斋宅窄债寨|zhan:瞻毡詹沾盏斩崭展蘸栈占战站湛绽|zhang:樟章彰漳张掌涨杖丈帐账仗胀瘴障|zhao:招昭找沼赵照罩兆肇召|zhe:遮折哲蛰辙者锗蔗这浙着|zhen:珍斟真甄砧臻贞针侦枕疹诊震振镇阵帧|zheng:蒸挣睁征狰争怔整拯正政症郑证|zhi:芝枝支吱蜘知肢脂汁之织职直植殖执值侄址指止趾只旨纸志挚掷至致置帜峙制智秩稚质炙痔滞治窒|zhong:中盅忠钟衷终种肿重仲众|zhou:舟周州洲诌粥轴肘帚咒皱宙昼骤|zhu:珠株蛛朱猪诸诛逐竹烛煮拄瞩嘱主著柱助蛀贮铸筑住注祝驻|zhua:抓爪|zhuai:拽|zhuan:专砖转撰赚篆|zhuang:幢桩庄装妆撞壮状|zhui:椎锥追赘坠缀|zhun:谆准|zhuo:捉拙卓桌琢茁酌啄灼浊|zi:兹咨资姿滋淄孜紫籽滓子自渍字|zong:鬃棕踪宗综总纵|zou:邹走奏揍|zu:租足卒族祖诅阻组|zuan:钻纂|zui:咀嘴醉最罪|zun:尊遵|zuo:昨左佐做作坐座';
+var spPyMap = null;
+function spPyChar(c){
+  if(!spPyMap){ spPyMap = {}; SP_PY_TBL.split('|').forEach(e=>{ const i = e.indexOf(':'); const py = e.slice(0, i); for(const ch of e.slice(i+1)) spPyMap[ch] = py; }); }
+  return spPyMap[c] || '';
+}
+function spSearchKeys(text){
+  const raw = String(text||'').toLowerCase(); let py = '', ini = '';
+  for(const ch of raw){ const p = spPyChar(ch); if(p){ py += p; ini += p[0]; } else if(/[a-z0-9]/.test(ch)){ py += ch; ini += ch; } }
+  return {raw, py, ini};
+}
+function spSubseq(hay, q){ let i = 0; for(const ch of hay){ if(ch===q[i]) i++; if(i>=q.length) return true; } return q.length===0; }
+/* fields：待搜索的文本列表；q：查询（空格分词，每个词都要命中任一字段：子串 / 拼音 / 首字母 / 模糊子序列） */
+function spSearchMatch(q, fields){
+  const toks = String(q||'').toLowerCase().split(/\s+/).filter(Boolean); if(!toks.length) return true;
+  const ks = fields.filter(x=>x!=null && x!=='').map(spSearchKeys);
+  return toks.every(t=>ks.some(k=>k.raw.includes(t) || k.py.includes(t) || k.ini.includes(t) || (t.length>=2 && (spSubseq(k.raw, t) || spSubseq(k.py, t)))));
+}
+/* ---------- 输入框：受控 + 防抖 300 ms + 中文输入法（compositionstart / compositionend）+ 移动端键盘避让 ---------- */
+var spQT = null;
+function spSearchStore(el){ const key = el.dataset.spInput; if(key) spS()[key] = el.value; }
+function spSearchApply(key, val, caret){
+  const S = spS(); S[key] = val; if(key==='libQ') S.libPage = 1;
+  const el = document.querySelector(`[data-sp-input="${key}"]`), live = el?.dataset?.spLive;
+  if(live && typeof window[live]==='function'){ window[live](); return; }
+  render();
+  const n = document.querySelector(`[data-sp-input="${key}"]`);
+  if(n && document.activeElement!==n){ n.focus({preventScroll:true}); try{ const c = caret ?? n.value.length; n.setSelectionRange(c, c); }catch(_e){} }
+}
+function spSearchSchedule(el){
+  clearTimeout(spQT);
+  const key = el.dataset.spInput;
+  spQT = setTimeout(()=>{ if(el.dataset.composing) return; spSearchApply(key, el.value, el.selectionStart); }, 300);
+}
+function spSearchFlush(el){
+  if(el.dataset.composing) return; clearTimeout(spQT);
+  const key = el.dataset.spInput, S = spS();
+  if(S[key]!==el.value || el.dataset.spDirty){ delete el.dataset.spDirty; spSearchApply(key, el.value, el.selectionStart); }
+}
+function spNoop(){}
+document.addEventListener('compositionstart', e=>{ const el = e.target; if(el?.dataset?.spInput){ el.dataset.composing = '1'; clearTimeout(spQT); } });
+document.addEventListener('compositionend', e=>{ const el = e.target; if(el?.dataset?.spInput){ delete el.dataset.composing; spSearchStore(el); el.dataset.spDirty = '1'; spSearchSchedule(el); } });
+document.addEventListener('input', e=>{
+  const el = e.target; if(!el?.dataset?.spInput || !(el.tagName==='INPUT' || el.tagName==='TEXTAREA')) return;
+  spSearchStore(el);                                  /* 先写入状态：任何重渲染都不会丢失已输入的内容 */
+  if(e.isComposing || el.dataset.composing) return;   /* 输入法组字中不触发刷新 */
+  el.dataset.spDirty = '1'; spSearchSchedule(el);
+});
+function spKeepInputVisible(el){
+  if(!el?.matches?.('input[data-sp-input],textarea[data-sp-input]')) return;
+  setTimeout(()=>{ try{ el.scrollIntoView({block:'center', behavior:'smooth'}); }catch(_e){} }, 320);
+}
+document.addEventListener('focusin', e=>{ if(window.innerWidth<=900) spKeepInputVisible(e.target); });
+if(window.visualViewport) window.visualViewport.addEventListener('resize', ()=>{ const a = document.activeElement; if(window.innerWidth<=900 && a?.dataset?.spInput) spKeepInputVisible(a); });
+
+/* ---------- my_spirits：统一数据源 ---------- */
+var SP_MY_SRC = {season:['赛季','Season','Mùa'], trial:['试验','Trial','Thử nghiệm'], collab:['联名 / 联动','Collab','Hợp tác'], event:['活动专属','Event exclusive','Độc quyền sự kiện'], hidden:['隐藏','Hidden','Ẩn'], grant:['管理员发放','Admin grant','Quản trị cấp'], other:['其他','Other','Khác']};
+function spMySrcOf(src, def){
+  const s = String(src||'');
+  if(s==='grant' || s==='gift' || s==='compensate') return 'grant';
+  if(s==='season') return 'season'; if(s==='trial') return 'trial';
+  if(s==='hidden' || def?.rar==='HD' || def?.cat==='hidden') return 'hidden';
+  if(s==='collab' || s==='link' || def?.cat==='collab') return 'collab';
+  if(s==='event' || s==='ret' || def?.rar==='EX' || def?.rar==='FD') return 'event';
+  return 'other';
+}
+/* 为已获得的精灵建立养成记录（赛季精灵留在 u.ss，不重复建立） */
+function spMysEnsure(u, id, src, extra){
+  const def = spDef(id); if(!def || src==='season') return null;
+  u.mys = u.mys || {}; if(u.mys[id]) return u.mys[id];
+  if(u.ss?.[seasonNow().id]?.sp===id) return null;
+  const now = gNowIso();
+  u.mys[id] = {operator_id:u.user, spirit_id:id, source:String(src||'other'), acquired_at:u.spc?.[id]?.at || now, xp:0, stage:1, intimacy:0, mood:+gCfg().moodStart||80, equipped_skin:'', is_season_spirit:false, season_id:'', trial_id:'', granted_by:'', fav:false,
+    sid:'own:'+id, sp:id, rar:def.rar, rar0:def.rar, pal:'v0', form:SP_FORMS[spHash(id)%SP_FORMS.length], pers:def.pers??0, act:0, acts:def.acts||['hop'], mult:1, name:'', moodAt:now, feeds:0, lastFeed:'', stageMax:1, at:now, libVer:def.ver||1, ...(extra||{})};
+  gTouch(u); return u.mys[id];
+}
+/* 把「已拥有但没有养成记录」的精灵（旧数据、活动 / 隐藏 / 联动获得）补齐；同步阶段镜像字段 */
+function spMysSync(u){
+  let n = 0; u.mys = u.mys || {};
+  Object.entries(u.spc||{}).forEach(([id, c])=>{ if(u.mys[id] || c?.src==='season' || !spDef(id)) return; if(spMysEnsure(u, id, c?.src||'other')) n++; });
+  Object.values(u.mys).forEach(r=>{ r.stage = spRecStage(r); });
+  if(n) saveGrowth();
+  return n;
+}
+function spMyRow(u, kind, ckey, rec, o){
+  const def = spDef(rec.sp || rec.spirit_id), key = `${kind}:${ckey}`, cur = !!o.current;
+  const skin = kind==='trial' ? (u.equip.trial?.[rec.type]||'') : spRecSkin(u, 'season', rec);
+  return {key, kind, ckey, rec, def, cur, spirit_id:rec.spirit_id||rec.sp||rec.type||'', name:spRecName(kind, rec), cat:o.cat ?? def?.cat ?? '', rar:kind==='trial' ? '' : (rec.rar||def?.rar||''),
+    stage:spRecStage(rec), source:o.source, season_id:o.season_id||'', trial_id:o.trial_id||'', acquired_at:rec.acquired_at||rec.at||'', xp:+rec.xp||0, intimacy:+rec.intimacy||0, mood:spMood(rec), equipped_skin:skin,
+    is_season_spirit:!!o.season_spirit, fav:!!u.fav?.[key], compact:!!o.compact};
+}
+function spMyList(u){
+  spMysSync(u);
+  const sid = seasonNow().id, out = [];
+  Object.values(u.ss||{}).forEach(r=>{ if(r?.sp) out.push(spMyRow(u, 'season', r.sid, r, {source:'season', season_id:r.sid, season_spirit:true, current:r.sid===sid, compact:true})); });
+  Object.entries(u.tr||{}).forEach(([k, r])=>out.push(spMyRow(u, 'trial', k, r, {source:'trial', trial_id:k, cat:'trial'})));
+  Object.values(u.mys||{}).forEach(r=>{ if(spDef(r.spirit_id)) out.push(spMyRow(u, 'season', r.sid, r, {source:spMySrcOf(r.source, spDef(r.spirit_id))})); });
+  return out;
+}
+function spMyFilter(u, rows){
+  const S = spS();
+  let list = rows.filter(r=>{
+    if(S.mySrc && r.source!==S.mySrc) return false;
+    if(S.myCat && r.cat!==S.myCat) return false;
+    if(S.myRar && r.rar!==S.myRar) return false;
+    if(S.myStage && String(r.stage)!==String(S.myStage)) return false;
+    if(S.mySeason && r.season_id!==S.mySeason) return false;
+    if(S.myFav==='1' && !r.fav) return false;
+    return true;
+  });
+  const q = String(S.myQ||'').trim();
+  if(q) list = list.filter(r=>spSearchMatch(q, [r.name, r.rec.name, ...(r.def?.name||[]), r.spirit_id, r.def?.no, trT(SP_MY_SRC[r.source]||SP_MY_SRC.other), r.cat ? trT(SP_CATS[r.cat]||['','','']) : '', r.rar, r.rar ? sprName(r.rar) : '', trT(spSkin(r.equipped_skin)?.name||'')]));
+  const rk = x=>SPR_ORDER.indexOf(x), by = S.mySort || 'default';
+  const cmp = {default:(a,b)=>String(b.acquired_at).localeCompare(String(a.acquired_at)), rarity:(a,b)=>rk(b.rar)-rk(a.rar), stage:(a,b)=>b.stage-a.stage, intimacy:(a,b)=>b.intimacy-a.intimacy, mood:(a,b)=>b.mood-a.mood, name:(a,b)=>String(a.name).localeCompare(String(b.name), 'zh'), time:(a,b)=>String(b.acquired_at).localeCompare(String(a.acquired_at))}[by] || (()=>0);
+  return list.sort((a,b)=>(b.cur-a.cur) || (by==='default' ? ((b.fav-a.fav) || cmp(a,b)) : cmp(a,b)));   /* 当前赛季精灵永远置顶 */
+}
+function spMyCompactCard(u, r){
+  const rec = r.rec, mi = spMoodInfo(r.mood), def = r.def, skin = r.equipped_skin;
+  const art = r.kind==='season' ? spSeasonView(rec, 72, {stage:spDispStage(rec), skin, mood:mi.face, cls:'act-idle'}) : '';
+  return `<section class="sp-c4 sp-card sp-my-compact ${r.cur?'cur':''}" data-act="spSpDetail" data-v="${r.kind}" data-id="${escapeAttr(r.ckey)}" data-user="${escapeAttr(u.user)}" role="button" tabindex="0" aria-label="${escapeAttr(r.name)}">
+    <div class="c4-b"><div class="c4-art sp-stage">${art}</div></div>
+    <header class="c4-h"><div class="c4-title"><b class="c4-name" data-i18n-ignore="1">${escapeHtml(r.name)}</b><small class="c4-label">${r.cur?`📌 ${escapeHtml(tx('当前赛季精灵','Current season sprite','Tinh linh mùa hiện tại'))}`:`${escapeHtml(trT(SP_MY_SRC[r.source]||SP_MY_SRC.other))}${r.season_id?` · ${escapeHtml(r.season_id)}`:''}`}</small></div>
+      <div class="c4-tags">${r.rar?sprPill(r.rar):''}<span class="c4-stage s${r.stage}">LV${r.stage}</span><span class="c4-mood">${mi.e}</span></div></header>
+    <div class="c4-p"><div class="sp-meters">${spMeter(r.intimacy, +gCfg().intimacyMax||1000, 'int', `💞 ${tx('亲密度','Intimacy','Thân mật')}`)}${spMeter(r.mood, +gCfg().moodMax||100, 'mood', `${mi.e} ${tx('心情','Mood','Tâm trạng')}`)}</div>
+      ${skin?`<div class="c4-skin">👗 ${escapeHtml(trT(spSkin(skin)?.name||''))}</div>`:''}</div></section>`;
+}
+function spMyListHtml(u){
+  const all = spMyList(u), list = spMyFilter(u, all), SH = 60;
+  if(!list.length) return spStateHtml('empty', tx('没有符合条件的精灵','No sprites match','Không có tinh linh phù hợp'));
+  return list.slice(0, SH).map(r=>`<div class="sp-my-item">${r.kind==='season' && (r.cur || (!String(r.ckey).startsWith('own:') && r.ckey!==seasonNow().id)) ? spMyCompactCard(u, r) : spCard4(u, r.kind, r.rec, {})}<button type="button" class="sp-my-fav ${r.fav?'on':''}" data-act="spMyFav" data-id="${escapeAttr(r.key)}" aria-pressed="${r.fav}" title="${escapeAttr(tx('收藏','Favorite','Yêu thích'))}" aria-label="${escapeAttr(tx('收藏','Favorite','Yêu thích'))}">${r.fav?'★':'☆'}</button></div>`).join('')
+    + (list.length>SH ? `<div class="hint">${escapeHtml(tx(`仅显示前 ${SH} 只，请缩小筛选范围`,`Showing the first ${SH}; narrow the filters`,`Chỉ hiển thị ${SH} đầu tiên; hãy thu hẹp bộ lọc`))}</div>` : '');
+}
+function spMyRefresh(){
+  const u = spCanPlay() ? spU() : null, box = document.getElementById('spMyList'); if(!u || !box) return render();
+  const top = box.scrollTop; box.innerHTML = spMyListHtml(u); box.scrollTop = top;
+  const c = document.getElementById('spMyCount'); if(c) c.textContent = spMyFilter(u, spMyList(u)).length;
+}
+function spMyAllHtml(u){
+  const S = spS(), rows = spMyList(u), seasons = [...new Set(rows.map(r=>r.season_id).filter(Boolean))].sort().reverse();
+  const sel = (key, label, opts)=>`<select data-sp-input="${key}" data-sp-live="spMyRefresh" aria-label="${escapeAttr(label)}"><option value="">${escapeHtml(label)}</option>${opts.map(([k,n])=>`<option value="${escapeAttr(k)}" ${String(S[key]||'')===String(k)?'selected':''}>${escapeHtml(n)}</option>`).join('')}</select>`;
+  const cats = [...new Set(rows.map(r=>r.cat).filter(c=>c && SP_CATS[c]))];
+  return `<div class="sp-sec-h"><h3>🐾 ${escapeHtml(tx('全部精灵','All sprites','Tất cả tinh linh'))} <small class="hint">(<span id="spMyCount">${spMyFilter(u, rows).length}</span>/${rows.length})</small></h3><span class="hint">${escapeHtml(tx('统一展示赛季、试验、联名、联动、活动专属、隐藏与管理员发放的全部已拥有精灵；当前赛季精灵置顶，点击卡片进入养成详情。','Every sprite you own — season, trial, collab, event, hidden and admin-granted. The current season sprite is pinned on top; click a card for the care details.','Mọi tinh linh bạn sở hữu — mùa, thử nghiệm, hợp tác, sự kiện, ẩn và do quản trị cấp. Tinh linh mùa hiện tại được ghim đầu; bấm thẻ để xem chi tiết.'))}</span></div>
+    <div class="sp-filter sp-my-bar"><input type="search" data-sp-input="myQ" data-sp-live="spMyRefresh" value="${escapeAttr(S.myQ||'')}" enterkeyhint="search" autocomplete="off" placeholder="${escapeAttr(tx('搜索名称 / 编号 / 来源 / 类别 / 稀有度（支持拼音、首字母）','Search name / number / source / category / rarity (pinyin supported)','Tìm tên / số / nguồn / loại / độ hiếm (hỗ trợ pinyin)'))}" aria-label="${escapeAttr(tx('搜索','Search','Tìm kiếm'))}">
+      ${sel('mySrc', tx('全部来源','All sources','Mọi nguồn'), Object.entries(SP_MY_SRC).map(([k,n])=>[k, trT(n)]))}
+      ${sel('myCat', tx('全部类别','All categories','Mọi loại'), cats.map(c=>[c, trT(SP_CATS[c])]))}
+      ${sel('myRar', tx('全部稀有度','All rarities','Mọi độ hiếm'), SPR_ORDER.map(k=>[k, `${k} ${sprName(k)}`]))}
+      ${sel('myStage', tx('全部阶段','All stages','Mọi giai đoạn'), [1,2,3,4,5].map(i=>[i, `LV${i} ${trT(SP_STAGE_NAMES[i])}`]))}
+      ${sel('mySeason', tx('全部赛季','All seasons','Mọi mùa'), seasons.map(k=>[k, k]))}
+      ${sel('myFav', tx('全部 / 收藏','All / favorites','Tất cả / yêu thích'), [['1', tx('仅收藏','Favorites only','Chỉ yêu thích')]])}
+      <select data-sp-input="mySort" data-sp-live="spMyRefresh" aria-label="${escapeAttr(tx('排序','Sort','Sắp xếp'))}">${[['default',tx('默认（收藏优先）','Default (favorites first)','Mặc định (yêu thích trước)')],['rarity',tx('稀有度','Rarity','Độ hiếm')],['stage',tx('阶段','Stage','Giai đoạn')],['intimacy',tx('亲密度','Intimacy','Thân mật')],['mood',tx('心情','Mood','Tâm trạng')],['time',tx('获得时间','Acquired','Thời gian nhận')],['name',tx('名称','Name','Tên')]].map(([k,n])=>`<option value="${k}" ${(S.mySort||'default')===k?'selected':''}>${escapeHtml(n)}</option>`).join('')}</select></div>
+    <div id="spMyList" class="sp-ovg sp-my-grid">${spMyListHtml(u)}</div>`;
+}
+function spMyFav(key){
+  if(!spCanPlay()) return; const u = spU(); u.fav = u.fav || {};
+  if(u.fav[key]) delete u.fav[key]; else u.fav[key] = gNowIso();
+  gTouch(u); saveGrowth(); spMyRefresh();
+}
+
+/* ---------- pending_rewards：待领取 ---------- */
+var SP_PEND_ST = {pending:['待领取','To claim','Chờ nhận'], claimed:['已领取','Claimed','Đã nhận'], expired:['已过期','Expired','Đã hết hạn'], revoked:['已撤回','Revoked','Đã thu hồi']};
+var SP_PEND_SRC = {grant:['管理员发放','Admin grant','Quản trị cấp'], compensate:['补偿','Compensation','Bù'], gift:['赠礼','Gift','Quà tặng']};
+var SP_RW_TYPES = {spirit:['精灵','Spirit','Tinh linh'], skin:['皮肤','Skin','Trang phục'], item:['道具','Item','Vật phẩm'], xp:['经验','XP','EXP'], offline:['线下实物','Offline item','Vật phẩm ngoài đời']};
+function spPend(){ const g = G(); g.pend = g.pend || {}; return g.pend; }
+function spPendCount(user){ return Object.values(spPend()).filter(r=>r.operator_id===user && r.status==='pending').length; }
+/* 奖励内容文本：发放 / 赠礼 / 待领取窗口共用 */
+function spRewardLabel(type, c){
+  c = c || {};
+  if(type==='spirit') return `🐾 ${trT(spDef(c.id)?.name||[c.id||'?','',''])}`;
+  if(type==='skin') return `👗 ${trT(spSkin(c.id)?.name||[c.id||'?','',''])}`;
+  if(type==='xp') return `✨ ${tx('当季经验','Season XP','EXP mùa')} ×${c.n}`;
+  if(type==='offline') return `🎁 ${c.text||''}${+c.n>1?` ×${c.n}`:''}`;
+  return `🎒 ${trT(SP_WHAT_N[c.what]||[c.what,c.what,c.what])} ×${c.n}`;
+}
+/* 把表单选择（what / n / skin / spirit(s)）转成奖励项；扣减（n ≤ 0）不走待领取 */
+function spRewardItems(p){
+  const what = p.what, n = Math.floor(+p.n||0);
+  if(what==='spirit') return (p.spirits || [p.spirit]).filter(id=>spDef(id)).map(id=>({type:'spirit', content:{id}}));
+  if(what==='skin') return spSkin(p.skin) ? [{type:'skin', content:{id:p.skin}}] : [];
+  if(n<=0) return null;
+  if(what==='xp') return [{type:'xp', content:{n}}];
+  if(what==='points' || SP_INF_FIELD[what]) return [{type:'item', content:{what, n}}];
+  return null;
+}
+function spPendGive(p){
+  const g = G(), now = gNowIso(), batch = uid('rw_'), days = Math.max(0, Math.floor(+p.days||0)), exp = days ? new Date(spNowMs() + days*86400000).toISOString() : '';
+  let n = 0;
+  (p.users||[]).forEach(user=>{
+    (p.items||[]).forEach(it=>{
+      const id = uid('pr_') + (n++);
+      spPend()[id] = {id, operator_id:user, reward_id:batch, reward_type:it.type, reward_content:it.content, source:p.source||'grant', granted_by:spMe(), granted_at:now, expire_at:exp, status:'pending',
+        note:p.note||'', cond:{minStage:+p.minStage||0}, channels:p.channels||['inbox'], claimed_at:'', updatedAt:now};
+      spAudit('pend-give', user, {id, batch, type:it.type, content:it.content, source:p.source||'grant', note:p.note||'', expire:exp, cond:+p.minStage||0});
+    });
+  });
+  return {batch, n, exp};
+}
+function spPendSweep(){
+  const now = spNowMs(); let ch = 0;
+  Object.values(spPend()).forEach(r=>{ if(r.status==='pending' && r.expire_at && new Date(r.expire_at).getTime() <= now){ r.status = 'expired'; r.updatedAt = gNowIso(); spAudit('pend-expire', r.operator_id, {id:r.id, type:r.reward_type, content:r.reward_content}); ch++; } });
+  if(ch) saveGrowth();
+  return ch;
+}
+/* 站内信（铃铛）+ 浏览器推送：操作员端发现新的待领取记录时各发一次 */
+function spPendWatch(){
+  if(!window.__spReady || !spCanPlay()) return;
+  spPendSweep();
+  const me = spMe(), by = {};
+  Object.values(spPend()).forEach(r=>{ if(r.operator_id===me && r.status==='pending') (by[r.reward_id] = by[r.reward_id] || []).push(r); });
+  Object.entries(by).forEach(([batch, rs])=>{
+    const key = `pend:${batch}:${me}`; if(state.notifications.some(n=>n.key===key)) return;
+    const who = spUserName(rs[0].granted_by), title = tx('收到新的待领取奖励','You have new rewards to claim','Bạn có phần thưởng mới cần nhận'), desc = `${who} · ${rs.map(r=>spRewardLabel(r.reward_type, r.reward_content)).join(' / ')}`.slice(0, 120);
+    addNormalNotification(key, title, desc, 'check', true, {type:'achv', audienceUser:me});
+    try{ if(window.Notification && Notification.permission==='granted' && rs[0].channels?.includes('push')) new Notification(title, {body:desc}); }catch(_e){}
+  });
+}
+function spPendCond(u, r){
+  const need = +r.cond?.minStage||0;
+  if(need > 1){ const ss = u.ss?.[seasonNow().id], st = ss ? spRecStage(ss) : 1; if(st < need) return tx(`需要赛季精灵达到 LV${need}`, `Your season sprite must reach LV${need}`, `Tinh linh mùa cần đạt LV${need}`); }
+  return '';
+}
+function spPendApply(u, r){
+  const c = r.reward_content || {}, sid = seasonNow().id;
+  if(r.reward_type==='spirit'){
+    spCollect(u, c.id, 'grant', true);
+    const m = spMysEnsure(u, c.id, 'grant'); if(m){ m.granted_by = r.granted_by; m.source = 'grant'; m.via = r.source; m.reward_id = r.reward_id; }
+  }
+  else if(r.reward_type==='skin') spGrantSkin(u, c.id, 'grant');
+  else if(r.reward_type==='xp') gainXpRaw(u, +c.n||0);
+  else if(r.reward_type==='item'){ const n = +c.n||0; if(c.what==='points'){ u.ptsSpent[sid] = (+u.ptsSpent[sid]||0) - n; } else { const f = SP_INF_FIELD[c.what]; if(f) u[f] = Math.max(0, (+u[f]||0) + n); } }
+}
+function spPendClaim(ids){
+  if(!spCanPlay()) return;
+  const u = spU(), P = spPend(); spPendSweep();
+  let ok = 0, bad = '';
+  ids.forEach(id=>{
+    const r = P[id]; if(!r || r.operator_id!==u.user || r.status!=='pending') return;
+    const why = spPendCond(u, r); if(why){ bad = why; return; }
+    spPendApply(u, r); r.status = 'claimed'; r.claimed_at = gNowIso(); r.updatedAt = r.claimed_at; ok++;
+    spAudit('pend-claim', u.user, {id:r.id, type:r.reward_type, content:r.reward_content, by:r.granted_by, source:r.source, reward:r.reward_id});
+  });
+  if(ok){ spSpiritGauges(u); gTouch(u); saveGrowth(true); toast(`${tx('已领取','Claimed','Đã nhận')} ×${ok}`, 'ok'); spSound('rare'); }
+  else if(bad) toast(bad, 'warn');
+  render();
+}
+function spPendRevoke(id){
+  if(!spIsAdmin()) return; const r = spPend()[id]; if(!r || r.status!=='pending') return;
+  r.status = 'revoked'; r.updatedAt = gNowIso(); spAudit('pend-revoke', r.operator_id, {id, type:r.reward_type, content:r.reward_content});
+  saveGrowth(true); toast(tx('已撤回','Revoked','Đã thu hồi'), 'ok'); render();
+}
+function spPendExpireText(r){
+  if(!r.expire_at) return tx('长期有效','No expiry','Không hết hạn');
+  const ms = new Date(r.expire_at).getTime() - spNowMs(); if(r.status!=='pending') return localDT(r.expire_at);
+  const d = Math.floor(ms/86400000), h = Math.floor(ms%86400000/3600000);
+  return `${localDT(r.expire_at)} · ${d>0?`${d}${tx('天','d','ngày')} `:''}${h}${tx('小时','h','giờ')}`;
+}
+/* 操作员：待领取窗口 */
+function spInboxHtml(u){
+  spPendSweep();
+  const mine = Object.values(spPend()).filter(r=>r.operator_id===u.user).sort((a,b)=>String(b.granted_at).localeCompare(String(a.granted_at)));
+  const open = mine.filter(r=>r.status==='pending'), done = mine.filter(r=>r.status!=='pending').slice(0, 50);
+  const card = r=>{ const why = spPendCond(u, r); return `<label class="sp-ib-item ${why?'locked':''}">
+      <input type="checkbox" data-sp-ibc="${escapeAttr(r.id)}" ${why?'disabled':''} aria-label="${escapeAttr(spRewardLabel(r.reward_type, r.reward_content))}">
+      <div class="sp-ib-main"><b class="sp-ib-rw" data-i18n-ignore="1">${escapeHtml(spRewardLabel(r.reward_type, r.reward_content))}</b>
+        <small>${escapeHtml(tx('来源','Source','Nguồn'))}：${escapeHtml(trT(SP_PEND_SRC[r.source]||SP_PEND_SRC.grant))} · ${escapeHtml(tx('发放人','From','Người cấp'))}：<span data-i18n-ignore="1">${escapeHtml(spUserName(r.granted_by))}</span> · ${escapeHtml(tx('发放时间','Sent','Thời gian cấp'))}：${escapeHtml(localDT(r.granted_at))} · ${escapeHtml(tx('有效期至','Valid until','Hạn đến'))}：${escapeHtml(spPendExpireText(r))}</small>
+        ${r.note?`<small class="sp-ib-note" data-i18n-ignore="1">💬 ${escapeHtml(r.note)}</small>`:''}${why?`<small class="sp-why">🔒 ${escapeHtml(why)}</small>`:''}</div>
+      <button type="button" class="btn btn-primary btn-sm" data-act="spPendClaim" data-id="${escapeAttr(r.id)}" ${why?'disabled':''}>${escapeHtml(tx('领取','Claim','Nhận'))}</button></label>`; };
+  const perm = window.Notification ? Notification.permission : 'unsupported';
+  return `<div class="sp-inbox">
+    <div class="sp-sec-h"><h3>📬 ${escapeHtml(tx('待领取','To claim','Chờ nhận'))} <small class="hint">(${open.length})</small></h3>
+      <div class="sp-ib-bar"><button type="button" class="btn btn-ghost btn-sm" data-act="spIbAll" ${open.length?'':'disabled'}>${escapeHtml(tx('全选','Select all','Chọn tất cả'))}</button><button type="button" class="btn btn-primary btn-sm" data-act="spPendClaimSel" ${open.length?'':'disabled'}>${escapeHtml(tx('批量领取所选','Claim selected','Nhận mục đã chọn'))}</button>
+      ${perm==='default'?`<button type="button" class="btn btn-ghost btn-sm" data-act="spPushEnable">🔔 ${escapeHtml(tx('开启浏览器推送','Enable browser push','Bật thông báo đẩy'))}</button>`:''}</div></div>
+    <div class="sp-ib-list">${open.map(card).join('') || spStateHtml('empty', tx('暂无待领取奖励','Nothing to claim','Không có phần thưởng cần nhận'))}</div>
+    <div class="sp-sec-h"><h3>${escapeHtml(tx('领取记录','History','Lịch sử'))}</h3></div>
+    <div class="table-scroll"><table class="data-table"><thead><tr><th>${escapeHtml(tx('奖励','Reward','Phần thưởng'))}</th><th>${escapeHtml(tx('来源','Source','Nguồn'))}</th><th>${escapeHtml(tx('发放人','From','Người cấp'))}</th><th>${escapeHtml(tx('发放时间','Sent','Thời gian cấp'))}</th><th>${escapeHtml(tx('状态','Status','Trạng thái'))}</th><th>${escapeHtml(tx('处理时间','Handled','Thời gian xử lý'))}</th></tr></thead><tbody>
+      ${done.map(r=>`<tr><td data-i18n-ignore="1">${escapeHtml(spRewardLabel(r.reward_type, r.reward_content))}</td><td>${escapeHtml(trT(SP_PEND_SRC[r.source]||SP_PEND_SRC.grant))}</td><td data-i18n-ignore="1">${escapeHtml(spUserName(r.granted_by))}</td><td class="mono">${escapeHtml(localDT(r.granted_at))}</td><td><span class="sp-lst ${r.status==='claimed'?'granted':'rejected'}">${escapeHtml(trT(SP_PEND_ST[r.status]||[r.status,r.status,r.status]))}</span></td><td class="mono">${escapeHtml(localDT(r.claimed_at||r.updatedAt))}</td></tr>`).join('') || `<tr><td colspan="6" class="hint">${escapeHtml(tx('暂无记录','No records yet','Chưa có bản ghi'))}</td></tr>`}</tbody></table></div></div>`;
+}
+
+/* ---------- 奖励选择器（发放 / 补偿 / 赠礼共用）：搜索 + 筛选 + 多选 + 最近发放 + 常用精灵 ---------- */
+function spRpKind(kind){ return kind==='skin' ? {q:'rpSkQ', sel:'rpSkSel', rar:'rpSkRar'} : {q:'rpQ', sel:'rpSel', rar:'rpRar', cat:'rpCat', stage:'rpStage'}; }
+function spRpRows(kind){
+  const S = spS(), K = spRpKind(kind), q = String(S[K.q]||'').trim();
+  if(kind==='skin'){
+    let list = spSkins().filter(s=>s.enabled!==false && !s.workshop);
+    if(S[K.rar]) list = list.filter(s=>s.rarity===S[K.rar]);
+    if(q) list = list.filter(s=>spSearchMatch(q, [s.id, ...(s.name||[]), trT(SP_RARITY[s.rarity]?.n||['','','']), s.rarity]));
+    return list;
+  }
+  let list = spLib().filter(d=>!d.reserved && !d.deleted);
+  if(S.rpRar) list = list.filter(d=>d.rar===S.rpRar);
+  if(S.rpCat) list = list.filter(d=>d.cat===S.rpCat);
+  if(q || S.rpStage){
+    const st = +S.rpStage||0;
+    list = list.filter(d=>{
+      const forms = (d.forms||[]).flatMap(a=>st ? [a?.[st-1]] : (a||[]));
+      if(!q) return forms.some(Boolean) || !!d;
+      return spSearchMatch(q, [d.id, d.no, ...(d.name||[]), trT(SP_CATS[d.cat]||['','','']), d.rar, sprName(d.rar), ...forms]);
+    });
+  }
+  return list.sort((a,b)=>String(a.no).localeCompare(String(b.no)));
+}
+/* 最近发放 / 常用：来自发放与赠礼的审计记录 */
+function spRpHistory(kind){
+  const t = kind==='skin' ? 'skin' : 'spirit', seq = [];
+  Object.values(G().gaudit||{}).forEach(a=>{
+    if(a.act==='grant'){ const id = a.detail?.[t]; if(id) seq.push({id, at:a.at}); }
+    else if(a.act==='pend-give' && a.detail?.type===t){ const id = a.detail?.content?.id; if(id) seq.push({id, at:a.at}); }
+  });
+  seq.sort((a,b)=>String(b.at).localeCompare(String(a.at)));
+  const recent = [], cnt = {};
+  seq.forEach(x=>{ cnt[x.id] = (cnt[x.id]||0) + 1; if(recent.length<8 && !recent.includes(x.id)) recent.push(x.id); });
+  const freq = Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a]).slice(0, 8);
+  const ok = id=>kind==='skin' ? !!spSkin(id) : !!spDef(id);
+  return {recent:recent.filter(ok), freq:freq.filter(ok)};
+}
+function spRpName(kind, id){ return trT(kind==='skin' ? (spSkin(id)?.name||[id,id,id]) : (spDef(id)?.name||[id,id,id])); }
+function spRpListHtml(kind){
+  const S = spS(), K = spRpKind(kind), sel = new Set(S[K.sel]||[]), rows = spRpRows(kind), CAP = 120;
+  const row = d=>{ const id = d.id, rar = kind==='skin' ? trT(SP_RARITY[d.rarity]?.n||['','','']) : d.rar, sub = kind==='skin' ? '' : `${d.no||''} · ${trT(SP_CATS[d.cat]||['','',''])}`;
+    return `<label class="sp-rp-row ${sel.has(id)?'on':''}"><input type="checkbox" data-sp-rp="${kind}" value="${escapeAttr(id)}" ${sel.has(id)?'checked':''}><b data-i18n-ignore="1">${escapeHtml(trT(d.name))}</b><small data-i18n-ignore="1">${escapeHtml(sub)}</small><span class="sp-rp-rar">${escapeHtml(rar)}</span></label>`; };
+  return (rows.slice(0, CAP).map(row).join('') || `<div class="hint">${escapeHtml(tx('没有匹配的项目','No matches','Không có kết quả'))}</div>`) + (rows.length>CAP ? `<div class="hint">${escapeHtml(tx(`共 ${rows.length} 项，仅显示前 ${CAP} 项，请继续输入缩小范围`,`${rows.length} results; showing the first ${CAP}. Keep typing to narrow down`,`${rows.length} kết quả; chỉ hiển thị ${CAP} đầu. Hãy nhập thêm để thu hẹp`))}</div>` : '');
+}
+function spRpSelHtml(kind){
+  const S = spS(), K = spRpKind(kind), sel = S[K.sel]||[], hist = spRpHistory(kind);
+  const chip = (id, on)=>`<button type="button" class="sp-pillbtn ${on?'active':''}" data-act="spRpToggle" data-v="${kind}" data-id="${escapeAttr(id)}" data-i18n-ignore="1">${escapeHtml(spRpName(kind, id))}</button>`;
+  return `${hist.recent.length?`<div class="sp-rp-quick"><span class="hint">${escapeHtml(tx('最近发放','Recent','Gần đây'))}</span>${hist.recent.map(id=>chip(id, sel.includes(id))).join('')}</div>`:''}
+    ${hist.freq.length?`<div class="sp-rp-quick"><span class="hint">${escapeHtml(tx('常用','Frequent','Thường dùng'))}</span>${hist.freq.map(id=>chip(id, sel.includes(id))).join('')}</div>`:''}
+    <div class="sp-rp-quick"><span class="hint">${escapeHtml(tx('已选','Selected','Đã chọn'))} <b>${sel.length}</b></span>${sel.map(id=>`<button type="button" class="sp-pillbtn active" data-act="spRpToggle" data-v="${kind}" data-id="${escapeAttr(id)}" data-i18n-ignore="1" title="${escapeAttr(tx('点击取消','Click to remove','Bấm để bỏ'))}">${escapeHtml(spRpName(kind, id))} ✕</button>`).join('')}${sel.length?`<button type="button" class="btn btn-ghost btn-sm" data-act="spRpClear" data-v="${kind}">${escapeHtml(tx('清空','Clear','Xóa'))}</button>`:''}</div>`;
+}
+function spRpHtml(kind){
+  kind = kind==='skin' ? 'skin' : 'spirit';
+  const S = spS(), K = spRpKind(kind);
+  const sel = (key, label, opts)=>`<select data-sp-input="${key}" data-sp-live="spRpRefresh" aria-label="${escapeAttr(label)}"><option value="">${escapeHtml(label)}</option>${opts.map(([k,n])=>`<option value="${escapeAttr(k)}" ${String(S[key]||'')===String(k)?'selected':''}>${escapeHtml(n)}</option>`).join('')}</select>`;
+  const filters = kind==='skin'
+    ? sel('rpSkRar', tx('全部稀有度','All rarities','Mọi độ hiếm'), Object.entries(SP_RARITY).map(([k,r])=>[k, trT(r.n)]))
+    : sel('rpRar', tx('全部稀有度','All rarities','Mọi độ hiếm'), SPR_ORDER.map(k=>[k, `${k} ${sprName(k)}`])) + sel('rpCat', tx('全部类别','All categories','Mọi loại'), Object.entries(SP_CATS).map(([k,n])=>[k, trT(n)])) + sel('rpStage', tx('全部阶段','All stages','Mọi giai đoạn'), [1,2,3,4,5].map(i=>[i, `LV${i} ${trT(SP_STAGE_NAMES[i])}`]));
+  const ph = kind==='skin' ? tx('搜索皮肤名称 / 稀有度（支持拼音、首字母）','Search skin name / rarity (pinyin supported)','Tìm tên / độ hiếm trang phục (hỗ trợ pinyin)') : tx('搜索名称 / 编号 / 类别 / 稀有度 / 阶段（支持模糊、拼音、首字母）','Search name / number / category / rarity / stage (fuzzy, pinyin, initials)','Tìm tên / số / loại / độ hiếm / giai đoạn (mờ, pinyin, chữ cái đầu)');
+  return `<div class="sp-rp" data-rp="${kind}">
+    <div class="sp-filter"><input type="search" data-sp-input="${K.q}" data-sp-live="spRpRefresh" value="${escapeAttr(S[K.q]||'')}" enterkeyhint="search" autocomplete="off" placeholder="${escapeAttr(ph)}" aria-label="${escapeAttr(ph)}">${filters}
+      <button type="button" class="btn btn-ghost btn-sm" data-act="spRpAll" data-v="${kind}">${escapeHtml(tx('全选当前结果','Select results','Chọn kết quả'))}</button></div>
+    <div id="spRpSel">${spRpSelHtml(kind)}</div>
+    <div id="spRpList" class="sp-rp-list" role="group" aria-label="${escapeAttr(ph)}">${spRpListHtml(kind)}</div></div>`;
+}
+function spRpRefresh(){
+  const root = document.querySelector('.sp-rp'); if(!root){ return; }
+  const kind = root.dataset.rp, list = document.getElementById('spRpList'), sel = document.getElementById('spRpSel'), top = list?.scrollTop||0;
+  if(sel) sel.innerHTML = spRpSelHtml(kind);
+  if(list){ list.innerHTML = spRpListHtml(kind); list.scrollTop = top; }
+}
+function spRpToggle(kind, id){
+  const K = spRpKind(kind), S = spS(), a = S[K.sel] = S[K.sel] || [], i = a.indexOf(id);
+  if(i>=0) a.splice(i, 1); else a.push(id);
+  spRpRefresh();
+}
+document.addEventListener('change', e=>{
+  const el = e.target; if(!el?.dataset || el.dataset.spRp===undefined) return;
+  const K = spRpKind(el.dataset.spRp), a = spS()[K.sel] = spS()[K.sel] || [], i = a.indexOf(el.value);
+  if(el.checked && i<0) a.push(el.value); else if(!el.checked && i>=0) a.splice(i, 1);
+  const sel = document.getElementById('spRpSel'); if(sel) sel.innerHTML = spRpSelHtml(el.dataset.spRp);
+  el.closest('.sp-rp-row')?.classList.toggle('on', el.checked);
+});
+
+/* ---------- 后台 → 操作员 → 赠礼 ---------- */
+SP_ADM_TABS.gift = ['赠礼','Gifts','Quà tặng'];
+SP_AUDIT_LABEL['pend-give'] = ['生成待领取','Reward queued','Tạo phần thưởng chờ nhận'];
+SP_AUDIT_LABEL['pend-claim'] = ['领取奖励','Reward claimed','Nhận phần thưởng'];
+SP_AUDIT_LABEL['pend-expire'] = ['奖励过期','Reward expired','Phần thưởng hết hạn'];
+SP_AUDIT_LABEL['pend-revoke'] = ['撤回奖励','Reward revoked','Thu hồi phần thưởng'];
+function spGiftHtml(){
+  if(!spIsAdmin()) return '';
+  const S = spS(), ops = spOperators(), users = S.gfUsers = (S.gfUsers||[]).filter(x=>ops.some(a=>a.username===x));
+  const type = S.gfType || 'spirit', items = S.gfItems = S.gfItems || [];
+  const uq = String(S.gfUq||'').trim(), shown = ops.filter(a=>!uq || spSearchMatch(uq, [a.username, a.displayName]));
+  const tabs = Object.entries(SP_RW_TYPES).map(([k,n])=>`<button type="button" role="tab" aria-selected="${type===k}" class="sp-pillbtn ${type===k?'active':''}" data-act="spGfType" data-v="${k}">${escapeHtml(trT(n))}</button>`).join('');
+  const itemOpts = [...Object.keys(SP_INF_FIELD), 'points'];
+  let builder = '';
+  if(type==='spirit' || type==='skin') builder = `${spRpHtml(type)}<div class="sp-form-act"><button type="button" class="btn btn-ghost btn-sm" data-act="spGfAdd" data-v="${type}">${escapeHtml(tx('加入奖励清单','Add to rewards','Thêm vào danh sách'))}</button></div>`;
+  else if(type==='item') builder = `<div class="sp-form-row"><label>${escapeHtml(tx('道具','Item','Vật phẩm'))}<select data-sp-input="gfWhat" data-sp-live="spNoop">${itemOpts.map(k=>`<option value="${k}" ${(S.gfWhat||'feed')===k?'selected':''}>${escapeHtml(trT(SP_WHAT_N[k]||[k,k,k]))}</option>`).join('')}</select></label>
+      <label>${escapeHtml(tx('数量','Amount','Số lượng'))}<input type="number" min="1" data-sp-input="gfN" data-sp-live="spNoop" value="${escapeAttr(S.gfN||'1')}"></label><button type="button" class="btn btn-ghost btn-sm" data-act="spGfAdd" data-v="item">${escapeHtml(tx('加入奖励清单','Add to rewards','Thêm vào danh sách'))}</button></div>`;
+  else if(type==='xp') builder = `<div class="sp-form-row"><label>${escapeHtml(tx('当季经验','Season XP','EXP mùa'))}<input type="number" min="1" data-sp-input="gfN" data-sp-live="spNoop" value="${escapeAttr(S.gfN||'10')}"></label><button type="button" class="btn btn-ghost btn-sm" data-act="spGfAdd" data-v="xp">${escapeHtml(tx('加入奖励清单','Add to rewards','Thêm vào danh sách'))}</button></div>`;
+  else builder = `<div class="sp-form-row"><label>${escapeHtml(tx('线下实物名称','Item name','Tên vật phẩm'))}<input maxlength="40" data-sp-input="gfText" data-sp-live="spNoop" value="${escapeAttr(S.gfText||'')}" data-i18n-ignore="1"></label>
+      <label>${escapeHtml(tx('数量','Amount','Số lượng'))}<input type="number" min="1" data-sp-input="gfN" data-sp-live="spNoop" value="${escapeAttr(S.gfN||'1')}"></label><button type="button" class="btn btn-ghost btn-sm" data-act="spGfAdd" data-v="offline">${escapeHtml(tx('加入奖励清单','Add to rewards','Thêm vào danh sách'))}</button></div>
+      <div class="hint">${escapeHtml(tx('线下实物不会自动入账：操作员点击「领取」后记录为已领取，请线下交付。','Offline items are not credited automatically: the record becomes "claimed" when the operator clicks Claim; hand the item over in person.','Vật phẩm ngoài đời không tự ghi nhận: bản ghi chuyển thành "đã nhận" khi vận hành viên bấm Nhận; hãy giao trực tiếp.'))}</div>`;
+  const hist = Object.values(spPend()).filter(r=>!S.gfSt || r.status===S.gfSt).sort((a,b)=>String(b.granted_at).localeCompare(String(a.granted_at))).slice(0, 200);
+  return `<div class="sp-gift">
+    <div class="sp-sec-h"><h3>🎁 ${escapeHtml(tx('赠礼','Gifts','Quà tặng'))}</h3><span class="hint">${escapeHtml(tx('操作员 › 赠礼：选择接收人与奖励，发送后生成「待领取」记录，操作员领取后入账；与「审核与异常 › 发放 / 补偿」共用奖励配置，全部记录可追溯。','Operators › Gifts: pick recipients and rewards; each send creates "to claim" records that are credited on claim. Shares the reward setup with Reviews › Grant / compensate; everything is traceable.','Vận hành viên › Quà tặng: chọn người nhận và phần thưởng; mỗi lần gửi tạo bản ghi "chờ nhận". Dùng chung cấu hình phần thưởng với Cấp / bù; mọi thứ đều truy vết được.'))}</span></div>
+    <div class="sp-note"><button type="button" class="btn btn-ghost btn-sm" data-act="spAdmTab" data-v="users">${escapeHtml(tx('← 操作员列表','← Operators','← Vận hành viên'))}</button></div>
+    <section class="sp-c4 sp-card wide"><header class="c4-h"><div class="c4-title"><b class="c4-name">① ${escapeHtml(tx('接收人（可多选）','Recipients (multi-select)','Người nhận (chọn nhiều)'))}</b></div><div class="c4-tags"><small>${users.length}/${ops.length}</small></div></header>
+      <div class="c4-b"><div class="sp-filter"><input type="search" data-sp-input="gfUq" data-sp-live="spGfUsersRefresh" value="${escapeAttr(S.gfUq||'')}" autocomplete="off" enterkeyhint="search" placeholder="${escapeAttr(tx('搜索操作员（支持拼音、首字母）','Search operators (pinyin supported)','Tìm vận hành viên (hỗ trợ pinyin)'))}" aria-label="${escapeAttr(tx('搜索操作员','Search operators','Tìm vận hành viên'))}">
+        <button type="button" class="btn btn-ghost btn-sm" data-act="spGfUsersAll">${escapeHtml(tx('全选当前','Select shown','Chọn đang hiển thị'))}</button><button type="button" class="btn btn-ghost btn-sm" data-act="spGfUsersClear">${escapeHtml(tx('清空','Clear','Xóa'))}</button></div>
+        <div id="spGfUsers" class="sp-rp-list">${spGfUsersHtml(shown, users)}</div></div></section>
+    <section class="sp-c4 sp-card wide"><header class="c4-h"><div class="c4-title"><b class="c4-name">② ${escapeHtml(tx('奖励','Rewards','Phần thưởng'))}</b></div><div class="c4-tags"><div class="subview-toggle" role="tablist">${tabs}</div></div></header>
+      <div class="c4-b">${builder}
+        <div class="sp-rp-quick"><span class="hint">${escapeHtml(tx('奖励清单','Reward list','Danh sách'))} <b>${items.length}</b></span>${items.map((it,i)=>`<button type="button" class="sp-pillbtn active" data-act="spGfDel" data-id="${i}" data-i18n-ignore="1" title="${escapeAttr(tx('点击移除','Click to remove','Bấm để xóa'))}">${escapeHtml(spRewardLabel(it.type, it.content))} ✕</button>`).join('')}</div></div></section>
+    <section class="sp-c4 sp-card wide"><header class="c4-h"><div class="c4-title"><b class="c4-name">③ ${escapeHtml(tx('附言与条件','Message and conditions','Lời nhắn và điều kiện'))}</b></div></header>
+      <div class="c4-b"><div class="sp-form-row"><label style="flex:1 1 280px">${escapeHtml(tx('附言','Message','Lời nhắn'))}<input maxlength="80" data-sp-input="gfNote" data-sp-live="spNoop" value="${escapeAttr(S.gfNote||'')}" data-i18n-ignore="1"></label>
+        <label>${escapeHtml(tx('有效期（天，0=不过期）','Valid days (0 = no expiry)','Hạn (ngày, 0 = không hết hạn)'))}<input type="number" min="0" max="365" data-sp-input="gfDays" data-sp-live="spNoop" value="${escapeAttr(S.gfDays ?? '30')}"></label>
+        <label>${escapeHtml(tx('领取条件','Claim condition','Điều kiện nhận'))}<select data-sp-input="gfCond" data-sp-live="spNoop">${[0,2,3,4,5].map(i=>`<option value="${i}" ${String(S.gfCond||0)===String(i)?'selected':''}>${i?tx(`赛季精灵达到 LV${i}`,`Season sprite reaches LV${i}`,`Tinh linh mùa đạt LV${i}`):tx('无条件','None','Không')}</option>`).join('')}</select></label></div>
+        <div class="sp-form-row"><span class="hint">${escapeHtml(tx('通知渠道','Channels','Kênh thông báo'))}</span><label class="checkline"><input type="checkbox" checked disabled> ${escapeHtml(tx('站内信','In-app','Trong ứng dụng'))}</label>
+          <label class="checkline"><input type="checkbox" data-sp-gfch="push" ${S.gfPush!==false?'checked':''}> ${escapeHtml(tx('浏览器推送','Browser push','Thông báo đẩy'))}</label>
+          <label class="checkline"><input type="checkbox" data-sp-gfch="mail" ${S.gfMail?'checked':''}> ${escapeHtml(tx('邮件（生成邮件草稿）','Email (opens a draft)','Email (mở bản nháp)'))}</label></div>
+        <div class="sp-form-act"><button type="button" class="btn btn-primary" data-act="spGiftSend">${escapeHtml(tx('发送赠礼','Send gift','Gửi quà'))} <small>${users.length} × ${items.length}</small></button></div></div></section>
+    <div class="sp-sec-h"><h3>${escapeHtml(tx('赠礼 / 发放记录','Gift / grant records','Bản ghi quà / cấp'))}</h3><select data-sp-input="gfSt" aria-label="${escapeAttr(tx('状态','Status','Trạng thái'))}"><option value="">${escapeHtml(tx('全部状态','All statuses','Mọi trạng thái'))}</option>${Object.entries(SP_PEND_ST).map(([k,n])=>`<option value="${k}" ${S.gfSt===k?'selected':''}>${escapeHtml(trT(n))}</option>`).join('')}</select></div>
+    <div class="table-scroll"><table class="data-table"><thead><tr><th>${escapeHtml(tx('时间','Time','Thời gian'))}</th><th>${escapeHtml(tx('接收人','To','Người nhận'))}</th><th>${escapeHtml(tx('奖励','Reward','Phần thưởng'))}</th><th>${escapeHtml(tx('来源','Source','Nguồn'))}</th><th>${escapeHtml(tx('发放人','By','Người cấp'))}</th><th>${escapeHtml(tx('附言','Message','Lời nhắn'))}</th><th>${escapeHtml(tx('有效期','Expiry','Hạn'))}</th><th>${escapeHtml(tx('状态','Status','Trạng thái'))}</th><th></th></tr></thead><tbody>
+      ${hist.map(r=>`<tr><td class="mono nowrap">${escapeHtml(localDT(r.granted_at))}</td><td data-i18n-ignore="1">${escapeHtml(spUserName(r.operator_id))}</td><td data-i18n-ignore="1">${escapeHtml(spRewardLabel(r.reward_type, r.reward_content))}</td><td>${escapeHtml(trT(SP_PEND_SRC[r.source]||SP_PEND_SRC.grant))}</td><td data-i18n-ignore="1">${escapeHtml(spUserName(r.granted_by))}</td><td class="hint" data-i18n-ignore="1">${escapeHtml(r.note||'')}${+r.cond?.minStage>1?` · LV${r.cond.minStage}+`:''}</td><td class="mono">${escapeHtml(r.expire_at?localDT(r.expire_at):'—')}</td><td>${escapeHtml(trT(SP_PEND_ST[r.status]||[r.status,r.status,r.status]))}${r.claimed_at?` <small class="hint">${escapeHtml(localDT(r.claimed_at))}</small>`:''}</td><td>${r.status==='pending'?`<button type="button" class="btn btn-ghost btn-sm" data-act="spGfRevoke" data-id="${escapeAttr(r.id)}">${escapeHtml(tx('撤回','Revoke','Thu hồi'))}</button>`:''}</td></tr>`).join('') || `<tr><td colspan="9" class="hint">${escapeHtml(tx('暂无记录','No records yet','Chưa có bản ghi'))}</td></tr>`}</tbody></table></div></div>`;
+}
+function spGfUsersHtml(shown, users){
+  return shown.map(a=>`<label class="sp-rp-row ${users.includes(a.username)?'on':''}"><input type="checkbox" data-sp-gfu="${escapeAttr(a.username)}" ${users.includes(a.username)?'checked':''}><b data-i18n-ignore="1">${escapeHtml(translateData(a.displayName||a.username))}</b><small data-i18n-ignore="1">${escapeHtml(a.username)}</small></label>`).join('') || `<div class="hint">${escapeHtml(tx('没有匹配的操作员','No matching operators','Không có vận hành viên phù hợp'))}</div>`;
+}
+function spGfUsersRefresh(){
+  const box = document.getElementById('spGfUsers'); if(!box) return render();
+  const S = spS(), ops = spOperators(), uq = String(S.gfUq||'').trim(), top = box.scrollTop;
+  box.innerHTML = spGfUsersHtml(ops.filter(a=>!uq || spSearchMatch(uq, [a.username, a.displayName])), S.gfUsers||[]); box.scrollTop = top;
+}
+document.addEventListener('change', e=>{
+  const el = e.target; if(!el?.dataset) return;
+  if(el.dataset.spGfu!==undefined){ const S = spS(), a = S.gfUsers = S.gfUsers || [], i = a.indexOf(el.dataset.spGfu); if(el.checked && i<0) a.push(el.dataset.spGfu); else if(!el.checked && i>=0) a.splice(i, 1); el.closest('.sp-rp-row')?.classList.toggle('on', el.checked); const b = document.querySelector('.sp-gift [data-act="spGiftSend"] small'); if(b) b.textContent = `${a.length} × ${(S.gfItems||[]).length}`; }
+  if(el.dataset.spGfch){ const S = spS(); if(el.dataset.spGfch==='push') S.gfPush = el.checked; else S.gfMail = el.checked; }
+  if(el.dataset.spIbc!==undefined){ /* 待领取勾选仅在点击时读取 DOM */ }
+});
+function spGfAdd(type){
+  const S = spS(), items = S.gfItems = S.gfItems || [];
+  if(type==='spirit' || type==='skin'){
+    const K = spRpKind(type), ids = (S[K.sel]||[]).filter(id=>type==='skin' ? spSkin(id) : spDef(id));
+    if(!ids.length) return toast(tx('请先在列表中选择','Select from the list first','Hãy chọn trong danh sách trước'), 'warn');
+    ids.forEach(id=>{ if(!items.some(x=>x.type===type && x.content.id===id)) items.push({type, content:{id}}); }); S[K.sel] = [];
+  } else if(type==='item'){
+    const what = S.gfWhat || 'feed', n = Math.max(1, Math.floor(+S.gfN||0)); items.push({type:'item', content:{what, n}});
+  } else if(type==='xp'){ const n = Math.max(1, Math.floor(+S.gfN||0)); items.push({type:'xp', content:{n}}); }
+  else { const text = String(S.gfText||'').trim(); if(!text) return toast(tx('请填写线下实物名称','Enter the item name','Hãy nhập tên vật phẩm'), 'warn'); items.push({type:'offline', content:{text, n:Math.max(1, Math.floor(+S.gfN||1))}}); }
+}
+function spGiftSend(){
+  if(!spIsAdmin()) return;
+  const S = spS(), users = (S.gfUsers||[]).filter(x=>spOperators().some(a=>a.username===x)), items = S.gfItems||[], note = String(S.gfNote||'').trim();
+  if(!users.length) return toast(tx('请选择接收人','Choose at least one recipient','Hãy chọn người nhận'), 'error');
+  if(!items.length) return toast(tx('奖励清单为空','The reward list is empty','Danh sách phần thưởng trống'), 'error');
+  if(!note) return toast(tx('请填写附言（写入审计）','Please enter a message (written to the audit log)','Hãy nhập lời nhắn (ghi vào nhật ký)'), 'error');
+  if((users.length*items.length) > 1 && !confirm(tx(`将向 ${users.length} 人发送 ${items.length} 项奖励（共 ${users.length*items.length} 条待领取），确认？`, `Send ${items.length} reward(s) to ${users.length} operator(s) (${users.length*items.length} records)?`, `Gửi ${items.length} phần thưởng cho ${users.length} người (${users.length*items.length} bản ghi)?`))) return;
+  const channels = ['inbox', ...(S.gfPush!==false?['push']:[]), ...(S.gfMail?['mail']:[])];
+  const res = spPendGive({users, items, source:'gift', note, days:S.gfDays ?? 30, minStage:+S.gfCond||0, channels});
+  saveGrowth(true);
+  if(S.gfMail){
+    const to = users.map(x=>state.accounts?.find(a=>a.username===x)).map(a=>a?.email || (/@/.test(a?.username||'') ? a.username : '')).filter(Boolean).join(',');
+    const body = `${note}\n\n${items.map(it=>spRewardLabel(it.type, it.content)).join('\n')}`;
+    if(to) window.open(`mailto:${encodeURIComponent(to).replace(/%40/g,'@').replace(/%2C/g,',')}?subject=${encodeURIComponent(tx('您收到新的待领取奖励','You have new rewards to claim','Bạn có phần thưởng mới cần nhận'))}&body=${encodeURIComponent(body)}`);
+    else toast(tx('收件人没有邮箱地址，已跳过邮件','No email address on file; email skipped','Không có địa chỉ email; bỏ qua email'), 'warn');
+  }
+  S.gfItems = []; S.gfUsers = []; S.gfNote = '';
+  toast(`${tx('赠礼已发送','Gift sent','Đã gửi quà')} · ${res.n}`, 'ok'); render();
+}
+function spAction20(act, el, id){
+  const S = spS(), v = el?.dataset?.v;
+  switch(act){
+    case 'spRpToggle': spRpToggle(v, id); return false;
+    case 'spRpClear': S[spRpKind(v).sel] = []; spRpRefresh(); return false;
+    case 'spRpAll': { const K = spRpKind(v), a = S[K.sel] = S[K.sel] || []; spRpRows(v).slice(0, 500).forEach(d=>{ if(!a.includes(d.id)) a.push(d.id); }); spRpRefresh(); return false; }
+    case 'spGfType': S.gfType = v; return true;
+    case 'spGfAdd': spGfAdd(v); return true;
+    case 'spGfDel': (S.gfItems||[]).splice(+id, 1); return true;
+    case 'spGfUsersAll': { const uq = String(S.gfUq||'').trim(), a = S.gfUsers = S.gfUsers || []; spOperators().filter(x=>!uq || spSearchMatch(uq, [x.username, x.displayName])).forEach(x=>{ if(!a.includes(x.username)) a.push(x.username); }); return true; }
+    case 'spGfUsersClear': S.gfUsers = []; return true;
+    case 'spGiftSend': spGiftSend(); return false;
+    case 'spGfRevoke': spPendRevoke(id); return false;
+    case 'spPendClaim': spPendClaim([id]); return false;
+    case 'spPendClaimSel': { const ids = [...document.querySelectorAll('[data-sp-ibc]:checked')].map(x=>x.dataset.spIbc); if(!ids.length) toast(tx('请先勾选要领取的奖励','Tick the rewards to claim first','Hãy chọn phần thưởng cần nhận'), 'warn'); else spPendClaim(ids); return false; }
+    case 'spIbAll': { const boxes = [...document.querySelectorAll('[data-sp-ibc]:not(:disabled)')], on = boxes.some(b=>!b.checked); boxes.forEach(b=>{ b.checked = on; }); return false; }
+    case 'spPushEnable': try{ Notification.requestPermission().then(()=>render()); }catch(_e){} return false;
+    case 'spMyFav': spMyFav(id); return false;
+  }
+  return null;
+}
 
 /* ---------- 活动名称 / 说明自动翻译：只填中文，英文 / 越南文自动生成并写入 translations.csv（对象类型 event） ---------- */
 function spAutoTrOne(zh, lang){
