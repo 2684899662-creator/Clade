@@ -17997,6 +17997,7 @@ function spMineHtml(u){
   return `<div class="sp-mine">
     <div class="sp-ovg">${ss ? spCard4(u, 'season', ss, {big:true}) : spStateHtml('empty', tx('本季还没有赛季精灵','No season sprite yet this season','Mùa này chưa có tinh linh mùa'))}${today}${link}</div>
     ${spMyAllHtml(u)}
+    ${spLvlMineHtml(u)}
     <div class="sp-ovg">
       <section class="sp-c4 sp-card sp-talent"><header class="c4-h"><div class="c4-title"><b class="c4-name">🌳 ${escapeHtml(tx('天赋树（永久）','Talent tree (permanent)','Cây thiên phú (vĩnh viễn)'))}</b></div><div class="c4-tags"><small>${escapeHtml(tx('可用','Free','Còn'))} <b>${Math.max(0, tp-used)}</b>/${tp}</small></div></header>
         <div class="c4-b"><div class="sp-tal-list">${SP_TALENTS.map(d=>`<div class="sp-tal"><span class="sp-tal-i" aria-hidden="true">${d.icon}</span><div><b>${escapeHtml(trT(d.n))}</b> <small>${+u.tal[d.k]||0}/${d.max}</small><div class="hint">${escapeHtml(trT(d.d))}</div><div class="sp-pips">${Array.from({length:d.max},(_,i)=>`<i class="${i<(+u.tal[d.k]||0)?'on':''}"></i>`).join('')}</div></div><button type="button" class="btn btn-ghost btn-sm" data-act="spTalent" data-v="${d.k}" ${(+u.tal[d.k]||0)>=d.max || used>=tp?'disabled':''} aria-label="${escapeAttr(`${trT(d.n)} +1`)}">+1</button></div>`).join('')}</div></div>
@@ -27292,74 +27293,118 @@ function spGfAdd(type){
 
 /* ---------- 管理员修改精灵等级（仅超级管理员）：只改精灵养成字段，不碰成就 / 真实进度 / 甘特条 / 业务统计 ---------- */
 var spLvlLast = 0;
-function spLvlCfg(){ const c = gCfg().lvlAdm || {}; return {daily:+c.daily>0 ? +c.daily : 30, cooldownMs:c.cooldownMs>=0 ? +c.cooldownMs : 3000, notify:c.notify!==false, bigXp:+c.bigXp>0 ? +c.bigXp : 3000}; }
+function spLvlCfg(){ const c = gCfg().lvlAdm || {}; return {daily:+c.daily>0 ? +c.daily : 30, cooldownMs:c.cooldownMs>=0 ? +c.cooldownMs : 3000, notify:c.notify!==false, bigXp:+c.bigXp>0 ? +c.bigXp : 3000, hourly:+c.hourly>0 ? +c.hourly : 15, repeat:+c.repeat>0 ? +c.repeat : 3}; }
 function spLvlToday(){ const d = gToday(), me = spMe(); return Object.values(G().gaudit||{}).filter(a=>a.act==='sprite-lvl-adjust' && a.by===me && String(a.at).slice(0,10)===d).length; }
+/* 直接设置阶段 → 该阶段 XP 中值（LV5 取 LV4→LV5 区间同宽的中值）；阶段始终由 calculateStage(xp) 派生 */
+function spLvlStageXp(s, c){ c = c || spCurve(); const lo = c[s-1], hi = s<5 ? c[s] : c[4] + (c[4]-c[3]); return Math.floor((lo + hi) / 2); }
+var SP_LVL_KIND = {season:['赛季精灵','Season sprite','Tinh linh mùa'], trial:['试验精灵','Trial sprites','Tinh linh thử nghiệm'], own:['已获取精灵（联名 / 联动 / 活动 / 隐藏 / 管理员发放等）','Owned spirits (collab / linkage / event / hidden / admin-granted…)','Tinh linh đã có (liên danh / liên kết / sự kiện / ẩn / quản trị cấp…)']};
+/* 解析修改目标：按操作员 / 按精灵 / 按批次；返回 [{name,u,r,kind,key,label}] */
+function spLvlTargets(scope, kind, users, spirit){
+  const sid = seasonNow().id, ops = spOperators().map(a=>a.username), out = [];
+  const names = scope==='operator' ? users.filter(x=>ops.includes(x)) : ops;
+  names.forEach(name=>{
+    const u = spU(name);
+    if(kind==='season'){ const r = u.ss[sid]; if(r && (scope!=='spirit' || r.sp===spirit || r.form===spirit)) out.push({name, u, r, kind, key:sid, label:spRecName('season', r)}); }
+    else if(kind==='trial'){ Object.keys(u.tr).forEach(k=>{ if(scope==='spirit' && k!==spirit) return; out.push({name, u, r:u.tr[k], kind, key:k, label:spRecName('trial', u.tr[k])}); }); }
+    else Object.keys(u.mys||{}).forEach(k=>{ if(scope==='spirit' && k!==spirit) return; const d = spDef(k); out.push({name, u, r:u.mys[k], kind, key:k, label:d ? trT(d.name) : k}); });
+  });
+  return out;
+}
+function spLvlLogRows(user){
+  return Object.values(G().gaudit||{}).filter(a=>(a.act==='sprite-lvl-adjust' || (!user && a.act==='sprite-lvl-anomaly')) && (!user || a.user===user)).sort((a,b)=>String(b.at).localeCompare(String(a.at))).slice(0, 50);
+}
+function spLvlLogHtml(user){
+  const rows = spLvlLogRows(user); if(!rows.length) return `<p class="hint">${escapeHtml(tx('暂无修改记录','No adjustment records','Chưa có bản ghi'))}</p>`;
+  return `<div class="table-scroll" style="max-height:200px;overflow:auto"><table class="data-table"><thead><tr><th>${escapeHtml(tx('时间','Time','Thời gian'))}</th>${user?'':`<th>${escapeHtml(tx('操作员','Operator','Vận hành viên'))}</th><th>${escapeHtml(tx('管理员 / 设备','Admin / device','QTV / thiết bị'))}</th>`}<th>${escapeHtml(tx('精灵','Sprite','Tinh linh'))}</th><th>${escapeHtml(tx('变化','Change','Thay đổi'))}</th><th>${escapeHtml(tx('理由','Reason','Lý do'))}</th></tr></thead><tbody>${rows.map(a=>{ const d = a.detail||{}, b = d.before, f = d.after;
+    const chg = a.act==='sprite-lvl-anomaly' ? `⚠ ${(d.flags||[]).join(', ')}` : (b&&f ? `LV${b.stage}→LV${f.stage}, XP ${b.xp}→${f.xp}` : ''); 
+    return `<tr><td class="nowrap">${escapeHtml(String(a.at).replace('T',' ').slice(0,16))}</td>${user?'':`<td data-i18n-ignore="1">${escapeHtml(a.user)}</td><td data-i18n-ignore="1">${escapeHtml(a.by)} · ${escapeHtml(a.dev||'')}</td>`}<td data-i18n-ignore="1">${escapeHtml(d.label||'')}</td><td data-i18n-ignore="1">${escapeHtml(chg)}</td><td data-i18n-ignore="1">${escapeHtml(d.reason||'')}</td></tr>`; }).join('')}</tbody></table></div>`;
+}
+/* 操作员：只看自己的精灵被修改的记录；访客不可见 */
+function spLvlMineHtml(u){
+  if(!spCanPlay() || !u) return '';
+  const rows = spLvlLogRows(u.user || spMe()).filter(a=>a.user===spMe()); if(!rows.length) return '';
+  return `<div class="sp-sec-h"><h3>🧬 ${escapeHtml(tx('精灵数据调整记录','Sprite adjustments','Lịch sử chỉnh tinh linh'))}</h3></div>${spLvlLogHtml(spMe())}`;
+}
 function spLvlHtml(){
   if(!spIsSuper()) return '';
   const m = state.modal, ops = spOperators(), sid = seasonNow().id, cfg = spLvlCfg(), c = spCurve();
-  const skins = spSkins();
-  return `<div class="modal sp-lvl" role="dialog" aria-modal="true" aria-labelledby="spLvlT" style="max-width:720px">
+  const skins = spSkins(), opt = (v,l)=>`<option value="${v}">${escapeHtml(l)}</option>`;
+  return `<div class="modal sp-lvl" role="dialog" aria-modal="true" aria-labelledby="spLvlT" style="max-width:760px">
     <div class="modal-head"><h2 id="spLvlT">🧬 ${escapeHtml(tx('修改精灵等级','Adjust sprite level','Chỉnh cấp tinh linh'))}</h2><button class="modal-close" data-act="spLvlClose" aria-label="${escapeAttr(tx('关闭','Close','Đóng'))}">${svgIcon('x',15)}</button></div>
     <form id="spLvlForm" class="modal-body" onsubmit="return false">
-      <p class="hint">${escapeHtml(tx('仅修改精灵养成数据（阶段 / XP / 亲密度 / 心情 / 皮肤 / 图鉴）。成就进度、真实进度、甘特条与业务统计不会改变；阶段由 XP 实时派生，LV5 需觉醒。','Only sprite growth data is changed (stage / XP / intimacy / mood / skin / codex). Achievements, real progress, Gantt bars and business stats are untouched. Stage derives from XP; LV5 needs awakening.','Chỉ đổi dữ liệu nuôi tinh linh. Thành tựu, tiến độ thật, thanh Gantt và thống kê không đổi. Giai đoạn suy ra từ XP; LV5 cần thức tỉnh.'))}</p>
-      <div class="sp-filter"><b>${escapeHtml(tx('操作员（可多选 = 批量）','Operators (multi = batch)','Vận hành viên (nhiều = hàng loạt)'))}</b></div>
-      <div class="sp-rp-list" style="max-height:160px;overflow:auto">${ops.map(a=>{ const r = spU(a.username).ss[sid]; return `<label class="sp-rp-row"><input type="checkbox" name="u" value="${escapeAttr(a.username)}" ${m.pre===a.username?'checked':''}><b data-i18n-ignore="1">${escapeHtml(translateData(a.displayName||a.username))}</b> <small class="hint">${r?`LV${spStageOf(+r.xp||0, r)} · ${+r.xp||0} XP`:escapeHtml(tx('无当季精灵','No season sprite','Không có'))}</small></label>`; }).join('')}</div>
-      <div class="sp-form-row"><label>${escapeHtml(tx('直接设置阶段','Set stage','Đặt giai đoạn'))}<select name="stage"><option value="">—</option>${[1,2,3,4].map(i=>`<option value="${i}">LV${i} (≥${c[i-1]} XP)</option>`).join('')}</select></label>
+      <p class="hint">${escapeHtml(tx('仅修改精灵养成数据（阶段 / XP / 亲密度 / 心情 / 皮肤 / 来源标签 / 图鉴解锁）。成就进度、真实进度、甘特条、业务统计、已领取奖励、货币、图鉴永久解锁、已拥有皮肤、家园不会改变；阶段由 XP 实时派生。','Only sprite growth data is changed (stage / XP / intimacy / mood / skin / source tag / codex unlock). Achievements, real progress, Gantt bars, business stats, claimed rewards, currency, permanent codex unlocks, owned skins and homes are untouched. Stage derives from XP.','Chỉ đổi dữ liệu nuôi tinh linh. Thành tựu, tiến độ thật, Gantt, thống kê, phần thưởng đã nhận, tiền tệ, sách tranh vĩnh viễn, trang phục đã có và nhà không đổi.'))}</p>
+      <div class="sp-form-row"><label>${escapeHtml(tx('修改方式','Mode','Cách sửa'))}<select name="scope">${opt('operator',tx('按操作员','By operator','Theo vận hành viên'))}${opt('spirit',tx('按精灵（所有拥有者）','By spirit (all owners)','Theo tinh linh'))}${opt('batch',tx('按批次（全部操作员）','By batch (all operators)','Theo lô (tất cả)'))}</select></label>
+        <label>${escapeHtml(tx('精灵类别','Sprite kind','Loại tinh linh'))}<select name="kind">${Object.keys(SP_LVL_KIND).map(k=>opt(k, tx(...SP_LVL_KIND[k]))).join('')}</select></label>
+        <label>${escapeHtml(tx('精灵 ID（按精灵时填：精灵库 ID / 试验类型 / 赛季精灵 ID）','Spirit id (for by-spirit)','ID tinh linh (khi theo tinh linh)'))}<input name="spirit" data-i18n-ignore="1"></label></div>
+      <div class="sp-filter"><b>${escapeHtml(tx('操作员（按操作员时可多选 = 批量）','Operators (multi = batch; used by "by operator")','Vận hành viên'))}</b></div>
+      <div class="sp-rp-list" style="max-height:140px;overflow:auto">${ops.map(a=>{ const r = spU(a.username).ss[sid]; return `<label class="sp-rp-row"><input type="checkbox" name="u" value="${escapeAttr(a.username)}" ${m.pre===a.username?'checked':''}><b data-i18n-ignore="1">${escapeHtml(translateData(a.displayName||a.username))}</b> <small class="hint">${r?`LV${spStageOf(+r.xp||0, r)} · ${+r.xp||0} XP`:escapeHtml(tx('无当季精灵','No season sprite','Không có'))}</small></label>`; }).join('')}</div>
+      <div class="sp-form-row"><label>${escapeHtml(tx('直接设置阶段（取 XP 中值）','Set stage (mid-point XP)','Đặt giai đoạn (XP giữa)'))}<select name="stage"><option value="">—</option>${[1,2,3,4,5].map(i=>`<option value="${i}">LV${i} (≥${c[i-1]} XP → ${spLvlStageXp(i,c)})</option>`).join('')}</select></label>
         <label>${escapeHtml(tx('设置 XP','Set XP','Đặt XP'))}<input type="number" name="xp" min="0" step="1"></label>
         <label>${escapeHtml(tx('增减 XP','XP ±','XP ±'))}<input type="number" name="dxp" step="1"></label></div>
       <div class="sp-form-row"><label>${escapeHtml(tx('亲密度','Intimacy','Thân mật'))}<input type="number" name="int" min="0" max="${+gCfg().intimacyMax||1000}"></label>
         <label>${escapeHtml(tx('心情','Mood','Tâm trạng'))}<input type="number" name="mood" min="0" max="${+gCfg().moodMax||100}"></label>
-        <label>${escapeHtml(tx('装备皮肤（须已拥有）','Equip skin (owned)','Trang phục (đã có)'))}<select name="skin"><option value="">—</option>${skins.map(k=>`<option value="${escapeAttr(k.id)}" data-i18n-ignore="1">${escapeHtml(trT(k.name))}</option>`).join('')}</select></label></div>
+        <label>${escapeHtml(tx('装备皮肤（须已拥有）','Equip skin (owned)','Trang phục (đã có)'))}<select name="skin"><option value="">—</option>${skins.map(k=>`<option value="${escapeAttr(k.id)}" data-i18n-ignore="1">${escapeHtml(trT(k.name))}</option>`).join('')}</select></label>
+        <label>${escapeHtml(tx('来源标签','Source tag','Nhãn nguồn'))}<select name="tag"><option value="">—</option>${['season','trial','collab','linkage','event','hidden','admin-only','admin-grant'].map(k=>opt(k,k)).join('')}</select></label></div>
       <div class="sp-form-row"><label style="flex:1 1 280px">${escapeHtml(tx('解锁图鉴（精灵 ID，逗号分隔）','Unlock codex (spirit ids, comma separated)','Mở sách tranh (ID, cách nhau dấu phẩy)'))}<input name="codex" data-i18n-ignore="1"></label></div>
       <div class="sp-form-row"><label style="flex:1 1 280px">${escapeHtml(tx('修改理由（必填）','Reason (required)','Lý do (bắt buộc)'))}<input name="reason" maxlength="120" data-i18n-ignore="1"></label></div>
-      <p class="hint">${escapeHtml(tx(`今日已修改 ${spLvlToday()} / ${cfg.daily} 次；冷却 ${cfg.cooldownMs/1000} 秒；降低 XP、跨 2 阶以上、单次 ±${cfg.bigXp} XP 以上或批量属高风险，需二次确认。`, `Today ${spLvlToday()} / ${cfg.daily}; cooldown ${cfg.cooldownMs/1000}s; lowering XP, jumping 2+ stages, ±${cfg.bigXp}+ XP or batches are high-risk and need a second confirmation.`, `Hôm nay ${spLvlToday()} / ${cfg.daily}; chờ ${cfg.cooldownMs/1000}s; thao tác rủi ro cao cần xác nhận lần hai.`))}</p>
+      <p class="hint">${escapeHtml(tx(`今日已修改 ${spLvlToday()} / ${cfg.daily} 次；冷却 ${cfg.cooldownMs/1000} 秒；降低 XP、跨 2 阶以上、单次 ±${cfg.bigXp} XP 以上、批量或按批次属高风险，需二次确认并填写理由。频率 / 设备 / 重复修改会记录异常。`, `Today ${spLvlToday()} / ${cfg.daily}; cooldown ${cfg.cooldownMs/1000}s; lowering XP, jumping 2+ stages, ±${cfg.bigXp}+ XP, batches are high-risk and need a second confirmation plus a reason. Frequency / device / repeat anomalies are logged.`, `Hôm nay ${spLvlToday()} / ${cfg.daily}; chờ ${cfg.cooldownMs/1000}s; thao tác rủi ro cao cần xác nhận lần hai.`))}</p>
+      <div class="sp-filter"><b>${escapeHtml(tx('修改记录（超级管理员可见全部）','Adjustment log (all, super admin only)','Nhật ký chỉnh'))}</b></div>${spLvlLogHtml('')}
     </form>
     <div class="modal-foot"><span style="flex:1"></span><button class="btn btn-ghost btn-sm" data-act="spLvlClose">${escapeHtml(tx('取消','Cancel','Hủy'))}</button><button class="btn btn-primary btn-sm" data-act="spLvlApply">${escapeHtml(tx('应用','Apply','Áp dụng'))}</button></div></div>`;
 }
 function spLvlApply(){
   if(!spIsSuper()) return;
   const f = document.getElementById('spLvlForm'); if(!f) return;
-  const fd = new FormData(f), cfg = spLvlCfg(), sid = seasonNow().id, c = spCurve(), g = k=>String(fd.get(k)||'').trim();
-  const users = fd.getAll('u').filter(x=>spOperators().some(a=>a.username===x));
-  if(!users.length) return toast(tx('请选择操作员','Choose operators','Hãy chọn vận hành viên'), 'error');
+  const fd = new FormData(f), cfg = spLvlCfg(), c = spCurve(), g = k=>String(fd.get(k)||'').trim();
+  const scope = ['operator','spirit','batch'].includes(g('scope')) ? g('scope') : 'operator', kind = SP_LVL_KIND[g('kind')] ? g('kind') : 'season', spirit = g('spirit');
+  const users = fd.getAll('u');
+  if(scope==='operator' && !users.length) return toast(tx('请选择操作员','Choose operators','Hãy chọn vận hành viên'), 'error');
+  if(scope==='spirit' && !spirit) return toast(tx('请填写精灵 ID','Enter a spirit id','Hãy nhập ID tinh linh'), 'error');
   const reason = g('reason'); if(!reason) return toast(tx('请填写修改理由','Please enter a reason','Hãy nhập lý do'), 'error');
   const num = k=>{ const v = g(k); if(v==='') return null; const n = Math.floor(+v); return Number.isFinite(n) ? n : NaN; };
-  const stage = num('stage'), xpSet = num('xp'), dxp = num('dxp'), inti = num('int'), mood = num('mood'), skin = g('skin');
+  const stage = num('stage'), xpSet = num('xp'), dxp = num('dxp'), inti = num('int'), mood = num('mood'), skin = g('skin'), tag = g('tag');
   const codex = g('codex').split(/[,，\s]+/).filter(Boolean);
   if([stage,xpSet,dxp,inti,mood].some(Number.isNaN)) return toast(tx('数值无效','Invalid number','Số không hợp lệ'), 'error');
+  if(stage!=null && (stage<1 || stage>5)) return toast(tx('阶段须为 LV1~LV5','Stage must be LV1–LV5','Giai đoạn LV1–LV5'), 'error');
   if(xpSet!=null && xpSet < 0) return toast(tx('XP 不能为负','XP can\'t be negative','XP không được âm'), 'error');
   if(skin && !spSkin(skin)) return toast(tx('皮肤不存在','Skin not found','Không có trang phục'), 'error');
   const badCodex = codex.filter(id=>!spDef(id)); if(badCodex.length) return toast(tx('图鉴精灵不存在：','Unknown spirit: ','Không có tinh linh: ')+badCodex.join(','), 'error');
-  if([stage,xpSet,dxp,inti,mood].every(v=>v==null) && !skin && !codex.length) return toast(tx('没有要修改的内容','Nothing to change','Không có gì để đổi'), 'warn');
+  if([stage,xpSet,dxp,inti,mood].every(v=>v==null) && !skin && !codex.length && !tag) return toast(tx('没有要修改的内容','Nothing to change','Không có gì để đổi'), 'warn');
   if(Date.now() - spLvlLast < cfg.cooldownMs) return toast(tx('操作过于频繁，请稍后再试（冷却中）','Too fast, please wait (cooldown)','Quá nhanh, vui lòng chờ'), 'warn');
-  if(spLvlToday() + users.length > cfg.daily) return toast(tx(`超过每日修改次数上限（${cfg.daily}）`, `Daily adjustment limit (${cfg.daily}) exceeded`, `Vượt giới hạn mỗi ngày (${cfg.daily})`), 'error');
-  const plan = users.map(name=>{ const u = spU(name), r = u.ss[sid]; if(!r) return null;
-    const old = +r.xp||0; let nx = old; if(stage!=null) nx = c[stage-1]; if(xpSet!=null) nx = xpSet; if(dxp!=null) nx = Math.max(0, nx + dxp);
-    return {name, u, r, old, nx, oldStage:spStageOf(old, r), newStage:spStageOf(nx, r)}; }).filter(Boolean);
-  const skipped = users.length - plan.length; if(!plan.length) return toast(tx('所选操作员没有当季精灵','Selected operators have no season sprite','Không có tinh linh mùa'), 'error');
-  const risky = plan.length > 1 || plan.some(p=>p.nx < p.old || Math.abs(p.newStage - p.oldStage) >= 2 || Math.abs(p.nx - p.old) >= cfg.bigXp);
+  const plan = spLvlTargets(scope, kind, users, spirit).map(p=>{ const old = +p.r.xp||0; let nx = old; if(stage!=null) nx = spLvlStageXp(stage, c); if(xpSet!=null) nx = xpSet; if(dxp!=null) nx = Math.max(0, nx + dxp);
+    return {...p, old, nx, oldStage:spStageOf(old, p.r), newStage:spStageOf(nx, p.r)}; });
+  if(!plan.length) return toast(tx('没有符合条件的精灵','No matching sprites','Không có tinh linh phù hợp'), 'error');
+  if(spLvlToday() + plan.length > cfg.daily) return toast(tx(`超过每日修改次数上限（${cfg.daily}）`, `Daily adjustment limit (${cfg.daily}) exceeded`, `Vượt giới hạn mỗi ngày (${cfg.daily})`), 'error');
+  const risky = plan.length > 1 || scope!=='operator' || plan.some(p=>p.nx < p.old || Math.abs(p.newStage - p.oldStage) >= 2 || Math.abs(p.nx - p.old) >= cfg.bigXp);
   const go = ()=>{
     spLvlLast = Date.now();
+    const me = spMe(), dev = spDevice(), all = Object.values(G().gaudit||{}).filter(a=>a.act==='sprite-lvl-adjust'), hourAgo = Date.now() - 3600000;
+    const recent = all.filter(a=>a.by===me && new Date(a.at).getTime() >= hourAgo), lastDev = all.filter(a=>a.by===me).sort((a,b)=>String(b.at).localeCompare(String(a.at)))[0]?.dev;
+    const notified = new Set(), batchId = uid('lvb_');
     plan.forEach(p=>{
-      const {u, r, name} = p, before = {xp:p.old, stage:p.oldStage, intimacy:+r.intimacy||0, mood:spMood(r), skin:u.equip.season||''}, anomalies = [];
-      r.xp = p.nx;
+      const {u, r, name} = p, before = {xp:p.old, stage:p.oldStage, intimacy:+r.intimacy||0, mood:spMood(r), skin:p.kind==='season' ? (u.equip.season||'') : p.kind==='trial' ? (u.equip.trial[p.key]||'') : (r.equipped_skin||''), tag:r.srcTag||r.source||''}, anomalies = [];
+      r.xp = p.nx; if(p.kind==='own') r.stage = spStageOf(p.nx, r);
       if(inti!=null) r.intimacy = Math.max(0, Math.min(+gCfg().intimacyMax||1000, inti));
       if(mood!=null) spMoodSet(r, mood);
-      if(skin){ if(u.skins[skin]) u.equip.season = skin; else anomalies.push('skin-not-owned'); }
+      if(skin){ if(u.skins[skin]){ if(p.kind==='season') u.equip.season = skin; else if(p.kind==='trial') u.equip.trial[p.key] = skin; else r.equipped_skin = skin; } else anomalies.push('skin-not-owned'); }
+      if(tag){ if(p.kind==='own') r.source = tag; else r.srcTag = tag; }
       codex.forEach(id=>{ const k = `sp:${id}`; if(!u.codex[k]) u.codex[k] = gNowIso(); });
       if(Math.abs(p.nx - p.old) >= cfg.bigXp) anomalies.push('big-xp');
       if(Math.abs(p.newStage - p.oldStage) >= 2) anomalies.push('stage-jump');
-      if(plan.length > 1) anomalies.push('batch');
-      const after = {xp:r.xp, stage:spStageOf(r.xp, r), intimacy:+r.intimacy||0, mood:spMood(r), skin:u.equip.season||''};
-      spAudit('sprite-lvl-adjust', name, {reason, before, after, codex, risky, batch:plan.length>1});
-      if(anomalies.some(a=>a!=='batch')) spAudit('sprite-lvl-anomaly', name, {reason, flags:anomalies});
+      if(recent.length + plan.length > cfg.hourly) anomalies.push('frequency');
+      if(lastDev && lastDev!==dev) anomalies.push('device-change');
+      if(all.filter(a=>a.user===name && a.detail?.key===p.key && String(a.at).slice(0,10)===gToday()).length >= cfg.repeat) anomalies.push('repeat-target');
+      if(p.nx < p.old && all.some(a=>a.user===name && a.detail?.key===p.key && a.detail?.after?.xp > a.detail?.before?.xp && String(a.at).slice(0,10)===gToday())) anomalies.push('raise-then-lower');
+      const after = {xp:r.xp, stage:spStageOf(r.xp, r), intimacy:+r.intimacy||0, mood:spMood(r), skin:p.kind==='season' ? (u.equip.season||'') : p.kind==='trial' ? (u.equip.trial[p.key]||'') : (r.equipped_skin||''), tag:r.srcTag||r.source||''};
+      spAudit('sprite-lvl-adjust', name, {reason, before, after, codex, risky, batch:plan.length>1, batchId, scope, kind, key:p.key, label:p.label});
+      if(anomalies.length) spAudit('sprite-lvl-anomaly', name, {reason, flags:anomalies, key:p.key, label:p.label, batchId});
       gTouch(u);
-      if(cfg.notify) spNotify('season', `lvl:${name}:${Date.now()}`, tx('你的精灵数据已被管理员调整','Your sprite data was adjusted by an admin','Dữ liệu tinh linh của bạn đã được quản trị viên chỉnh'), `${reason} · LV${before.stage}→LV${after.stage}, XP ${before.xp}→${after.xp}`, false, name);
+      if(cfg.notify && !notified.has(name)){ notified.add(name); spNotify('season', `lvl:${name}:${Date.now()}`, tx('你的精灵数据已被管理员调整','Your sprite data was adjusted by an admin','Dữ liệu tinh linh của bạn đã được quản trị viên chỉnh'), `${p.label} · ${reason} · LV${before.stage}→LV${after.stage}, XP ${before.xp}→${after.xp}`, false, name); }
     });
     saveGrowth(true); state.modal = null;
-    toast(`${tx('已修改精灵数据','Sprite data updated','Đã cập nhật')} · ${plan.length}${skipped?` (${tx('跳过','skipped','bỏ qua')} ${skipped})`:''}`, 'ok'); render();
+    toast(`${tx('已修改精灵数据','Sprite data updated','Đã cập nhật')} · ${plan.length}`, 'ok'); render();
   };
-  if(risky){ if(!confirm(tx(`高风险操作：将修改 ${plan.length} 位操作员的精灵数据。\n理由：${reason}\n确认执行？`, `High-risk: sprite data of ${plan.length} operator(s) will change.\nReason: ${reason}\nProceed?`, `Rủi ro cao: đổi dữ liệu của ${plan.length} người.\nLý do: ${reason}\nTiếp tục?`))) return; }
+  if(risky){ if(!confirm(tx(`高风险操作：将修改 ${plan.length} 个精灵（${new Set(plan.map(p=>p.name)).size} 位操作员）。\n理由：${reason}\n确认执行？`, `High-risk: ${plan.length} sprite(s) of ${new Set(plan.map(p=>p.name)).size} operator(s) will change.\nReason: ${reason}\nProceed?`, `Rủi ro cao: đổi ${plan.length} tinh linh.\nLý do: ${reason}\nTiếp tục?`))) return; }
   go();
 }
 /* ---------- 赠礼预览弹窗：发送前预览，可返回修改 ---------- */
