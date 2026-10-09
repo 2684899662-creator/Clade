@@ -14321,21 +14321,21 @@ function growthCfgSave(){
   saveGrowth(true); seasonSettle(); spApplyGanttSkins(); toast(t('成就设置已保存'), 'ok'); render();
 }
 function resetOperatorSprites(username){
-  if(!spIsAdmin()) return toast(tx('仅超级管理员可以重置操作员精灵形态','Only super admins can reset an operator’s sprite form','Chỉ quản trị viên cấp cao mới có thể đặt lại hình dạng tinh linh của vận hành viên'), 'error');
+  if(!spIsAdmin()) return toast(tx('仅超级管理员可以重置操作员精灵','Only super admins can reset an operator’s sprite','Chỉ quản trị viên cấp cao mới có thể đặt lại tinh linh của vận hành viên'), 'error');
   const operator = (state.accounts||[]).find(a=>a.username===username && a.role==='operator');
   if(!operator) return toast(tx('请选择有效的操作员','Choose a valid operator','Hãy chọn một vận hành viên hợp lệ'), 'error');
   const name = spUserName(username);
   const message = tx(
-    '确定将操作员“{name}”的精灵形态重置为初始形态？仅重置当前操作员的精灵形态，不影响进度、养成、甘特投喂加速、排期、账号及其他设置。',
-    'Reset operator “{name}” to their initial sprite form? Only this operator’s sprite form changes; progress, growth, Gantt feed boosts, schedules, accounts, and other settings are unaffected.',
-    'Đặt lại hình dạng tinh linh ban đầu cho vận hành viên “{name}”? Chỉ hình dạng tinh linh của người này thay đổi; tiến độ, dữ liệu nuôi, tăng tốc cho ăn Gantt, lịch, tài khoản và các cài đặt khác không bị ảnh hưởng.'
+    '确定为操作员“{name}”重新分配一个精灵？精灵经验与亲密度会保留。',
+    'Assign a different sprite to operator “{name}”? Sprite XP and intimacy will be kept.',
+    'Phân một tinh linh khác cho vận hành viên “{name}”? EXP và mức độ thân mật sẽ được giữ lại.'
   ).replace('{name}', name);
   if(!confirm(message)) return;
   const seasonSprite = G().users?.[username]?.ss?.[seasonNow().id];
-  if(!seasonSprite) return toast(`${name} · ${tx('尚无当前赛季精灵形态可重置','has no current-season sprite form to reset','chưa có hình dạng tinh linh mùa hiện tại để đặt lại')}`, 'info');
-  seasonSprite.form = seasonSprite.sp ? SP_FORMS[spHash(seasonSprite.sp) % SP_FORMS.length] : 'orb';
-  saveGrowth(true);
-  toast(`${name} · ${tx('精灵形态已重置为初始形态','sprite form reset to its initial form','đã đặt lại hình dạng tinh linh ban đầu')}`, 'ok');
+  if(!seasonSprite) return toast(`${name} · ${tx('尚无当前赛季精灵可重置','has no current-season sprite to reset','chưa có tinh linh mùa hiện tại để đặt lại')}`, 'info');
+  const reassigned = spAssignSeason(username, true);
+  if(reassigned?.sp===seasonSprite.sp) return toast(tx('当前精灵库中没有可重新分配的其他精灵','No different sprite is available in the current pool','Không có tinh linh khác để phân lại trong kho hiện tại'), 'info');
+  toast(`${name} · ${tx('精灵已重置','sprite reset','đã đặt lại tinh linh')}`, 'ok');
   render();
 }
 function growthCfgHtml(){
@@ -15587,7 +15587,7 @@ function spAdmUsers(){
   return `<div class="table-scroll"><table class="data-table"><thead><tr><th>${escapeHtml(tx('操作员','Operator','Vận hành viên'))}</th><th>${escapeHtml(tx('当季等级','Season level','Cấp mùa'))}</th><th>XP</th><th>${escapeHtml(tx('赛季精灵','Season sprite','Tinh linh mùa'))}</th><th>${escapeHtml(tx('试验精灵','Trial sprites','Tinh linh thử nghiệm'))}</th><th>🥣</th><th>🎫</th><th>🔷</th><th>⭐</th><th>👗</th><th>${escapeHtml(tx('图鉴','Codex','Sách tranh'))}</th><th>${escapeHtml(tx('异常','Flags','Cờ'))}</th><th></th></tr></thead><tbody>
     ${ops.map(a=>{ const u = spU(a.username), s = u.ss[sid], L = achvLevel(achvPoints(u));
       return `<tr><td data-i18n-ignore="1" class="nowrap">${escapeHtml(translateData(a.displayName||a.username))} <small class="hint">${escapeHtml(a.username)}</small></td><td><span class="lv-pill lvb-${L.idx}">${escapeHtml(t(L.name))}</span></td><td>${achvPoints(u)}</td><td>${s?`${spUserSpiritView(u, 22)} LV${spRecStage(s)}`:'—'}</td><td>${Object.keys(u.tr).length}/9</td><td>${u.crystals||0}</td><td>${u.tickets||0}</td><td>${u.shards||0}</td><td>${spPoints(u)}</td><td>${Object.keys(u.skins).length}</td><td>${spCodexPct(u).toFixed(0)}%</td>
-        <td>${u.flags.length?`<span class="tag warn" title="${escapeAttr(u.flags.slice(-5).map(f=>`${f.date} ${f.metric}：${f.metric==='xpCap' ? tx('已达经验上限（每日 / 每周），超出部分不计','XP cap reached (daily / weekly); the excess is not counted','Đã chạm giới hạn kinh nghiệm (ngày / tuần); phần dư không tính') : f.note}`).join('\n'))}">${u.flags.length}</span>`:'—'}</td><td class="nowrap"><button class="btn btn-ghost btn-sm" data-act="spAdmViewUser" data-id="${escapeAttr(a.username)}">${escapeHtml(tx('查看','View','Xem'))}</button> <button class="btn btn-danger btn-sm" data-act="resetOperatorSprites" data-id="${escapeAttr(a.username)}">${escapeHtml(tx('重置当前操作员精灵形态','Reset this operator’s sprite form','Đặt lại hình dạng tinh linh của vận hành viên này'))}</button></td></tr>`; }).join('')}</tbody></table></div>`;
+        <td>${u.flags.length?`<span class="tag warn" title="${escapeAttr(u.flags.slice(-5).map(f=>`${f.date} ${f.metric}：${f.metric==='xpCap' ? tx('已达经验上限（每日 / 每周），超出部分不计','XP cap reached (daily / weekly); the excess is not counted','Đã chạm giới hạn kinh nghiệm (ngày / tuần); phần dư không tính') : f.note}`).join('\n'))}">${u.flags.length}</span>`:'—'}</td><td class="nowrap"><button class="btn btn-ghost btn-sm" data-act="spAdmViewUser" data-id="${escapeAttr(a.username)}">${escapeHtml(tx('查看','View','Xem'))}</button> <button class="btn btn-danger btn-sm" data-act="resetOperatorSprites" data-id="${escapeAttr(a.username)}">${escapeHtml(tx('重置精灵','Reset sprite','Đặt lại tinh linh'))}</button></td></tr>`; }).join('')}</tbody></table></div>`;
 }
 function spAdmPool(){
   const sid = seasonNow().id, g = G(), dups = spDupCheck();
@@ -16100,13 +16100,16 @@ function spPickRarity(rng, pity){
 function spAssignSeason(user, force){
   const u = spU(user), cur = seasonNow(), sid = cur.id;
   if(u.ss[sid] && !force) return u.ss[sid];
-  const seed = spSeasonSeed(), input = `${user}|${sid}|${seed}`, h = spHash(input), rng = spRng(h);
+  const prev = u.ss[sid];
+  const reassigned = force ? (+prev?.reassigned||0)+1 : 0;
+  const seed = spSeasonSeed(), input = force ? `${user}|${sid}|${seed}|${reassigned}` : `${user}|${sid}|${seed}`, h = spHash(input), rng = spRng(h);
   const pity = {...(u.spPity || {sr:0, ssr:0})};
   if(force && u.ss[sid]?.pityBefore) Object.assign(pity, u.ss[sid].pityBefore);
   const {k:rar0, forced} = spPickRarity(rng, pity);
   const {limIds} = spSeasonRarTable();
   const taken = new Set(), takenCombo = new Set();
   Object.values(G().users).forEach(x=>{ const s = x.ss?.[sid]; if(s && x.user!==user){ taken.add(s.sp); takenCombo.add(`${s.sp}|${s.pal}`); } });
+  if(force && prev?.sp) taken.add(prev.sp);
   /* 抽取：先在目标稀有度池内按权重抽（同季已被占用的精灵跳过）；整池都被占用则换配色变体；仍不够则降一档 */
   const order = SPR_ORDER.slice(0, SPR_ORDER.indexOf(rar0)+1).reverse();
   let pick = null, pal = 'v0', probe = 0, rar = rar0;
@@ -16119,14 +16122,13 @@ function spAssignSeason(user, force){
     if(!pick) for(let n=0; n<pool.length*SP_PALS2.length && !pick; n++){ const d = pool[(i+n)%pool.length], p = SP_PALS2[(Math.floor(n/pool.length)+1) % SP_PALS2.length].id; if(!takenCombo.has(`${d.id}|${p}`)){ pick = d; pal = p; probe = n; } }
     if(pick){ rar = rk; break; }
   }
-  if(!pick){ pick = spLib().find(d=>d.enabled!==false && d.inPool) || spLibDefaults()[0]; rar = pick.rar; }
+  if(!pick){ pick = spLib().find(d=>d.enabled!==false && d.inPool && (!force || d.id!==prev?.sp)) || (!force ? spLibDefaults()[0] : null); if(!pick) return prev; rar = pick.rar; }
   if(pal==='v0' && rng() < 0.25) { const alt = SP_PALS2[1 + Math.floor(rng()*(SP_PALS2.length-1))].id; if(!takenCombo.has(`${pick.id}|${alt}`)) pal = alt; }
-  const prev = u.ss[sid];
   const rank = x=>SPR_ORDER.indexOf(x);
   u.ss[sid] = {sid, label:cur.label, sp:pick.id, rar, rar0:rar, pal, form:SP_FORMS[spHash(pick.id)%SP_FORMS.length], seed, input, hash:h.toString(16).padStart(8,'0'), idx:probe, probe, pool:spLib().filter(d=>d.enabled!==false && d.inPool).length, forced, pityBefore:pity,
     pers:pick.pers??0, act:0, acts:pick.acts||['hop'], mult:Math.round((0.95 + rng()*0.15)*100)/100,
     xp:prev?.xp||0, name:prev?.name||'', intimacy:prev?.intimacy||0, mood:prev?.mood ?? (+gCfg().moodStart||80), moodAt:prev?.moodAt||gNowIso(), feeds:prev?.feeds||0, lastFeed:prev?.lastFeed||'', stageMax:prev?.stageMax||1,
-    at:prev?.at||gNowIso(), reassigned: force ? (prev?.reassigned||0)+1 : 0, libVer:pick.ver||1};
+    at:prev?.at||gNowIso(), reassigned, libVer:pick.ver||1};
   /* 跨赛季保底计数 */
   u.spPity = {sr: rank(rar) >= rank('SR') && rar!=='HD' ? 0 : (pity.sr||0)+1, ssr: rank(rar) >= rank('SSR') && rar!=='HD' ? 0 : (pity.ssr||0)+1, updatedSid:sid};
   gTouch(u);
