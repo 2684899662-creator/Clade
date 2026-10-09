@@ -13869,7 +13869,7 @@ function loadGrowth(){
 function normGrowth(g){
   g = g || {};
   return {config:migrateGrowthCfg(g.config||{}), users:g.users||{}, boost:g.boost||{}, rewards:g.rewards||{}, claims:g.claims||{}, seasons:g.seasons||{}, seasonMeta:g.seasonMeta||null,
-    events:g.events||{}, shop:g.shop||{}, guides:g.guides||{}, gaudit:g.gaudit||{}, visits:g.visits||{}, reqs:g.reqs||{}, skins:g.skins||{}, spiritLib:g.spiritLib||{}, links:g.links||{}, drafts:g.drafts||{}, lsubs:g.lsubs||{}, plans:g.plans||{}, adminU:g.adminU||{}, adminLib:g.adminLib||{}, pubLog:g.pubLog||{}, tgen:g.tgen||{}, pend:g.pend||{}};
+    events:g.events||{}, shop:g.shop||{}, guides:g.guides||{}, gaudit:g.gaudit||{}, visits:g.visits||{}, reqs:g.reqs||{}, skins:g.skins||{}, spiritLib:g.spiritLib||{}, links:g.links||{}, drafts:g.drafts||{}, lsubs:g.lsubs||{}, plans:g.plans||{}, adminU:g.adminU||{}, adminLib:g.adminLib||{}, pubLog:g.pubLog||{}, tgen:g.tgen||{}, pend:g.pend||{}, spInst:g.spInst||{}, spSnap:g.spSnap||{}, spLog:g.spLog||{}};
 }
 /* 配置迁移：v1.8 及以前（5 级、小数值）→ v1.9 默认配置表；嵌套对象与默认值合并 */
 function migrateGrowthCfg(c){
@@ -14545,6 +14545,9 @@ function growthCsvData(){
   Object.values(g.pubLog||{}).forEach(x=>rows.push([`prec:${x.id}`, '精灵发布记录', x.sp||'', x.by||'', x.act||'', x.updatedAt||'', JSON.stringify(x)]));
   Object.values(g.tgen||{}).forEach(x=>rows.push([`tgen:${x.id}`, '试验精灵生成记录', x.variant||'', x.user||'', x.tt||'', x.updatedAt||x.at||'', JSON.stringify(x)]));   /* v2.4：试验变种生成日志持久化 */
   Object.values(g.pend||{}).forEach(x=>rows.push([`pr:${x.id}`, '待领取奖励', x.reward_type||'', x.operator_id||'', x.status||'', x.updatedAt||'', JSON.stringify(x)]));   /* pending_rewards */
+  Object.values(g.spInst||{}).forEach(x=>rows.push([`sinst:${x.instanceId}`, '精灵实例', x.spiritId||'', x.user||'', x.kind||'', x.updatedAt||'', JSON.stringify(x)]));
+  Object.values(g.spSnap||{}).forEach(x=>rows.push([`ssnap:${x.snapshotId}`, 'spirit_snapshot', x.instanceId||'', x.user||'', x.status||'', x.updatedAt||'', JSON.stringify(x)]));
+  Object.values(g.spLog||{}).forEach(x=>rows.push([`slog:${x.id}`, '精灵修改审计', x.instanceId||'', x.user||'', x.status||'', x.updatedAt||'', JSON.stringify(x)]));
   Object.values(g.gaudit||{}).forEach(a=>rows.push([`ga:${a.id}`, '精灵审计', a.act, a.user, a.rolledBack?'已回滚':'', a.updatedAt||'', JSON.stringify(a)]));
   return {filename:'growth.csv', headers:['键','类型','名称','用户','状态','更新时间','完整数据(JSON)'], rows};
 }
@@ -14564,7 +14567,7 @@ function applyGrowthRows(rows){
     else if(type==='seasonmeta'){ if(!g.seasonMeta || ts(o) >= ts(g.seasonMeta)) g.seasonMeta = o; }
     else if(type==='season'){ if(!g.seasons[id] || ts(o) >= ts(g.seasons[id])) g.seasons[id] = o; }
     else if(type==='claim'){ if(!g.claims[id] || ts(o) >= ts(g.claims[id])) g.claims[id] = o; }
-    else { const coll = {event:'events', shop:'shop', guide:'guides', ga:'gaudit', visit:'visits', req:'reqs', skin:'skins', spirit:'spiritLib', lk:'links', draft:'drafts', ls:'lsubs', plan:'plans', admu:'adminU', adml:'adminLib', prec:'pubLog', tgen:'tgen', pr:'pend'}[type];
+    else { const coll = {event:'events', shop:'shop', guide:'guides', ga:'gaudit', visit:'visits', req:'reqs', skin:'skins', spirit:'spiritLib', lk:'links', draft:'drafts', ls:'lsubs', plan:'plans', admu:'adminU', adml:'adminLib', prec:'pubLog', tgen:'tgen', pr:'pend', sinst:'spInst', ssnap:'spSnap', slog:'spLog'}[type];
       if(coll){ g[coll] = g[coll] || {}; if(!g[coll][id] || ts(o) >= ts(g[coll][id])) g[coll][id] = o; } }
   });
   spCacheVer++;
@@ -27291,6 +27294,216 @@ function spGfAdd(type){
   else { const text = String(S.gfText||'').trim(); if(!text) return toast(tx('请填写线下实物名称','Enter the item name','Hãy nhập tên vật phẩm'), 'warn'); items.push({type:'offline', content:{text, n:Math.max(1, Math.floor(+S.gfN||1))}}); }
 }
 
+/* SPINST-BEGIN —— 精灵实例隔离：以唯一 instance_id 为唯一修改键；修改前深拷贝快照（spirit_snapshot），支持单个 / 批量回滚与审计。禁止用 category_id / batch_id / spirit_id 作为修改键 ---------- */
+var SP_INST_FIELDS = ['xp','intimacy','mood','skin','tag'];
+function spInstDeepCopy(o){ return o===undefined ? undefined : JSON.parse(JSON.stringify(o)); }
+function spInstMake(env){
+  const S = ()=>env.store();
+  const doneReq = {}; let seqNo = 0;
+  const nextSeq = ()=>{ const mx = Object.values(S().spSnap).reduce((a,x)=>Math.max(a,+x.seq||0), 0); seqNo = Math.max(seqNo, mx); };
+  const fail = (code, msg, extra)=>({ok:false, code, error:msg, ...(extra||{})});
+  const hasOwn = (o,k)=>Object.prototype.hasOwnProperty.call(o,k);
+  /* 实例当前可修改数据视图（只含精灵养成字段） */
+  function viewOf(m, h){
+    const {rec, u} = h;
+    return {xp:+rec.xp||0, stage:env.stageOf(+rec.xp||0, rec), intimacy:+rec.intimacy||0, mood:rec.mood==null ? null : +rec.mood, moodAt:rec.moodAt||'',
+      skin:m.kind==='season' ? (u.equip?.season||'') : m.kind==='trial' ? (u.equip?.trial?.[m.key]||'') : (rec.equipped_skin||''), tag:(m.kind==='own' ? rec.source : rec.srcTag)||''};
+  }
+  function writeView(m, h, v){
+    const {rec, u} = h;
+    rec.xp = v.xp; if(m.kind==='own') rec.stage = env.stageOf(v.xp, rec);
+    rec.intimacy = v.intimacy;
+    if(v.mood==null){ delete rec.mood; delete rec.moodAt; } else { rec.mood = v.mood; rec.moodAt = v.moodAt || env.now(); }
+    if(m.kind==='season'){ u.equip = u.equip || {season:'', trial:{}}; u.equip.season = v.skin; }
+    else if(m.kind==='trial'){ u.equip = u.equip || {season:'', trial:{}}; u.equip.trial = u.equip.trial || {}; u.equip.trial[m.key] = v.skin; }
+    else rec.equipped_skin = v.skin;
+    if(m.kind==='own') rec.source = v.tag; else rec.srcTag = v.tag;
+  }
+  /* 受保护字段：真实进度 / 甘特 / 业务统计 / 成就经验，任何精灵修改都不得变化 */
+  const protOf = u=>JSON.stringify([u.xp, u.totalXp, u.counters, u.days, u.day, u.unlocked, u.best, u.crystals, u.pts, u.shards, u.tickets]);
+  /* 为精灵记录登记唯一 instance_id；已被其它位置占用（复制 / 共享引用）则重新分配 */
+  function ensure(user, kind, key, rec){
+    if(!rec || typeof rec!=='object') return '';
+    const reg = S().spInst;
+    const taken = id=>{ const m = reg[id]; if(!m) return false; if(m.user===user && m.kind===kind && m.key===key) return false; const h = env.locate(m); return !!h && h.rec!==rec && h.rec.instanceId===id; };
+    if(!rec.instanceId || taken(rec.instanceId)){ let id; do{ id = env.uid('spi_') + env.uid(''); }while(reg[id]); rec.instanceId = id; }
+    const id = rec.instanceId;
+    if(!reg[id] || reg[id].user!==user || reg[id].kind!==kind || reg[id].key!==key) reg[id] = {instanceId:id, user, kind, key, spiritId:env.spiritId(kind, key, rec), batchId:rec.batchId||'', source:(kind==='own' ? rec.source : rec.srcTag)||kind, createdAt:reg[id]?.createdAt||env.now(), updatedAt:env.now()};
+    return id;
+  }
+  function sync(){ env.listAll().forEach(x=>ensure(x.user, x.kind, x.key, x.rec)); }
+  function listInstances(){ sync(); return env.listAll().map(x=>({instanceId:x.rec.instanceId, user:x.user, kind:x.kind, key:x.key, spiritId:env.spiritId(x.kind, x.key, x.rec)})); }
+  function resolve(instanceId){
+    if(!instanceId || typeof instanceId!=='string') return fail('bad-id', 'instance_id 无效');
+    sync();
+    const m = S().spInst[instanceId]; if(!m) return fail('not-found', '目标实例不存在');
+    const h = env.locate(m); if(!h || !h.rec || h.rec.instanceId!==instanceId) return fail('not-found', '目标实例不存在');
+    return {ok:true, m, h};
+  }
+  /* 校验实例 ID 唯一、且没有两个实例共享同一对象引用 */
+  function checkUnique(){
+    const seen = new Set(), objs = new Set(), all = env.listAll();
+    for(const x of all){ if(!x.rec.instanceId) continue; if(objs.has(x.rec)) return fail('shared-ref', '实例共享引用：'+x.rec.instanceId); objs.add(x.rec); if(seen.has(x.rec.instanceId)) return fail('dup-id', 'instance_id 重复：'+x.rec.instanceId); seen.add(x.rec.instanceId); }
+    return {ok:true};
+  }
+  const fp = (exceptId)=>{ const o = {}; env.listAll().forEach(x=>{ const id = x.rec.instanceId; if(id && id!==exceptId) o[id] = JSON.stringify(viewOf({kind:x.kind, key:x.key}, x)); }); return o; };
+  const fpUsers = ()=>{ const o = {}; env.listAll().forEach(x=>{ o[x.user] = protOf(x.u); }); return o; };
+  const sameMap = (a,b)=>{ const ka = Object.keys(a), kb = Object.keys(b); return ka.length===kb.length && ka.every(k=>a[k]===b[k]); };
+  function cleanChanges(changes){
+    if(!changes || typeof changes!=='object' || Array.isArray(changes)) return fail('bad-changes', '修改内容无效');
+    const keys = Object.keys(changes);
+    if(!keys.length) return fail('bad-changes', '没有要修改的内容');
+    const bad = keys.filter(k=>!SP_INST_FIELDS.includes(k)); if(bad.length) return fail('bad-field', '不允许修改字段：'+bad.join(','));
+    const lim = env.limits(), c = {};
+    if(hasOwn(changes,'xp')){ const n = Math.floor(+changes.xp); if(!Number.isFinite(n) || n<0) return fail('bad-value', 'XP 无效'); c.xp = n; }
+    if(hasOwn(changes,'intimacy')){ const n = Math.floor(+changes.intimacy); if(!Number.isFinite(n) || n<0) return fail('bad-value', '亲密度无效'); c.intimacy = Math.min(lim.intimacyMax, n); }
+    if(hasOwn(changes,'mood')){ const n = Math.floor(+changes.mood); if(!Number.isFinite(n) || n<0) return fail('bad-value', '心情无效'); c.mood = Math.min(lim.moodMax, n); }
+    if(hasOwn(changes,'skin')) c.skin = String(changes.skin||'');
+    if(hasOwn(changes,'tag')) c.tag = String(changes.tag||'');
+    return {ok:true, c};
+  }
+  const logAdd = (o)=>{ const id = env.uid('sil_'); S().spLog[id] = {id, at:env.now(), updatedAt:env.now(), ...o}; return id; };
+  const canWrite = ()=>env.isSuper() && env.canSee();
+  /* 单实例修改（内部）：返回 {ok, snapshot}，失败时已还原 */
+  function applyOne(instanceId, changes, o){
+    const r = resolve(instanceId); if(!r.ok) return r;
+    const {m, h} = r;
+    if(o.operator && m.user!==o.operator) return fail('wrong-operator', '目标实例不属于指定操作员');
+    const cc = cleanChanges(changes); if(!cc.ok) return cc;
+    const before = viewOf(m, h), original = spInstDeepCopy(before);
+    const othersBefore = fp(instanceId), usersBefore = fpUsers();
+    const after = {...before, ...cc.c}; if(hasOwn(cc.c,'mood')) after.moodAt = env.now();
+    after.stage = env.stageOf(after.xp, h.rec);
+    writeView(m, h, spInstDeepCopy(after));
+    const now = viewOf(m, h);
+    if(!sameMap(othersBefore, fp(instanceId)) || !sameMap(usersBefore, fpUsers())){
+      writeView(m, h, original);
+      env.alarm('sprite-inst-cross', {instanceId, user:m.user});
+      return fail('cross-contamination', '检测到其他实例被误改，已回滚并报警');
+    }
+    nextSeq(); const snapshotId = env.uid('snap_');
+    const snap = {snapshotId, instanceId, batchId:o.batchId||'', originalData:original, modifiedData:spInstDeepCopy(now), modifiedBy:o.by, modifiedAt:env.now(), reason:o.reason, status:'active', user:m.user, spiritId:m.spiritId, seq:++seqNo, updatedAt:env.now()};
+    S().spSnap[snapshotId] = snap;
+    logAdd({action:'update', instanceId, batchId:snap.batchId, user:m.user, spiritId:m.spiritId, snapshotId, before:original, after:spInstDeepCopy(now), by:o.by, reason:o.reason, status:'active'});
+    env.audit('sprite-inst-update', m.user, {instanceId, batchId:snap.batchId, before:original, after:now, reason:o.reason, snapshotId});
+    return {ok:true, snapshot:snap, instanceId};
+  }
+  const idem = (reqId, fn)=>{
+    if(!reqId) return fn();
+    const done = doneReq; if(done[reqId]) return {...spInstDeepCopy(done[reqId]), idempotent:true};
+    const out = fn(); if(out.ok){ done[reqId] = spInstDeepCopy(out); const ks = Object.keys(done); if(ks.length>500) delete done[ks[0]]; }
+    return out;
+  };
+  /* updateSpirit(instanceId, changes, {reason, operator, requestId}) */
+  function updateSpirit(instanceId, changes, o){
+    o = o || {};
+    if(!canWrite()) return fail('forbidden', '仅超级管理员可修改精灵');
+    const reason = String(o.reason||'').trim(); if(!reason) return fail('no-reason', '请填写修改理由');
+    return idem(o.requestId, ()=>{
+      const u = checkUnique(); if(!u.ok){ env.alarm('sprite-inst-unique', u); return u; }
+      const res = applyOne(instanceId, changes, {by:env.me(), reason, operator:o.operator, batchId:o.batchId||''});
+      if(res.ok) env.persist();
+      return res;
+    });
+  }
+  /* batchUpdate(instanceIds, changes, {reason, operator}) —— changes 可为函数 (instanceId)=>changes；任一失败整批还原 */
+  function batchUpdate(instanceIds, changes, o){
+    o = o || {};
+    if(!canWrite()) return fail('forbidden', '仅超级管理员可修改精灵');
+    const reason = String(o.reason||'').trim(); if(!reason) return fail('no-reason', '请填写修改理由');
+    if(!Array.isArray(instanceIds) || !instanceIds.length) return fail('bad-id', '请选择实例');
+    const ids = [...new Set(instanceIds)];
+    return idem(o.requestId, ()=>{
+      const u = checkUnique(); if(!u.ok){ env.alarm('sprite-inst-unique', u); return u; }
+      const batchId = o.batchId || env.uid('spb_'), done = [];
+      for(const id of ids){
+        const res = applyOne(id, typeof changes==='function' ? changes(id) : changes, {by:env.me(), reason, operator:o.operator, batchId});
+        if(!res.ok){
+          done.reverse().forEach(s=>restoreSnap(s, true));
+          done.forEach(s=>{ delete S().spSnap[s.snapshotId]; Object.keys(S().spLog).forEach(k=>{ if(S().spLog[k].snapshotId===s.snapshotId) delete S().spLog[k]; }); });
+          return {...res, instanceId:id, batchFailed:true};
+        }
+        done.push(res.snapshot);
+      }
+      env.persist();
+      return {ok:true, batchId, snapshots:done};
+    });
+  }
+  function restoreSnap(snap, silent){
+    const r = resolve(snap.instanceId); if(!r.ok) return r;
+    const others = fp(snap.instanceId), users = fpUsers(), cur = viewOf(r.m, r.h);
+    writeView(r.m, r.h, spInstDeepCopy(snap.originalData));
+    if(!sameMap(others, fp(snap.instanceId)) || !sameMap(users, fpUsers())){ writeView(r.m, r.h, cur); env.alarm('sprite-inst-cross', {instanceId:snap.instanceId}); return fail('cross-contamination', '检测到其他实例被误改，已还原并报警'); }
+    return {ok:true};
+  }
+  function rollbackCheck(snap){
+    if(!snap) return fail('no-snapshot', '快照不存在');
+    if(snap.status!=='active') return fail('already-rolled', '该快照已回滚，不可重复回滚');
+    const days = env.windowDays();
+    if(env.nowMs() - new Date(snap.modifiedAt).getTime() > days*86400000) return fail('expired', `已超过 ${days} 天回滚窗口`);
+    if(Object.values(S().spSnap).some(x=>x.instanceId===snap.instanceId && x.status==='active' && x.snapshotId!==snap.snapshotId && (+x.seq||0) > (+snap.seq||0))) return fail('newer-active', '该实例存在更新的未回滚修改，请先回滚较新的');
+    return {ok:true};
+  }
+  function doRollback(snap, reason, batchId){
+    const r = restoreSnap(snap); if(!r.ok) return r;
+    snap.status = 'rolled_back'; snap.rolledBackAt = env.now(); snap.rolledBackBy = env.me(); snap.rollbackReason = reason; snap.updatedAt = env.now();
+    logAdd({action:'rollback', instanceId:snap.instanceId, batchId:snap.batchId, user:snap.user, spiritId:snap.spiritId, snapshotId:snap.snapshotId, before:snap.modifiedData, after:snap.originalData, by:env.me(), reason, status:'rolled_back', rollbackBatch:batchId||''});
+    env.audit('sprite-inst-rollback', snap.user, {instanceId:snap.instanceId, batchId:snap.batchId, snapshotId:snap.snapshotId, reason});
+    return {ok:true};
+  }
+  const guardRb = (reason)=>{ if(!env.isSuper()) return fail('forbidden', '仅超级管理员可回滚'); if(!String(reason||'').trim()) return fail('no-reason', '回滚需填写理由'); return null; };
+  function rollback(snapshotId, reason){
+    const g = guardRb(reason); if(g) return g; reason = String(reason).trim();
+    const snap = S().spSnap[snapshotId], c = rollbackCheck(snap); if(!c.ok) return c;
+    const r = doRollback(snap, reason); if(r.ok) env.persist();
+    return r.ok ? {ok:true, snapshot:snap} : r;
+  }
+  function batchRollback(batchId, reason){
+    const g = guardRb(reason); if(g) return g; reason = String(reason).trim();
+    if(!batchId) return fail('bad-id', 'batch_id 无效');
+    const snaps = Object.values(S().spSnap).filter(x=>x.batchId===batchId && x.status==='active');
+    if(!snaps.length) return fail(Object.values(S().spSnap).some(x=>x.batchId===batchId) ? 'already-rolled' : 'no-snapshot', '没有可回滚的快照');
+    for(const s of snaps){ const c = rollbackCheck(s); if(!c.ok) return {...c, instanceId:s.instanceId}; }
+    const done = [];
+    for(const s of snaps){ const r = doRollback(s, reason, batchId); if(!r.ok){ done.forEach(d=>{ const cur = d.modifiedData, x = resolve(d.instanceId); if(x.ok) writeView(x.m, x.h, spInstDeepCopy(cur)); Object.keys(S().spLog).forEach(k=>{ if(S().spLog[k].snapshotId===d.snapshotId && S().spLog[k].action==='rollback') delete S().spLog[k]; }); d.status = 'active'; delete d.rolledBackAt; delete d.rolledBackBy; delete d.rollbackReason; }); return r; } done.push(s); }
+    env.persist();
+    return {ok:true, snapshots:done};
+  }
+  function query(f){
+    f = f || {}; if(!env.isSuper() || !env.canSee()) return [];
+    return Object.values(S().spLog).filter(x=>(!f.instanceId || x.instanceId===f.instanceId) && (!f.batchId || x.batchId===f.batchId) && (!f.operator || x.user===f.operator) && (!f.spiritId || x.spiritId===f.spiritId) && (!f.from || x.at>=f.from) && (!f.to || x.at<=f.to)).sort((a,b)=>String(b.at).localeCompare(String(a.at)));
+  }
+  function exportCsv(f){
+    if(!env.isSuper()) return '';
+    const q = s=>'"'+String(s==null?'':s).replace(/"/g,'""')+'"';
+    const rows = [['时间','动作','instance_id','batch_id','snapshot_id','操作员','精灵','修改前','修改后','修改人','理由','状态']];
+    query(f).forEach(x=>rows.push([x.at, x.action, x.instanceId, x.batchId, x.snapshotId, x.user, x.spiritId, JSON.stringify(x.before), JSON.stringify(x.after), x.by, x.reason, x.status]));
+    return rows.map(r=>r.map(q).join(',')).join('\r\n');
+  }
+  return {windowDays:()=>env.windowDays(), ensure, sync, resolve, listInstances, checkUnique, updateSpirit, batchUpdate, rollback, batchRollback, query, exportCsv, viewOf};
+}
+
+var spInstApi = null;
+function spInst(){
+  if(spInstApi) return spInstApi;
+  const locate = m=>{ const u = G().users?.[m.user]; if(!u) return null; const rec = m.kind==='season' ? u.ss?.[m.key] : m.kind==='trial' ? u.tr?.[m.key] : u.mys?.[m.key]; return rec && typeof rec==='object' ? {rec, u} : null; };
+  spInstApi = spInstMake({
+    store:()=>{ const g = G(); g.spInst = g.spInst||{}; g.spSnap = g.spSnap||{}; g.spLog = g.spLog||{}; return g; },
+    now:gNowIso, nowMs:()=>new Date(gNowIso()).getTime(), uid:(p)=>uid(p) + Math.random().toString(36).slice(2,8),
+    isSuper:()=>spIsSuper(), canSee:()=>canViewSpriteContent(), me:()=>spMe(),
+    locate, stageOf:(xp, rec)=>spStageOf(xp, rec),
+    listAll:()=>{ const out = []; Object.keys(G().users||{}).forEach(name=>{ const u = G().users[name]; [['season',u.ss],['trial',u.tr],['own',u.mys]].forEach(([kind,map])=>Object.keys(map||{}).forEach(key=>{ if(map[key] && typeof map[key]==='object') out.push({user:name, kind, key, rec:map[key], u}); })); }); return out; },
+    spiritId:(kind, key, rec)=>kind==='season' ? (rec.sp||key) : key,
+    limits:()=>({intimacyMax:+gCfg().intimacyMax||1000, moodMax:+gCfg().moodMax||100}),
+    windowDays:()=>+gCfg().spInstWindowDays>0 ? +gCfg().spInstWindowDays : 7,
+    persist:()=>saveGrowth(true),
+    audit:(act, user, detail)=>spAudit(act, user, detail),
+    alarm:(act, detail)=>{ try{ spAuditCore('sprite-inst-alarm', '', {act, ...detail}); }catch(_e){} console.warn('[spirit-instance]', act, detail); try{ if(typeof toast==='function') toast(tx('⚠ 精灵数据串号告警，已自动回滚','⚠ Spirit cross-contamination alarm; rolled back','⚠ Cảnh báo lẫn dữ liệu tinh linh; đã hoàn tác'), 'error'); }catch(_e){} },
+  });
+  return spInstApi;
+}
+/* SPINST-END */
+
 /* ---------- 管理员修改精灵等级（仅超级管理员）：只改精灵养成字段，不碰成就 / 真实进度 / 甘特条 / 业务统计 ---------- */
 var spLvlLast = 0;
 function spLvlCfg(){ const c = gCfg().lvlAdm || {}; return {daily:+c.daily>0 ? +c.daily : 30, cooldownMs:c.cooldownMs>=0 ? +c.cooldownMs : 3000, notify:c.notify!==false, bigXp:+c.bigXp>0 ? +c.bigXp : 3000, hourly:+c.hourly>0 ? +c.hourly : 15, repeat:+c.repeat>0 ? +c.repeat : 3}; }
@@ -27349,8 +27562,17 @@ function spLvlHtml(){
       <div class="sp-form-row"><label style="flex:1 1 280px">${escapeHtml(tx('修改理由（必填）','Reason (required)','Lý do (bắt buộc)'))}<input name="reason" maxlength="120" data-i18n-ignore="1"></label></div>
       <p class="hint">${escapeHtml(tx(`今日已修改 ${spLvlToday()} / ${cfg.daily} 次；冷却 ${cfg.cooldownMs/1000} 秒；降低 XP、跨 2 阶以上、单次 ±${cfg.bigXp} XP 以上、批量或按批次属高风险，需二次确认并填写理由。频率 / 设备 / 重复修改会记录异常。`, `Today ${spLvlToday()} / ${cfg.daily}; cooldown ${cfg.cooldownMs/1000}s; lowering XP, jumping 2+ stages, ±${cfg.bigXp}+ XP, batches are high-risk and need a second confirmation plus a reason. Frequency / device / repeat anomalies are logged.`, `Hôm nay ${spLvlToday()} / ${cfg.daily}; chờ ${cfg.cooldownMs/1000}s; thao tác rủi ro cao cần xác nhận lần hai.`))}</p>
       <div class="sp-filter"><b>${escapeHtml(tx('修改记录（超级管理员可见全部）','Adjustment log (all, super admin only)','Nhật ký chỉnh'))}</b></div>${spLvlLogHtml('')}
+      ${spInstSnapHtml()}
     </form>
     <div class="modal-foot"><span style="flex:1"></span><button class="btn btn-ghost btn-sm" data-act="spLvlClose">${escapeHtml(tx('取消','Cancel','Hủy'))}</button><button class="btn btn-primary btn-sm" data-act="spLvlApply">${escapeHtml(tx('应用','Apply','Áp dụng'))}</button></div></div>`;
+}
+function spInstSnapHtml(){
+  const snaps = Object.values(G().spSnap||{}).sort((a,b)=>String(b.modifiedAt).localeCompare(String(a.modifiedAt))).slice(0, 30);
+  if(!snaps.length) return '';
+  const batches = [...new Set(snaps.filter(s=>s.batchId && s.status==='active').map(s=>s.batchId))];
+  return `<div class="sp-filter"><b>${escapeHtml(tx(`快照与回滚（${spInst().windowDays?.()||7} 天内，每个快照仅可回滚一次）`,'Snapshots & rollback (within window, once per snapshot)','Ảnh chụp & hoàn tác'))}</b></div>
+    <div class="table-scroll" style="max-height:200px;overflow:auto"><table class="data-table"><tbody>${snaps.map(s=>`<tr><td class="nowrap">${escapeHtml(String(s.modifiedAt).replace('T',' ').slice(0,16))}</td><td data-i18n-ignore="1">${escapeHtml(s.user)}</td><td data-i18n-ignore="1">XP ${+s.originalData?.xp||0}→${+s.modifiedData?.xp||0}</td><td data-i18n-ignore="1">${escapeHtml(s.reason||'')}</td><td>${s.status==='active' ? `<button type="button" class="btn btn-ghost btn-sm" data-act="spInstRb" data-id="${escapeAttr(s.snapshotId)}">${escapeHtml(tx('回滚','Roll back','Hoàn tác'))}</button>` : escapeHtml(tx('已回滚','Rolled back','Đã hoàn tác'))}</td></tr>`).join('')}</tbody></table></div>
+    ${batches.map(b=>`<button type="button" class="btn btn-ghost btn-sm" data-act="spInstBrb" data-id="${escapeAttr(b)}">${escapeHtml(tx('整批回滚','Roll back batch','Hoàn tác cả lô'))} ${escapeHtml(b)}</button>`).join(' ')}`;
 }
 function spLvlApply(){
   if(!spIsSuper()) return;
@@ -27380,14 +27602,15 @@ function spLvlApply(){
     spLvlLast = Date.now();
     const me = spMe(), dev = spDevice(), all = Object.values(G().gaudit||{}).filter(a=>a.act==='sprite-lvl-adjust'), hourAgo = Date.now() - 3600000;
     const recent = all.filter(a=>a.by===me && new Date(a.at).getTime() >= hourAgo), lastDev = all.filter(a=>a.by===me).sort((a,b)=>String(b.at).localeCompare(String(a.at)))[0]?.dev;
-    const notified = new Set(), batchId = uid('lvb_');
+    const notified = new Set(), batchId = uid('lvb_'), inst = spInst();
+    const skinFor = p=>{ if(!skin) return {}; return p.u.skins[skin] ? {skin} : null; };
+    plan.forEach(p=>{ p.iid = inst.ensure(p.name, p.kind, p.key, p.r); });
+    const chg = {}; plan.forEach(p=>{ const c = {xp:p.nx}; if(inti!=null) c.intimacy = inti; if(mood!=null) c.mood = mood; const sk = skinFor(p); if(sk?.skin) c.skin = sk.skin; if(tag) c.tag = tag; chg[p.iid] = c; });
+    const res = inst.batchUpdate(plan.map(p=>p.iid), id=>chg[id], {reason, batchId});
+    if(!res.ok){ toast(`${tx('修改失败','Update failed','Cập nhật thất bại')}：${res.error||res.code}`, 'error'); render(); return; }
     plan.forEach(p=>{
-      const {u, r, name} = p, before = {xp:p.old, stage:p.oldStage, intimacy:+r.intimacy||0, mood:spMood(r), skin:p.kind==='season' ? (u.equip.season||'') : p.kind==='trial' ? (u.equip.trial[p.key]||'') : (r.equipped_skin||''), tag:r.srcTag||r.source||''}, anomalies = [];
-      r.xp = p.nx; if(p.kind==='own') r.stage = spStageOf(p.nx, r);
-      if(inti!=null) r.intimacy = Math.max(0, Math.min(+gCfg().intimacyMax||1000, inti));
-      if(mood!=null) spMoodSet(r, mood);
-      if(skin){ if(u.skins[skin]){ if(p.kind==='season') u.equip.season = skin; else if(p.kind==='trial') u.equip.trial[p.key] = skin; else r.equipped_skin = skin; } else anomalies.push('skin-not-owned'); }
-      if(tag){ if(p.kind==='own') r.source = tag; else r.srcTag = tag; }
+      const {u, r, name} = p, snap = res.snapshots.find(s=>s.instanceId===p.iid), before = {...snap.originalData, mood:spMood({mood:snap.originalData.mood, moodAt:snap.originalData.moodAt})}, anomalies = [];
+      if(skin && !u.skins[skin]) anomalies.push('skin-not-owned');
       codex.forEach(id=>{ const k = `sp:${id}`; if(!u.codex[k]) u.codex[k] = gNowIso(); });
       if(Math.abs(p.nx - p.old) >= cfg.bigXp) anomalies.push('big-xp');
       if(Math.abs(p.newStage - p.oldStage) >= 2) anomalies.push('stage-jump');
@@ -27453,6 +27676,12 @@ function spAction20(act, el, id){
     case 'spLvlOpen': if(!spIsSuper()) return false; state.modal = {type:'spLvl', pre:id||''}; return true;
     case 'spLvlApply': spLvlApply(); return false;
     case 'spLvlClose': state.modal = null; return true;
+    case 'spInstRb': case 'spInstBrb': {
+      if(!spIsSuper()) return false;
+      const reason = prompt(tx('回滚理由（必填）','Rollback reason (required)','Lý do hoàn tác (bắt buộc)')); if(reason===null) return false;
+      const res = act==='spInstRb' ? spInst().rollback(id, reason) : spInst().batchRollback(id, reason);
+      toast(res.ok ? tx('已回滚','Rolled back','Đã hoàn tác') : `${tx('回滚失败','Rollback failed','Hoàn tác thất bại')}：${res.error||res.code}`, res.ok ? 'ok' : 'error'); return true;
+    }
     case 'spGfType': S.gfType = v; return true;
     case 'spGfPreview': spGfPreview(); return true;
     case 'spGfPvBack': state.modal = null; return true;
