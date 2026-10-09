@@ -420,8 +420,8 @@ table.data-table tr:hover td{background:var(--panel-alt);}
 .password-field input{padding-right:42px;}
 .password-toggle{position:absolute;right:5px;bottom:4px;width:30px;height:30px;padding:0;border:0;border-radius:6px;background:transparent;color:var(--text-faint);display:flex;align-items:center;justify-content:center;}
 .password-toggle .eye-open{display:none;}
-.password-toggle:hover .eye-closed,.password-toggle:focus .eye-closed{display:none;}
-.password-toggle:hover .eye-open,.password-toggle:focus .eye-open{display:block;}
+.password-toggle.shown .eye-closed{display:none;}
+.password-toggle.shown .eye-open{display:block;}
 .empty-state{padding:60px 20px;text-align:center;color:var(--text-faint);}
 .empty-state svg{opacity:.35;margin-bottom:10px;}
 
@@ -11886,7 +11886,7 @@ async function onAction(e){
     case 'sortSamples': { const k = el.dataset.k, cur = state.tableSort; state.tableSort = (cur && cur.key===k) ? {key:k, dir:cur.dir==='asc'?'desc':'asc'} : {key:k, dir:'asc'}; break; }
     case 'printReport': window.print(); return;
     case 'openBooking': return openBookingDetail(id);
-    case 'toggleLoginPassword': { const input = document.getElementById('loginPassword'); if(input) input.type = input.type==='password' ? 'text' : 'password'; return; }
+    case 'toggleLoginPassword': { const input = document.getElementById('loginPassword'); if(input){ const show = input.type==='password'; input.type = show ? 'text' : 'password'; el?.classList.toggle('shown', show); el?.setAttribute('title', show ? '隐藏密码' : '显示密码'); } return; }
     case 'toggleTheme': state.theme = state.theme==='dark'?'light':'dark'; break;
     case 'toggleFullscreen': toggleFullscreen(); return;
     case 'toggleNotif':
